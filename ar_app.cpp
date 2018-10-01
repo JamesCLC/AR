@@ -36,6 +36,7 @@ void ARApp::Init()
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
 	InitFont();
+	SetupLights();
 
 
 	// initialise sony framework
@@ -153,3 +154,13 @@ void ARApp::DrawHUD()
 	}
 }
 
+void ARApp::SetupLights()
+{
+	gef::PointLight default_point_light;
+	default_point_light.set_colour(gef::Colour(0.7f, 0.7f, 1.0f, 1.0f));
+	default_point_light.set_position(gef::Vector4(-300.0f, -500.0f, 100.0f));
+
+	gef::Default3DShaderData& default_shader_data = renderer_3d_->default_shader_data();
+	default_shader_data.set_ambient_light_colour(gef::Colour(0.5f, 0.5f, 0.5f, 1.0f));
+	default_shader_data.AddPointLight(default_point_light);
+}

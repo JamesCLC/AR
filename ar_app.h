@@ -44,6 +44,7 @@ private:
 	void DrawHUD();
 
 	void RenderOverlay();
+	void SetupLights();
 
 	gef::InputManager* input_manager_;
 
