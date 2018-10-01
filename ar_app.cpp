@@ -23,15 +23,17 @@ ARApp::ARApp(gef::Platform& platform) :
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
 	font_(NULL),
-	renderer_3d_(NULL)
+	renderer_3d_(NULL),
+	primitive_builder_(NULL)
 {
 }
 
 void ARApp::Init()
 {
-	input_manager_ = platform_.CreateInputManager();
-	sprite_renderer_ = platform_.CreateSpriteRenderer();
-	renderer_3d_ = platform_.CreateRenderer3D();
+	input_manager_ = gef::InputManager::Create(platform_);
+	sprite_renderer_ = gef::SpriteRenderer::Create(platform_);
+	renderer_3d_ = gef::Renderer3D::Create(platform_);
+	primitive_builder_ = new PrimitiveBuilder(platform_);
 
 	InitFont();
 
@@ -48,6 +50,9 @@ void ARApp::Init()
 
 void ARApp::CleanUp()
 {
+	delete primitive_builder_;
+	primitive_builder_ = NULL;
+
 	smartRelease();
 	sampleRelease();
 

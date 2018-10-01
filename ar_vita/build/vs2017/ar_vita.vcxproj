@@ -47,7 +47,8 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>.../..;../../../gef_abertay</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.../..;../../../../gef_abertay</AdditionalIncludeDirectories>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PSVita'">
@@ -55,7 +56,8 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>.../..;../../../gef_abertay</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.../..;../../../../gef_abertay</AdditionalIncludeDirectories>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />

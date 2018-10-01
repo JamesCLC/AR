@@ -7,6 +7,7 @@
 #include <vector>
 #include <graphics/mesh_instance.h>
 #include <platform/vita/graphics/texture_vita.h>
+#include "primitive_builder.h"
 
 // Vita AR includes
 #include <camera.h>
@@ -41,8 +42,7 @@ private:
 	void InitFont();
 	void CleanUpFont();
 	void DrawHUD();
-	void RenderCameraFeed(struct AppData* dat);
-	void Render3DScene();
+
 	void RenderOverlay();
 
 	gef::InputManager* input_manager_;
@@ -53,6 +53,9 @@ private:
 	float fps_;
 
 	class gef::Renderer3D* renderer_3d_;
+	PrimitiveBuilder* primitive_builder_;
+
+	
 };
 
 

@@ -37,6 +37,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories>../../ar_vita;../../../gef_abertay</AdditionalIncludeDirectories>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
     </ClCompile>
     <Link>
       <AdditionalDependencies>-lSceFios2_stub;-lSceDbg_stub;-lSceGxm_stub;-lSceDisplay_stub;-lSceCtrl_stub;-lSceSysmodule_stub;-lSceNgs_stub_weak;-lSceAudio_stub;-lSceTouch_stub;-lSceRazorCapture_stub</AdditionalDependencies>
@@ -48,6 +49,7 @@
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories>../../ar_vita;../../../gef_abertay</AdditionalIncludeDirectories>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
     </ClCompile>
     <Link>
       <AdditionalDependencies>-lSceFios2_stub;-lSceGxm_stub;-lSceDisplay_stub;-lSceCtrl_stub;-lSceSysmodule_stub;-lSceNgs_stub_weak;-lSceAudio_stub;-lSceTouch_stub</AdditionalDependencies>
@@ -73,9 +75,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp" />
     <ClCompile Include="..\..\main_vita.cpp" />
+    <ClCompile Include="..\..\primitive_builder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
+    <ClInclude Include="..\..\primitive_builder.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
