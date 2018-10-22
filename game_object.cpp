@@ -22,11 +22,6 @@ GameObject::~GameObject()
 
 }
 
-gef::Mesh & GameObject::GetMesh() const
-{
-	return mesh_;
-}
-
 void GameObject::Initialise(gef::Platform& platform_)
 {
 	if (!scene_filename_.empty())
