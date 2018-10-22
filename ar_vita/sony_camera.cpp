@@ -9,8 +9,25 @@
 #include <sce_atomic.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
 void *graphicsAlloc(SceKernelMemBlockType type, uint32_t size, uint32_t alignment, uint32_t attribs, SceUID *uid);
 void graphicsFree(SceUID uid);
+
+
+#ifdef __cplusplus
+
+
+
+} // extern "C"
+
+
+
+#endif
 
 extern SampleState s_sampleState;
 
