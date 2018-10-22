@@ -20,12 +20,18 @@
     <ClCompile Include="..\..\primitive_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\primitive_builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

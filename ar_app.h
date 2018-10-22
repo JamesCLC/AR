@@ -56,10 +56,27 @@ private:
 	class gef::Renderer3D* renderer_3d_;
 	PrimitiveBuilder* primitive_builder_;
 
-	
+
+	///	James' Stuff
+	// Orthographic Projection Matrix for Rendering the viewport.
+	gef::Matrix44 ortho_matrix_;
+
+	// Scaling factor to prevent camera image distortion.
+	float scaling_factor_ = 0.0f;
+
+	gef::Sprite camera_feed_sprite_;
+	gef::TextureVita camera_feed_texture_;
+
+	// 3D Elements
+	gef::Matrix44 unscaled_projection_matrix_;
+	gef::Matrix44 scaling_matrix_;
+	gef::Matrix44 scaled_projection_matrix_;
+	gef::Matrix44 identity_;
+	gef::MeshInstance box_mesh_;
+	int marker_id = 1;
+	gef::Matrix44 box_scale_matrix;
+
+	///
+
 };
-
-
-
-
 #endif // _RENDER_TARGET_APP_H

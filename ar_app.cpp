@@ -35,6 +35,49 @@ void ARApp::Init()
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
+	///	Can probs move most of this to the constructor or header or something.
+
+	/// 2D Camera Feed
+		// Set up the Ortho Matrix for rendering the camera feed.
+		ortho_matrix_.SetIdentity();
+		ortho_matrix_ = platform_.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
+	
+		// Calculate y-scaling factor (based on resolution of camera and resolution of screen.)
+		scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
+	
+		// Set the texture's scale.
+		camera_feed_sprite_.set_width(2.0f);
+		camera_feed_sprite_.set_height(2.0f * scaling_factor_);
+
+		// Place the sprite at the back of the orthographic fustrum.
+		camera_feed_sprite_.set_position(0, 0, 1);
+
+		// Texture the sprite with the camera feed.
+		camera_feed_sprite_.set_texture(&camera_feed_texture_);
+
+	/// 3D Elements
+		// Create the initial projection matrix.
+		unscaled_projection_matrix_.SetIdentity();
+		unscaled_projection_matrix_ = platform_.PerspectiveProjectionFov(SCE_SMART_IMAGE_FOV, (SCE_SMART_IMAGE_WIDTH / SCE_SMART_IMAGE_HEIGHT), 0.1f, 100.0f);
+
+		// Create the Scaling Matrix
+		scaling_matrix_.SetIdentity();
+		scaling_matrix_.set_m(1, 1, scaling_factor_);
+			// Can replace this with a single function "Create Scale Matrix" or something.
+
+		// Create the final scaled matrix.
+		scaled_projection_matrix_.SetIdentity();
+		scaled_projection_matrix_ = unscaled_projection_matrix_ * scaling_matrix_;
+
+		// Create an identity matrix.
+		identity_.SetIdentity();
+
+		// Create default box mesh for testing.
+		box_mesh_.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+
+		box_scale_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
+	//
+
 	InitFont();
 	SetupLights();
 
@@ -79,6 +122,23 @@ bool ARApp::Update(float frame_time)
 	// use the tracking library to try and find markers
 	smartUpdate(dat->currentImage);
 
+	///
+	// check to see if a particular marker can be found
+	if (sampleIsMarkerFound(marker_id))
+	{
+		// marker is being tracked, get it’s transform
+		gef::Matrix44 marker_transform;
+		sampleGetTransform(
+			marker_id,
+			&marker_transform);
+
+		// set the transform of the 3D mesh instance to draw on
+		// top of the marker
+		box_mesh_.set_transform((box_scale_matrix*marker_transform));
+	}
+
+	///
+
 	sampleUpdateEnd(dat);
 
 	return true;
@@ -93,10 +153,18 @@ void ARApp::Render()
 	//
 
 	// REMEMBER AND SET THE PROJECTION MATRIX HERE
+		sprite_renderer_->set_projection_matrix(ortho_matrix_);
+		
 
 	sprite_renderer_->Begin(true);
 
 	// DRAW CAMERA FEED SPRITE HERE
+		// check there is data present for the camera image before trying to draw it
+		if (dat->currentImage)
+		{
+			camera_feed_texture_.set_texture(dat->currentImage->tex_yuv);
+			sprite_renderer_->DrawSprite(camera_feed_sprite_);
+		}
 
 	sprite_renderer_->End();
 
@@ -105,11 +173,14 @@ void ARApp::Render()
 	//
 
 	// SET VIEW AND PROJECTION MATRIX HERE
+	renderer_3d_->set_projection_matrix(scaled_projection_matrix_);
+	renderer_3d_->set_view_matrix(identity_);
 
 	// Begin rendering 3D meshes, don't clear the frame buffer
 	renderer_3d_->Begin(false);
 
 	// DRAW 3D MESHES HERE
+	renderer_3d_->DrawMesh(box_mesh_);
 
 	renderer_3d_->End();
 
