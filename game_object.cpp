@@ -22,7 +22,20 @@ GameObject::~GameObject()
 
 }
 
+gef::Mesh & GameObject::GetMesh() const
+{
+	return mesh_;
+}
+
 void GameObject::Initialise(gef::Platform& platform_)
+{
+	if (!scene_filename_.empty())
+	{
+		ReadSceneFile(platform_);
+	}
+}
+
+void GameObject::ReadSceneFile(gef::Platform & platform_)
 {
 	// Read the specified scene file.
 	scene_.ReadSceneFromFile(platform_, scene_filename_.data());
@@ -35,7 +48,6 @@ void GameObject::Initialise(gef::Platform& platform_)
 	{
 		mesh_ = scene_.CreateMesh(platform_, scene_.mesh_data.front());
 	}
-
 }
 
 void GameObject::UpdatePosition()

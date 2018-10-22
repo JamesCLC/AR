@@ -20,7 +20,7 @@
     <ClCompile Include="..\..\primitive_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game_object.cpp">
+    <ClCompile Include="..\..\game_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -31,7 +31,7 @@
     <ClInclude Include="..\..\primitive_builder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_object.h">
+    <ClInclude Include="..\..\game_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

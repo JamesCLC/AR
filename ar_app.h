@@ -8,6 +8,7 @@
 #include <graphics/mesh_instance.h>
 #include <platform/vita/graphics/texture_vita.h>
 #include "primitive_builder.h"
+#include "game_object.h"
 
 // Vita AR includes
 #include <camera.h>
@@ -15,6 +16,7 @@
 #include <motion.h>
 #include <libdbg.h>
 #include <libsmart.h>
+
 
 // FRAMEWORK FORWARD DECLARATIONS
 namespace gef
@@ -76,6 +78,8 @@ private:
 	int marker_id = 1;
 	gef::Matrix44 box_scale_matrix;
 
+	
+	GameObject* test_;
 	///
 
 };

@@ -65,7 +65,7 @@ void ARApp::Init()
 		scaling_matrix_.set_m(1, 1, scaling_factor_);
 			// Can replace this with a single function "Create Scale Matrix" or something.
 
-		// Create the final scaled matrix.
+		// Create the final scaled matrix. 
 		scaled_projection_matrix_.SetIdentity();
 		scaled_projection_matrix_ = unscaled_projection_matrix_ * scaling_matrix_;
 
@@ -73,9 +73,11 @@ void ARApp::Init()
 		identity_.SetIdentity();
 
 		// Create default box mesh for testing.
-		box_mesh_.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+		//box_mesh_.set_mesh(primitive_builder_->GetDefaultCubeMesh());
 
-		box_scale_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
+		//box_scale_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
+		
+		test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "balls/ball1.scn");
 	//
 
 	InitFont();
@@ -134,7 +136,8 @@ bool ARApp::Update(float frame_time)
 
 		// set the transform of the 3D mesh instance to draw on
 		// top of the marker
-		box_mesh_.set_transform((box_scale_matrix*marker_transform));
+		//box_mesh_.set_transform((box_scale_matrix*marker_transform));
+		test_->SetPosition(marker_transform);
 	}
 
 	///
@@ -181,6 +184,8 @@ void ARApp::Render()
 
 	// DRAW 3D MESHES HERE
 	renderer_3d_->DrawMesh(box_mesh_);
+	renderer_3d_->DrawMesh()
+
 
 	renderer_3d_->End();
 

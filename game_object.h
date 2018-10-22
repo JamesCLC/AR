@@ -7,6 +7,7 @@
 namespace gef
 {
 	class Platform;
+	class Mesh;
 }
 
 
@@ -24,9 +25,12 @@ public:
 	~GameObject();
 
 	void UpdatePosition();
-	void Initialise(gef::Platform& platform_);
-
+	void SetPosition(gef::Matrix44 n_position) { transform_ = n_position; }
 	void SetVelocity(gef::Vector4 n_velocity) { velocity_ = n_velocity; }
+	gef::Mesh& GetMesh() const;
+private:
+	void Initialise(gef::Platform& platform_);
+	void ReadSceneFile(gef::Platform& platform_);
 
 private:
 	gef::Vector4 velocity_;
