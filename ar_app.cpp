@@ -184,7 +184,7 @@ void ARApp::Render()
 
 	// DRAW 3D MESHES HERE
 	renderer_3d_->DrawMesh(box_mesh_);
-	renderer_3d_->DrawMesh(test_->GetMesh(), test_->transform());
+	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);
 
 
 	renderer_3d_->End();

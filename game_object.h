@@ -1,6 +1,6 @@
 #pragma once
 
-#include <graphics/mesh.h>
+#include <graphics/mesh_instance.h>
 #include <graphics/scene.h>
 #include <maths/matrix44.h>
 #include <string>
@@ -10,7 +10,7 @@ namespace gef
 	class Platform;
 }
 
-class GameObject
+class GameObject : gef::MeshInstance
 {
 
 public:
@@ -34,14 +34,10 @@ private:
 	void ReadSceneFile(gef::Platform& platform_);
 
 private:
-	const gef::Mesh* mesh_;
 	gef::Vector4 velocity_;
-	const gef::Matrix44 transform_;
 	std::string scene_filename_;
 	gef::Scene scene_;
 };
 
-/*
-Hey James. Removing inheritance entirely may have been a reasonable idea, but it may be that switching back is prudent.
-*/
+
 
