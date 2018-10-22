@@ -73,9 +73,7 @@ void ARApp::Init()
 		identity_.SetIdentity();
 
 		// Create default box mesh for testing.
-		//box_mesh_.set_mesh(primitive_builder_->GetDefaultCubeMesh());
-
-		//box_scale_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
+		box_scale_matrix.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 		
 		test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "balls/ball1.scn");
 	//
@@ -137,7 +135,7 @@ bool ARApp::Update(float frame_time)
 		// set the transform of the 3D mesh instance to draw on
 		// top of the marker
 		//box_mesh_.set_transform((box_scale_matrix*marker_transform));
-		test_->SetPosition(marker_transform);
+		test_->SetPosition(box_scale_matrix * marker_transform);
 	}
 
 	///
