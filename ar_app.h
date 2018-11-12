@@ -48,6 +48,8 @@ private:
 	void RenderOverlay();
 	void SetupLights();
 
+	void ProcessTouchInput();
+
 	gef::InputManager* input_manager_;
 
 	gef::SpriteRenderer* sprite_renderer_;
@@ -80,6 +82,9 @@ private:
 
 	
 	GameObject* test_;
+
+	Int32 active_touch_id;
+	gef::Vector2 touch_position;
 	///
 
 };

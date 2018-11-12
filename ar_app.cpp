@@ -24,7 +24,8 @@ ARApp::ARApp(gef::Platform& platform) :
 	sprite_renderer_(NULL),
 	font_(NULL),
 	renderer_3d_(NULL),
-	primitive_builder_(NULL)
+	primitive_builder_(NULL),
+	active_touch_id(-1)
 {
 }
 
@@ -90,6 +91,11 @@ void ARApp::Init()
 	AppData* dat = sampleUpdateBegin();
 	smartTrackingReset();
 	sampleUpdateEnd(dat);
+
+	// Initialise touch input
+	if (input_manager_ && input_manager_->touch_manager() && (input_manager_->touch_manager()->max_num_panels() > 0))
+		input_manager_->touch_manager()->EnablePanel(0);
+
 }
 
 void ARApp::CleanUp()
@@ -115,7 +121,14 @@ bool ARApp::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
-	input_manager_->Update();
+
+	if (input_manager_)
+	{
+		input_manager_->Update();
+
+		ProcessTouchInput();
+	}
+	
 
 	AppData* dat = sampleUpdateBegin();
 
@@ -224,6 +237,18 @@ void ARApp::DrawHUD()
 {
 	if(font_)
 	{
+		///
+		if (active_touch_id != -1)
+		{
+			font_->RenderText(
+				sprite_renderer_,
+				gef::Vector4(touch_position.x, touch_position.y, -0.9f),
+				1.0f, 0xffffffff, gef::TJ_LEFT, "(%.1f, %.1f)",
+				touch_position.x, touch_position.y);
+		}
+		///
+
+		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}
 }
@@ -237,4 +262,50 @@ void ARApp::SetupLights()
 	gef::Default3DShaderData& default_shader_data = renderer_3d_->default_shader_data();
 	default_shader_data.set_ambient_light_colour(gef::Colour(0.5f, 0.5f, 0.5f, 1.0f));
 	default_shader_data.AddPointLight(default_point_light);
+}
+
+void ARApp::ProcessTouchInput()
+{
+
+	const gef::TouchInputManager* touch_input = input_manager_->touch_manager();
+
+	if (touch_input && (touch_input->max_num_panels() > 0))
+	{
+		// get the active touches for this panel
+		const gef::TouchContainer& panel_touches = touch_input->touches(0);
+
+		// go through the touches
+		for (gef::ConstTouchIterator touch = panel_touches.begin(); touch != panel_touches.end(); touch++)
+		{
+			//if the active touch id is -1, then we are not currently processing a touch.
+			if (active_touch_id == -1)
+			{
+				// check for the start of a new touch
+				if (touch->type == gef::TT_NEW)
+				{
+					active_touch_id = touch->id;
+					// do any processing for  new touch here
+					// we're just going t record the position of the touch
+					touch_position = touch->position;
+				}
+			}
+			else if (active_touch_id == touch->id)
+			{
+				// we are processing touch data with a matching id to the one we are looking for
+				if (touch->type == gef::TT_ACTIVE)
+				{
+					// update an active touch here
+					// we're just going to record the position of the touch
+					touch_position = touch->position;
+				}
+				else if (touch->type == gef::TT_RELEASED)
+				{
+					// the touch we are tracking has been released
+					// perform any actions that need to happen when a touch is released here
+					// we're not doing anything her apart from restarting the active touch id
+					active_touch_id = -1;
+				}
+			}		
+		}
+	}
 }
