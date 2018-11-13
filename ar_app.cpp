@@ -123,15 +123,7 @@ bool ARApp::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
-
-	if (input_manager_)
-	{
-		input_manager_->Update();
-
-		ProcessTouchInput();
-	}
 	
-
 	AppData* dat = sampleUpdateBegin();
 
 	// use the tracking library to try and find markers
@@ -152,9 +144,19 @@ bool ARApp::Update(float frame_time)
 		test_->SetPosition(box_scale_matrix * marker_transform);
 	}
 
+	// Check for user input, process accordingly.
+	if (input_manager_)
+	{
+		input_manager_->Update();
+
+		ProcessTouchInput();
+	}
+
 	///
 
 	sampleUpdateEnd(dat);
+
+	// Current_state.Run
 
 	return true;
 }
@@ -203,6 +205,8 @@ void ARApp::Render()
 	RenderOverlay();
 
 	sampleRenderEnd();
+
+	// Current State.Render
 }
 
 
@@ -267,7 +271,6 @@ void ARApp::SetupLights()
 
 void ARApp::ProcessTouchInput()
 {
-
 	const gef::TouchInputManager* touch_input = input_manager_->touch_manager();
 
 	if (touch_input && (touch_input->max_num_panels() > 0))
@@ -312,43 +315,94 @@ void ARApp::ProcessTouchInput()
 }
 
 
-void ARApp::Raytrace(gef::Vector4 & startPoint, gef::Vector4 & direction, const gef::Matrix44 & projection, const gef::Matrix44 & view)
+// Here's the code that Grant emiled to me. I've changed a couple of variable names for consistency within my own code.
+void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const gef::Matrix44 & projection, const gef::Matrix44 & view)
 {
-	// Here's the code that Grant emiled to me. I've changed a couple of variable names for consistency within my own code.
+	// Make sure the input manager and touch manager have been initialised.
 	if(input_manager_ && input_manager_->touch_manager())
 	{
-		gef::Vector2 mousePos = input_manager_->touch_manager()->mouse_position();
-		gef::Vector2 ndc;
+		gef::Vector2 mouse_position = input_manager_->touch_manager()->mouse_position();	// TO DO - Swap out with touch position.
+
+		gef::Vector2 normalised_device_coordinates;
 
 		float half_width = platform_.width() * 0.5f;
 		float half_height = platform_.height() * 0.5f;
 
-		ndc.x = (static_cast<float>(mousePos.x) - half_width) / half_width;
-		ndc.y = (half_height - static_cast<float>(mousePos.y)) / half_height;
+		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
+		normalised_device_coordinates.x = (static_cast<float>(mouse_position.x) - half_width) / half_width;
+		normalised_device_coordinates.y = (half_height - static_cast<float>(mouse_position.y)) / half_height;
 
+		// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
 		gef::Matrix44 projectionInverse;
 		projectionInverse.Inverse(view * projection);
 
 		// Define the start and end point of the ray (based on the frustrum of the camera.)
-		gef::Vector4 nearPoint, farPoint;
+		gef::Vector4 near_point, far_point;
 
 		// direct 3D
 		// In Direct3D, the frustrum runs from 0 to 1.
-		// nearPoint = gef::Vector4(ndc.x, ndc.y, 0.0f, 1.0f).TransformW(projectionInverse);
+		// near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 0.0f, 1.0f).TransformW(projectionInverse);
 
 		// PS Vita
 		// The frustrum on the Vita runs from -1 to 1.
-		nearPoint = gef::Vector4(ndc.x, ndc.y, -1.0f, 1.0f).TransformW(projectionInverse);
-		farPoint = gef::Vector4(ndc.x, ndc.y, 1.0f, 1.0f).TransformW(projectionInverse);
+		near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
+		far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
 
 		//
-		nearPoint /= nearPoint.w();
-		farPoint /= farPoint.w();
+		near_point /= near_point.w();
+		far_point /= far_point.w();
 
-		//
-		startPoint = gef::Vector4(nearPoint.x(), nearPoint.y(), nearPoint.z());
-		direction = farPoint - nearPoint;
+		// Work out the start point of the ray and it's direction.
+		start_point = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
+		direction = far_point - near_point;
 		direction.Normalise();
 	}
+}
+
+bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::Vector4& ray_direction)
+{
+	//First, let's see if the point is inside the sphere. If so, return true
+	if (PointInSphere(game_object, ray_start))
+	{
+		return true;
+	}
+
+	//Create a vector from the ray's start to the sphere's center
+	gef::Vector4 vecV1(game_object.GetCollisionSphere()->position - ray_start);
+
+	//Project this vector onto the ray's direction vector
+	float fD = vecV1.DotProduct(ray_direction);
+
+	//If the ray is pointing away
+	if (fD < 0.0f)
+	{
+		return false;
+	}
+
+	//Calculate the closest point to the sphere
+	gef::Vector4 vecClosestPoint(ray_start + (ray_direction * fD));
+
+	//Check if that point is inside the sphere
+	return (PointInSphere(game_object, vecClosestPoint));
+}
+
+bool PointInSphere(GameObject& game_object, gef::Vector4& point)
+{
+    //Calculate the squared distance from the point to the center of the sphere
+    //gef::Vector4 vecDist(tSph.m_vecCenter - vecPoint);
+	gef::Vector4 vecDist(game_object.GetCollisionSphere()->position() - point);
+
+    //float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
+	float fDistSq(vecDist.DotProduct(vecDist));
+
+    //Calculate if the squared distance between the sphere's center and the point
+    //is less than the squared radius of the sphere
+	if (fDistSq < (game_object.GetCollisionSphere()->radius * game_object.GetCollisionSphere()->radius))
+	{
+		return true;
+	}
+
+    //If not, return false
+    return false;
 }
 

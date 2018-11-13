@@ -5,6 +5,11 @@
 #include <maths/matrix44.h>
 #include <string>
 
+///
+#include <graphics/mesh.h>
+///
+
+// FRAMEWORK FORWARD DECLARATIONS
 namespace gef
 {
 	class Platform;
@@ -27,7 +32,7 @@ public:
 	void SetPosition(gef::Matrix44 n_position) { transform_ = n_position; }
 	void SetVelocity(gef::Vector4 n_velocity) { velocity_ = n_velocity; }
 	const gef::Mesh * GetMesh() { return mesh_; };
-	//const gef::Sphere * GetCollisionSphere() { return &(mesh_->bounding_sphere()); };
+	const gef::Sphere * GetCollisionSphere() { return  &(mesh_->bounding_sphere()); };
 
 	// Return's the Game Object's World Transform
 	const gef::Matrix44& transform() { return transform_; }

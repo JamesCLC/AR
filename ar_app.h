@@ -8,7 +8,6 @@
 #include <graphics/mesh_instance.h>
 #include <platform/vita/graphics/texture_vita.h>
 #include "primitive_builder.h"
-#include "game_object.h"
 
 // Vita AR includes
 #include <camera.h>
@@ -16,6 +15,9 @@
 #include <motion.h>
 #include <libdbg.h>
 #include <libsmart.h>
+
+// James' Files
+#include "game_object.h"
 
 
 // FRAMEWORK FORWARD DECLARATIONS
@@ -49,7 +51,9 @@ private:
 	void SetupLights();
 
 	void ProcessTouchInput();
-	void Raytrace(gef::Vector4& startPoint, gef::Vector4& direction, const gef::Matrix44& projection, const gef::Matrix44& view);
+	void GetRay(gef::Vector4&, gef::Vector4&, const gef::Matrix44&, const gef::Matrix44&);
+	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
+	bool PointInSphere(GameObject&, gef::Vector4&);
 
 	gef::InputManager* input_manager_;
 
@@ -87,6 +91,10 @@ private:
 	// Touch Input - To Be Moved
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
+
+	// Raytracing - To Be Moved
+	gef::Vector4 ray_start;
+	gef::Vector4 ray_direction;
 	///
 
 };
