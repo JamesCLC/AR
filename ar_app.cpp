@@ -76,7 +76,9 @@ void ARApp::Init()
 		// Create default box mesh for testing.
 		box_scale_matrix.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 		
-		test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "balls/ball1.scn");
+		test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
+		//test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "zombie/zombie_idle.scn");
+		//test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "tesla/tesla.scn");
 	//
 
 	InitFont();
@@ -147,7 +149,6 @@ bool ARApp::Update(float frame_time)
 
 		// set the transform of the 3D mesh instance to draw on
 		// top of the marker
-		//box_mesh_.set_transform((box_scale_matrix*marker_transform));
 		test_->SetPosition(box_scale_matrix * marker_transform);
 	}
 
@@ -194,8 +195,7 @@ void ARApp::Render()
 	renderer_3d_->Begin(false);
 
 	// DRAW 3D MESHES HERE
-	renderer_3d_->DrawMesh(box_mesh_);
-	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);
+	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
 
 
 	renderer_3d_->End();
@@ -264,6 +264,7 @@ void ARApp::SetupLights()
 	default_shader_data.AddPointLight(default_point_light);
 }
 
+
 void ARApp::ProcessTouchInput()
 {
 
@@ -309,3 +310,45 @@ void ARApp::ProcessTouchInput()
 		}
 	}
 }
+
+
+void ARApp::Raytrace(gef::Vector4 & startPoint, gef::Vector4 & direction, const gef::Matrix44 & projection, const gef::Matrix44 & view)
+{
+	// Here's the code that Grant emiled to me. I've changed a couple of variable names for consistency within my own code.
+	if(input_manager_ && input_manager_->touch_manager())
+	{
+		gef::Vector2 mousePos = input_manager_->touch_manager()->mouse_position();
+		gef::Vector2 ndc;
+
+		float half_width = platform_.width() * 0.5f;
+		float half_height = platform_.height() * 0.5f;
+
+		ndc.x = (static_cast<float>(mousePos.x) - half_width) / half_width;
+		ndc.y = (half_height - static_cast<float>(mousePos.y)) / half_height;
+
+		gef::Matrix44 projectionInverse;
+		projectionInverse.Inverse(view * projection);
+
+		// Define the start and end point of the ray (based on the frustrum of the camera.)
+		gef::Vector4 nearPoint, farPoint;
+
+		// direct 3D
+		// In Direct3D, the frustrum runs from 0 to 1.
+		// nearPoint = gef::Vector4(ndc.x, ndc.y, 0.0f, 1.0f).TransformW(projectionInverse);
+
+		// PS Vita
+		// The frustrum on the Vita runs from -1 to 1.
+		nearPoint = gef::Vector4(ndc.x, ndc.y, -1.0f, 1.0f).TransformW(projectionInverse);
+		farPoint = gef::Vector4(ndc.x, ndc.y, 1.0f, 1.0f).TransformW(projectionInverse);
+
+		//
+		nearPoint /= nearPoint.w();
+		farPoint /= farPoint.w();
+
+		//
+		startPoint = gef::Vector4(nearPoint.x(), nearPoint.y(), nearPoint.z());
+		direction = farPoint - nearPoint;
+		direction.Normalise();
+	}
+}
+

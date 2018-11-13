@@ -27,6 +27,9 @@ public:
 	void SetPosition(gef::Matrix44 n_position) { transform_ = n_position; }
 	void SetVelocity(gef::Vector4 n_velocity) { velocity_ = n_velocity; }
 	const gef::Mesh * GetMesh() { return mesh_; };
+	//const gef::Sphere * GetCollisionSphere() { return &(mesh_->bounding_sphere()); };
+
+	// Return's the Game Object's World Transform
 	const gef::Matrix44& transform() { return transform_; }
 
 private:
@@ -34,9 +37,14 @@ private:
 	void ReadSceneFile(gef::Platform& platform_);
 
 private:
-	gef::Vector4 velocity_;
 	std::string scene_filename_;
 	gef::Scene scene_;
+
+	gef::Vector4 velocity_;
+
+
+	// The Game Object's transform relative to the marker
+	gef::Matrix44 local_transform;
 };
 
 

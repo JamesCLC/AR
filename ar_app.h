@@ -49,6 +49,7 @@ private:
 	void SetupLights();
 
 	void ProcessTouchInput();
+	void Raytrace(gef::Vector4& startPoint, gef::Vector4& direction, const gef::Matrix44& projection, const gef::Matrix44& view);
 
 	gef::InputManager* input_manager_;
 
@@ -83,6 +84,7 @@ private:
 	
 	GameObject* test_;
 
+	// Touch Input - To Be Moved
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
 	///
