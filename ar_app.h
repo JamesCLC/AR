@@ -34,6 +34,7 @@ namespace gef
 }
 
 
+
 class ARApp : public gef::Application
 {
 public:
@@ -50,7 +51,7 @@ private:
 	void RenderOverlay();
 	void SetupLights();
 
-	void ProcessTouchInput();
+	bool ProcessTouchInput();
 	void GetRay(gef::Vector4&, gef::Vector4&, const gef::Matrix44&, const gef::Matrix44&);
 	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
 	bool PointInSphere(GameObject&, gef::Vector4&);

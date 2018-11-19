@@ -123,13 +123,11 @@ bool ARApp::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
-	
 	AppData* dat = sampleUpdateBegin();
 
 	// use the tracking library to try and find markers
 	smartUpdate(dat->currentImage);
 
-	///
 	// check to see if a particular marker can be found
 	if (sampleIsMarkerFound(marker_id))
 	{
@@ -142,6 +140,8 @@ bool ARApp::Update(float frame_time)
 		// set the transform of the 3D mesh instance to draw on
 		// top of the marker
 		test_->SetPosition(box_scale_matrix * marker_transform);
+
+		test_->GetCollisionSphere()->Transform
 	}
 
 	// Check for user input, process accordingly.
@@ -149,7 +149,20 @@ bool ARApp::Update(float frame_time)
 	{
 		input_manager_->Update();
 
-		ProcessTouchInput();
+		// If there is currently touch input to process
+		if (ProcessTouchInput())
+		{
+			//Get ray
+
+			// Ray to sphere
+			GetRay(ray_start, ray_direction, scaled_projection_matrix_, identity_);
+
+			if (RayToSphere(*(test_), ray_start, ray_direction))
+			{
+				// Ray collision detection was successful!
+				int foo = 0;		// PLACEHOLDER
+			}
+		}
 	}
 
 	///
@@ -241,7 +254,7 @@ void ARApp::DrawHUD()
 {
 	if(font_)
 	{
-		///
+		// Degub - Display the position of the touch
 		if (active_touch_id != -1)
 		{
 			font_->RenderText(
@@ -250,7 +263,6 @@ void ARApp::DrawHUD()
 				1.0f, 0xffffffff, gef::TJ_LEFT, "(%.1f, %.1f)",
 				touch_position.x, touch_position.y);
 		}
-		///
 
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
@@ -269,9 +281,11 @@ void ARApp::SetupLights()
 }
 
 
-void ARApp::ProcessTouchInput()
+bool ARApp::ProcessTouchInput()
 {
 	const gef::TouchInputManager* touch_input = input_manager_->touch_manager();
+
+	bool isTouch = false;
 
 	if (touch_input && (touch_input->max_num_panels() > 0))
 	{
@@ -287,10 +301,15 @@ void ARApp::ProcessTouchInput()
 				// check for the start of a new touch
 				if (touch->type == gef::TT_NEW)
 				{
+					// Set the current active touch to be this new touch.
 					active_touch_id = touch->id;
+
 					// do any processing for  new touch here
 					// we're just going t record the position of the touch
 					touch_position = touch->position;
+
+					isTouch = true;
+
 				}
 			}
 			else if (active_touch_id == touch->id)
@@ -301,6 +320,8 @@ void ARApp::ProcessTouchInput()
 					// update an active touch here
 					// we're just going to record the position of the touch
 					touch_position = touch->position;
+
+					isTouch = true;
 				}
 				else if (touch->type == gef::TT_RELEASED)
 				{
@@ -308,10 +329,14 @@ void ARApp::ProcessTouchInput()
 					// perform any actions that need to happen when a touch is released here
 					// we're not doing anything her apart from restarting the active touch id
 					active_touch_id = -1;
+
+					isTouch = false;
 				}
 			}		
 		}
 	}
+
+	return isTouch;
 }
 
 
@@ -322,6 +347,9 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const g
 	if(input_manager_ && input_manager_->touch_manager())
 	{
 		gef::Vector2 mouse_position = input_manager_->touch_manager()->mouse_position();	// TO DO - Swap out with touch position.
+		
+		// Make sure there are touches active
+		
 
 		gef::Vector2 normalised_device_coordinates;
 
@@ -329,8 +357,11 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const g
 		float half_height = platform_.height() * 0.5f;
 
 		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
-		normalised_device_coordinates.x = (static_cast<float>(mouse_position.x) - half_width) / half_width;
-		normalised_device_coordinates.y = (half_height - static_cast<float>(mouse_position.y)) / half_height;
+		//normalised_device_coordinates.x = (static_cast<float>(mouse_position.x) - half_width) / half_width;
+		//normalised_device_coordinates.y = (half_height - static_cast<float>(mouse_position.y)) / half_height;
+
+		normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
+		normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
 
 		// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
 		gef::Matrix44 projectionInverse;
@@ -368,7 +399,7 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	}
 
 	//Create a vector from the ray's start to the sphere's center
-	gef::Vector4 vecV1(game_object.GetCollisionSphere()->position - ray_start);
+	gef::Vector4 vecV1(game_object.GetCollisionSphere()->position() - ray_start);
 
 	//Project this vector onto the ray's direction vector
 	float fD = vecV1.DotProduct(ray_direction);
@@ -386,7 +417,7 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	return (PointInSphere(game_object, vecClosestPoint));
 }
 
-bool PointInSphere(GameObject& game_object, gef::Vector4& point)
+bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
     //Calculate the squared distance from the point to the center of the sphere
     //gef::Vector4 vecDist(tSph.m_vecCenter - vecPoint);
@@ -397,7 +428,9 @@ bool PointInSphere(GameObject& game_object, gef::Vector4& point)
 
     //Calculate if the squared distance between the sphere's center and the point
     //is less than the squared radius of the sphere
-	if (fDistSq < (game_object.GetCollisionSphere()->radius * game_object.GetCollisionSphere()->radius))
+
+
+	if (fDistSq < (game_object.GetCollisionSphere()->radius() * game_object.GetCollisionSphere()->radius()))
 	{
 		return true;
 	}
