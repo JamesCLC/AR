@@ -79,6 +79,7 @@ void ARApp::Init()
 		test_ = new GameObject(platform_, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
 
 
+
 		// Create a Debug Sphere
 		debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
 		
@@ -407,7 +408,9 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	}
 
 	//Create a vector from the ray's start to the sphere's center
-	gef::Vector4 vecV1(game_object.GetCollisionSphere()->position() - ray_start);
+	//gef::Vector4 vecV1(game_object.GetCollisionSphere()->position() - ray_start);
+
+	gef::Vector4 vecV1(game_object.GetTranslation() - ray_start);	// DEBUG
 
 	//Project this vector onto the ray's direction vector
 	float fD = vecV1.DotProduct(ray_direction);
@@ -429,24 +432,50 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
     //Calculate the squared distance from the point to the center of the sphere
     //gef::Vector4 vecDist(tSph.m_vecCenter - vecPoint);
-	gef::Vector4 vecDist(game_object.GetCollisionSphere()->position() - point);
+	//gef::Vector4 vecDist(game_object.GetCollisionSphere()->position() - point);
+
+	gef::Vector4 vecDist(game_object.GetTranslation() - point);	// DEBUG
 
     //float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
 	float fDistSq(vecDist.DotProduct(vecDist));
 
     //Calculate if the squared distance between the sphere's center and the point
     //is less than the squared radius of the sphere
+	/*if (fDistSq < (game_object.GetCollisionSphere()->radius() * game_object.GetCollisionSphere()->radius()))
+	{
+		return true;
+	}*/
 
-
-	if (fDistSq < (game_object.GetCollisionSphere()->radius() * game_object.GetCollisionSphere()->radius()))
+	if (fDistSq < ((0.00125f*50.5) * (0.00125f * 50.5)))		// Debug
 	{
 		return true;
 	}
+
 
     //If not, return false
     return false;
 }
 
 /*
+Hey James,
 
+So, I figured out that I need to add vectors, not multiply, in order to get the collision shpere's position in world cordinates.
+However, the problem seems to be that the GameObeject's collision sphere is not actually centred on the game object.
+This is likely because the actual origin of the GameObject is not in it's centre. This could cause issues later down the line, but I don't know how to fix it.
+
+Update: I've temporarily altered the collision code, so that it treats the origin of the game object as the centre of the sphere.
+I'm having the same issue as before, where clicking anyhere on the screen is interperated as  successfull collision.
+Here are a few possible causes:
+1) The radius of the collision sphere is large enough for it to cover the entire screen.
+	=> Try decreasing the radius of the sphere?
+		=> Problem: The mesh_ is declared as a const in MeshInstance, so it doesn't like me trying to change it. I don't know what to do here.
+	=> Consider swapping to AABB?
+2) I've botched the translation of Grant's code.
+	=> Compare once again to Grant's email and correct any mistakes noted.
+3) I've botched the translation of the collision detection code.
+	=> Double check the source code, making sure that my alterations to make it fit gef are sensible.
+		=> May not be neccessary if I swap to AABB.
+
+Udpate 2: After replacing all of the collision detection's calls to the sphere object with magic numbers, I discovered that the problem is with my use of this object.
+That is to say, my translation of Grant's code and the code from the internet both seem fine.
 */
