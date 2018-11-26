@@ -9,6 +9,7 @@
 #include <platform/vita/graphics/texture_vita.h>
 #include "primitive_builder.h"
 
+
 // Vita AR includes
 #include <camera.h>
 #include <gxm.h>
@@ -21,6 +22,7 @@
 
 
 // FRAMEWORK FORWARD DECLARATIONS
+
 namespace gef
 {
 	class Platform;
@@ -89,6 +91,10 @@ private:
 	
 	GameObject* test_;
 
+	gef::MeshInstance debug_sphere;
+	gef::Matrix44 debug_matrix;
+
+
 	// Touch Input - To Be Moved
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
@@ -96,7 +102,7 @@ private:
 	// Raytracing - To Be Moved
 	gef::Vector4 ray_start;
 	gef::Vector4 ray_direction;
-	///
+	
 
 };
 #endif // _RENDER_TARGET_APP_H

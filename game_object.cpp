@@ -18,11 +18,12 @@ GameObject::GameObject(gef::Platform& platform_, gef::Vector4 n_velocity, std::s
 
 GameObject::~GameObject()
 {
-
+	// call the mesh cleanup function?
 }
 
 void GameObject::Initialise(gef::Platform& platform_)
 {
+	// Read relevent data from the scene file.
 	if (!scene_filename_.empty())
 	{
 		ReadSceneFile(platform_);
@@ -48,16 +49,21 @@ void GameObject::ReadSceneFile(gef::Platform & platform_)
 	}
 }
 
-void GameObject::UpdatePosition()
+
+gef::Vector4 GameObject::GetTranslation()
 {
-	if (velocity_.Length() > 0.0f)
-	{
-		// update the object's position if it has a velocity.
-		transform_.SetTranslation(transform_.GetTranslation() + velocity_);
-	}
-
-
+	return gef::Vector4(transform_.m(3, 0), transform_.m(3,1), transform_.m(3,2), 0.0f);
 }
+
+// Returns the position of the collision sphere in world coordinates.
+const gef:: Vector4 GameObject::CollisionSpherePosition()
+{
+	//return (collision_sphere()->position * this.);
+
+	return collision_sphere()->position();
+}
+
+
 
 
 

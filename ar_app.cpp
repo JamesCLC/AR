@@ -36,21 +36,20 @@ void ARApp::Init()
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
-	///	Can probs move most of this to the constructor or header or something.
 
 	/// 2D Camera Feed
 		// Set up the Ortho Matrix for rendering the camera feed.
-		ortho_matrix_.SetIdentity();
+		ortho_matrix_.SetIdentity();	// Probably unneccesary.
 		ortho_matrix_ = platform_.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
 	
 		// Calculate y-scaling factor (based on resolution of camera and resolution of screen.)
 		scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
 	
-		// Set the texture's scale.
+		// Scale the camera feed to fit on the Vita's display.
 		camera_feed_sprite_.set_width(2.0f);
 		camera_feed_sprite_.set_height(2.0f * scaling_factor_);
 
-		// Place the sprite at the back of the orthographic fustrum.
+		// Place the sprite at the back of the orthographic fustrum to prevent clipping.
 		camera_feed_sprite_.set_position(0, 0, 1);
 
 		// Texture the sprite with the camera feed.
@@ -64,7 +63,7 @@ void ARApp::Init()
 		// Create the Scaling Matrix
 		scaling_matrix_.SetIdentity();
 		scaling_matrix_.set_m(1, 1, scaling_factor_);
-			// Can replace this with a single function "Create Scale Matrix" or something.
+
 
 		// Create the final scaled matrix. 
 		scaled_projection_matrix_.SetIdentity();
@@ -76,9 +75,14 @@ void ARApp::Init()
 		// Create default box mesh for testing.
 		box_scale_matrix.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 		
+		// Initialise the game objects
 		test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
-		//test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "zombie/zombie_idle.scn");
-		//test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "tesla/tesla.scn");
+
+
+		// Create a Debug Sphere
+		debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+		
+		
 	//
 
 	InitFont();
@@ -96,7 +100,9 @@ void ARApp::Init()
 
 	// Initialise touch input
 	if (input_manager_ && input_manager_->touch_manager() && (input_manager_->touch_manager()->max_num_panels() > 0))
+	{
 		input_manager_->touch_manager()->EnablePanel(0);
+	}
 
 }
 
@@ -139,9 +145,9 @@ bool ARApp::Update(float frame_time)
 
 		// set the transform of the 3D mesh instance to draw on
 		// top of the marker
-		test_->SetPosition(box_scale_matrix * marker_transform);
-
-		test_->GetCollisionSphere()->Transform
+		test_->SetTransform(box_scale_matrix * marker_transform);
+			
+		
 	}
 
 	// Check for user input, process accordingly.
@@ -152,18 +158,23 @@ bool ARApp::Update(float frame_time)
 		// If there is currently touch input to process
 		if (ProcessTouchInput())
 		{
-			//Get ray
-
-			// Ray to sphere
+			// Create a ray from the touch postion into the scene
 			GetRay(ray_start, ray_direction, scaled_projection_matrix_, identity_);
 
+			// Test to see if the ray collided with the sphere.
 			if (RayToSphere(*(test_), ray_start, ray_direction))
 			{
 				// Ray collision detection was successful!
-				int foo = 0;		// PLACEHOLDER
+				int foo = 0;
 			}
 		}
 	}
+
+	// DEBUG
+	debug_matrix.SetIdentity();
+	debug_matrix.SetTranslation(test_->GetTranslation());
+	//debug_matrix.SetTranslation(test_->collision_sphere()->position());
+	debug_sphere.set_transform(debug_matrix);
 
 	///
 
@@ -212,6 +223,7 @@ void ARApp::Render()
 	// DRAW 3D MESHES HERE
 	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
 
+	renderer_3d_->DrawMesh(debug_sphere);
 
 	renderer_3d_->End();
 
@@ -250,6 +262,7 @@ void ARApp::CleanUpFont()
 	font_ = NULL;
 }
 
+
 void ARApp::DrawHUD()
 {
 	if(font_)
@@ -268,6 +281,7 @@ void ARApp::DrawHUD()
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}
 }
+
 
 void ARApp::SetupLights()
 {
@@ -305,7 +319,7 @@ bool ARApp::ProcessTouchInput()
 					active_touch_id = touch->id;
 
 					// do any processing for  new touch here
-					// we're just going t record the position of the touch
+					// we're just going to record the position of the touch
 					touch_position = touch->position;
 
 					isTouch = true;
@@ -347,9 +361,7 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const g
 	if(input_manager_ && input_manager_->touch_manager())
 	{
 		gef::Vector2 mouse_position = input_manager_->touch_manager()->mouse_position();	// TO DO - Swap out with touch position.
-		
-		// Make sure there are touches active
-		
+				
 
 		gef::Vector2 normalised_device_coordinates;
 
@@ -357,9 +369,6 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const g
 		float half_height = platform_.height() * 0.5f;
 
 		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
-		//normalised_device_coordinates.x = (static_cast<float>(mouse_position.x) - half_width) / half_width;
-		//normalised_device_coordinates.y = (half_height - static_cast<float>(mouse_position.y)) / half_height;
-
 		normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
 		normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
 
@@ -399,7 +408,7 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	}
 
 	//Create a vector from the ray's start to the sphere's center
-	gef::Vector4 vecV1(game_object.GetCollisionSphere()->position() - ray_start);
+	gef::Vector4 vecV1(game_object.collision_sphere()->position() - ray_start);
 
 	//Project this vector onto the ray's direction vector
 	float fD = vecV1.DotProduct(ray_direction);
@@ -421,7 +430,7 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
     //Calculate the squared distance from the point to the center of the sphere
     //gef::Vector4 vecDist(tSph.m_vecCenter - vecPoint);
-	gef::Vector4 vecDist(game_object.GetCollisionSphere()->position() - point);
+	gef::Vector4 vecDist(game_object.collision_sphere()->position() - point);
 
     //float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
 	float fDistSq(vecDist.DotProduct(vecDist));
@@ -430,7 +439,7 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
     //is less than the squared radius of the sphere
 
 
-	if (fDistSq < (game_object.GetCollisionSphere()->radius() * game_object.GetCollisionSphere()->radius()))
+	if (fDistSq < (game_object.collision_sphere()->radius() * game_object.collision_sphere()->radius()))
 	{
 		return true;
 	}
@@ -439,3 +448,13 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
     return false;
 }
 
+/*
+Hey James.
+
+So the current problem I'm facing is this:
+The position of the collision sphere is in local space relative to the mesh.
+What I need is the collision sphere's position in world coordinates.
+	=> collision_sphere_position*game object position
+The next problem is that I have a function for 
+
+*/
