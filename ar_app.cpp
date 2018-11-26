@@ -76,7 +76,7 @@ void ARApp::Init()
 		box_scale_matrix.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 		
 		// Initialise the game objects
-		test_ = new GameObject(platform_, gef::Vector4(0.0f, 0.0f, 0.0f), "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
+		test_ = new GameObject(platform_, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
 
 
 		// Create a Debug Sphere
@@ -166,14 +166,18 @@ bool ARApp::Update(float frame_time)
 			{
 				// Ray collision detection was successful!
 				int foo = 0;
+				
 			}
 		}
 	}
 
 	// DEBUG
 	debug_matrix.SetIdentity();
-	debug_matrix.SetTranslation(test_->GetTranslation());
-	//debug_matrix.SetTranslation(test_->collision_sphere()->position());
+
+	debug_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
+
+	debug_matrix.SetTranslation(test_->GetTranslation() + test_->CollisionSpherePosition());
+
 	debug_sphere.set_transform(debug_matrix);
 
 	///
@@ -408,7 +412,7 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	}
 
 	//Create a vector from the ray's start to the sphere's center
-	gef::Vector4 vecV1(game_object.collision_sphere()->position() - ray_start);
+	gef::Vector4 vecV1(game_object.GetCollisionSphere()->position() - ray_start);
 
 	//Project this vector onto the ray's direction vector
 	float fD = vecV1.DotProduct(ray_direction);
@@ -430,7 +434,7 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
     //Calculate the squared distance from the point to the center of the sphere
     //gef::Vector4 vecDist(tSph.m_vecCenter - vecPoint);
-	gef::Vector4 vecDist(game_object.collision_sphere()->position() - point);
+	gef::Vector4 vecDist(game_object.GetCollisionSphere()->position() - point);
 
     //float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
 	float fDistSq(vecDist.DotProduct(vecDist));
@@ -439,7 +443,7 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
     //is less than the squared radius of the sphere
 
 
-	if (fDistSq < (game_object.collision_sphere()->radius() * game_object.collision_sphere()->radius()))
+	if (fDistSq < (game_object.GetCollisionSphere()->radius() * game_object.GetCollisionSphere()->radius()))
 	{
 		return true;
 	}

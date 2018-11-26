@@ -8,8 +8,7 @@ GameObject::GameObject()
 }
 
 
-GameObject::GameObject(gef::Platform& platform_, gef::Vector4 n_velocity, std::string n_scene_filename_) : 
-	velocity_(n_velocity), 
+GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) : 
 	scene_filename_(n_scene_filename_)
 {
 	Initialise(platform_);	// Consider changing this. Keep the class interface uniform!
@@ -18,7 +17,7 @@ GameObject::GameObject(gef::Platform& platform_, gef::Vector4 n_velocity, std::s
 
 GameObject::~GameObject()
 {
-	// call the mesh cleanup function?
+
 }
 
 void GameObject::Initialise(gef::Platform& platform_)
@@ -50,17 +49,20 @@ void GameObject::ReadSceneFile(gef::Platform & platform_)
 }
 
 
+void GameObject::SetTranslation(gef::Vector4 n_translation)
+{
+	transform_.SetTranslation(n_translation);
+}
+
 gef::Vector4 GameObject::GetTranslation()
 {
-	return gef::Vector4(transform_.m(3, 0), transform_.m(3,1), transform_.m(3,2), 0.0f);
+	return transform_.GetTranslation();
 }
 
 // Returns the position of the collision sphere in world coordinates.
 const gef:: Vector4 GameObject::CollisionSpherePosition()
 {
-	//return (collision_sphere()->position * this.);
-
-	return collision_sphere()->position();
+	return (GetCollisionSphere()->position());
 }
 
 
