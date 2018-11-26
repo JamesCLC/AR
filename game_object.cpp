@@ -49,23 +49,5 @@ void GameObject::ReadSceneFile(gef::Platform & platform_)
 }
 
 
-void GameObject::SetTranslation(gef::Vector4 n_translation)
-{
-	transform_.SetTranslation(n_translation);
-}
-
-gef::Vector4 GameObject::GetTranslation()
-{
-	return transform_.GetTranslation();
-}
-
-// Returns the position of the collision sphere in world coordinates.
-const gef:: Vector4 GameObject::CollisionSpherePosition()
-{
-	return (GetCollisionSphere()->position());
-}
-
-
-
 
 

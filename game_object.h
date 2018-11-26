@@ -25,16 +25,21 @@ public:
 	);
 	~GameObject();
 
+	// Transform
 	void SetTransform(gef::Matrix44 n_transform) { transform_ = n_transform; }	
 	const gef::Matrix44& GetTransform() { return transform_; }
 
-	void SetTranslation(gef::Vector4 n_translation);
-	gef::Vector4 GetTranslation();
+	// Translation
+	void SetTranslation(gef::Vector4 n_translation) { transform_.SetTranslation(n_translation); }
+	gef::Vector4 GetTranslation() { return transform_.GetTranslation(); }
 
-	const gef::Mesh * GetMesh() { return mesh_; };
 
+	// Collision Sphere
 	const gef::Sphere * GetCollisionSphere() { return &(mesh_->bounding_sphere()); }
-	const gef::Vector4 CollisionSpherePosition();;
+	const gef::Vector4 CollisionSpherePosition() { return (GetCollisionSphere()->position()); }	// Optimise this?
+
+	// Mesh
+	const gef::Mesh * GetMesh() { return mesh_; }
 
 	
 

@@ -171,20 +171,18 @@ bool ARApp::Update(float frame_time)
 		}
 	}
 
-	// DEBUG
+	/// DEBUG
 	debug_matrix.SetIdentity();
 
 	debug_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
 
-	debug_matrix.SetTranslation(test_->GetTranslation() + test_->CollisionSpherePosition());
+	debug_matrix.SetTranslation(/*test_->CollisionSpherePosition() +*/ test_->GetTranslation());
 
 	debug_sphere.set_transform(debug_matrix);
+	/// END DEBUG
 
-	///
 
 	sampleUpdateEnd(dat);
-
-	// Current_state.Run
 
 	return true;
 }
@@ -226,7 +224,6 @@ void ARApp::Render()
 
 	// DRAW 3D MESHES HERE
 	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
-
 	renderer_3d_->DrawMesh(debug_sphere);
 
 	renderer_3d_->End();
@@ -234,8 +231,6 @@ void ARApp::Render()
 	RenderOverlay();
 
 	sampleRenderEnd();
-
-	// Current State.Render
 }
 
 
@@ -453,12 +448,5 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 }
 
 /*
-Hey James.
-
-So the current problem I'm facing is this:
-The position of the collision sphere is in local space relative to the mesh.
-What I need is the collision sphere's position in world coordinates.
-	=> collision_sphere_position*game object position
-The next problem is that I have a function for 
 
 */
