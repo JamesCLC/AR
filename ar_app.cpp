@@ -488,3 +488,31 @@ void ARApp::MoveGameObject(GameObject& game_object, gef::Matrix44 & projection, 
 	
 }
 
+void ARApp::GameObjectFall(GameObject & game_object, gef::Matrix44 & marker_transform)
+{
+	// Another Dummy Function. This time, I want the game object to fall back to the plane defined by the marker.
+	
+}
+
+/*
+So, we have
+a) The Game Object's transform in world space
+b) The Marker's transform in world space
+
+We want to:
+a) Calculate the Game Object's transform relative to the marker
+	=> Record that somehwere.
+		=> Relative_Transform
+b) Redefine the Game Object's transform to be relative to the marker
+	=> Game Object Transform = marker transform * relative transform
+c) Have the Game Object "Fall" down to the "plane" specified by the marker (i.e. Z = 0)
+
+Other things to take care of:
+a) Currently, the game object's position is being set to the marker's transform every frame. Gotta change that.
+b) Need a way to know when to call the "Falling" behaviour.
+
+Things to bear in mind:
+a) If I move the camera while "holding" an object (which is inevitable) I'll need to re-orient orientate it relative to the marker transform
+	This only really becomes neccessary once I'm using characters that have a defined "upright" position
+
+*/
