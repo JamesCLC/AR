@@ -35,8 +35,8 @@ public:
 
 
 	// Collision Sphere
-	const gef::Sphere * GetCollisionSphere() { return &(mesh_->bounding_sphere()); }
-	const gef::Vector4 CollisionSpherePosition() { return (GetCollisionSphere()->position()); }	// Optimise this?
+	const gef::Sphere * GetCollisionSphere(){ return &(mesh_->bounding_sphere()); }
+	const gef::Vector4 GetCollisionSpherePosition() { return (GetCollisionSphere()->position()); }	// Optimise this?
 
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }

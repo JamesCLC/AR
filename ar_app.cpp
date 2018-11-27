@@ -78,7 +78,7 @@ void ARApp::Init()
 		// Initialise the game objects
 		test_ = new GameObject(platform_, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
 
-
+		// SET THE SPHERE TRANSFORM HERE?
 
 		// Create a Debug Sphere
 		debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
@@ -148,7 +148,7 @@ bool ARApp::Update(float frame_time)
 		// top of the marker
 		test_->SetTransform(box_scale_matrix * marker_transform);
 			
-		
+		// SET THE SPHERE TRANSFORM HERE?
 	}
 
 	// Check for user input, process accordingly.
@@ -355,14 +355,11 @@ bool ARApp::ProcessTouchInput()
 
 
 // Here's the code that Grant emiled to me. I've changed a couple of variable names for consistency within my own code.
-void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const gef::Matrix44 & projection, const gef::Matrix44 & view)
+void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Matrix44 & projection, gef::Matrix44 & view)
 {
 	// Make sure the input manager and touch manager have been initialised.
 	if(input_manager_ && input_manager_->touch_manager())
 	{
-		gef::Vector2 mouse_position = input_manager_->touch_manager()->mouse_position();	// TO DO - Swap out with touch position.
-				
-
 		gef::Vector2 normalised_device_coordinates;
 
 		float half_width = platform_.width() * 0.5f;
@@ -379,16 +376,13 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const g
 		// Define the start and end point of the ray (based on the frustrum of the camera.)
 		gef::Vector4 near_point, far_point;
 
-		// direct 3D
-		// In Direct3D, the frustrum runs from 0 to 1.
-		// near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 0.0f, 1.0f).TransformW(projectionInverse);
 
 		// PS Vita
 		// The frustrum on the Vita runs from -1 to 1.
 		near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
 		far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
 
-		//
+		// Homogenise the vectors.
 		near_point /= near_point.w();
 		far_point /= far_point.w();
 
@@ -401,6 +395,8 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, const g
 
 bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::Vector4& ray_direction)
 {
+	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
+
 	//First, let's see if the point is inside the sphere. If so, return true
 	if (PointInSphere(game_object, ray_start))
 	{
@@ -408,9 +404,9 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	}
 
 	//Create a vector from the ray's start to the sphere's center
-	//gef::Vector4 vecV1(game_object.GetCollisionSphere()->position() - ray_start);
+	gef::Vector4 vecV1(transformed_sphere.position() - ray_start);
 
-	gef::Vector4 vecV1(game_object.GetTranslation() - ray_start);	// DEBUG
+	//gef::Vector4 vecV1(game_object.GetTranslation() - ray_start);	// DEBUG
 
 	//Project this vector onto the ray's direction vector
 	float fD = vecV1.DotProduct(ray_direction);
@@ -430,27 +426,34 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 
 bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
-    //Calculate the squared distance from the point to the center of the sphere
-    //gef::Vector4 vecDist(tSph.m_vecCenter - vecPoint);
-	//gef::Vector4 vecDist(game_object.GetCollisionSphere()->position() - point);
 
-	gef::Vector4 vecDist(game_object.GetTranslation() - point);	// DEBUG
+	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
+
+
+
+    //Calculate the squared distance from the point to the center of the sphere
+	gef::Vector4 vecDist(transformed_sphere.position() - point);
+
+	/// DEBUG ///
+	//gef::Vector4 vecDist(game_object.GetTranslation() - point);	
+	/// END DEBUG ///
 
     //float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
 	float fDistSq(vecDist.DotProduct(vecDist));
 
     //Calculate if the squared distance between the sphere's center and the point
     //is less than the squared radius of the sphere
-	/*if (fDistSq < (game_object.GetCollisionSphere()->radius() * game_object.GetCollisionSphere()->radius()))
-	{
-		return true;
-	}*/
-
-	if (fDistSq < ((0.00125f*50.5) * (0.00125f * 50.5)))		// Debug
+	if (fDistSq < (transformed_sphere.radius() * transformed_sphere.radius()))
 	{
 		return true;
 	}
 
+	/// DEBUG ///
+	/*if (fDistSq < ((0.00125f*50.5) * (0.00125f * 50.5)))
+	{
+		return true;
+	}*/
+	/// END DEBUG ///
 
     //If not, return false
     return false;

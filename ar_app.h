@@ -54,7 +54,7 @@ private:
 	void SetupLights();
 
 	bool ProcessTouchInput();
-	void GetRay(gef::Vector4&, gef::Vector4&, const gef::Matrix44&, const gef::Matrix44&);
+	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
 	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
