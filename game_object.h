@@ -13,7 +13,7 @@ namespace gef
 	class Platform;
 }
 
-class GameObject : gef::MeshInstance
+class GameObject : gef::MeshInstance	// Set to public, so I can remove some of the accessor functions.
 {
 
 public:

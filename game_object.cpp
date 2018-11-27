@@ -27,10 +27,6 @@ void GameObject::Initialise(gef::Platform& platform_)
 	{
 		ReadSceneFile(platform_);
 	}
-
-	//gef::Sphere new_bounds(gef::Vector4(0.0f, 0.0f, 0.0f), 50.5f);
-
-	//mesh_->set_bounding_sphere(new_bounds);
 }
 
 void GameObject::ReadSceneFile(gef::Platform & platform_)

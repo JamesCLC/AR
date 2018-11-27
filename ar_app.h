@@ -58,6 +58,8 @@ private:
 	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
+	void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44& );
+
 	gef::InputManager* input_manager_;
 
 	gef::SpriteRenderer* sprite_renderer_;
@@ -91,8 +93,8 @@ private:
 	
 	GameObject* test_;
 
-	gef::MeshInstance debug_sphere;
-	gef::Matrix44 debug_matrix;
+	//gef::MeshInstance debug_sphere;
+	//gef::Matrix44 debug_matrix;
 
 
 	// Touch Input - To Be Moved

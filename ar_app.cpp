@@ -78,12 +78,8 @@ void ARApp::Init()
 		// Initialise the game objects
 		test_ = new GameObject(platform_, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
 
-		// SET THE SPHERE TRANSFORM HERE?
-
 		// Create a Debug Sphere
-		debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
-		
-		
+		//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
 	//
 
 	InitFont();
@@ -147,8 +143,6 @@ bool ARApp::Update(float frame_time)
 		// set the transform of the 3D mesh instance to draw on
 		// top of the marker
 		test_->SetTransform(box_scale_matrix * marker_transform);
-			
-		// SET THE SPHERE TRANSFORM HERE?
 	}
 
 	// Check for user input, process accordingly.
@@ -166,20 +160,19 @@ bool ARApp::Update(float frame_time)
 			if (RayToSphere(*(test_), ray_start, ray_direction))
 			{
 				// Ray collision detection was successful!
-				int foo = 0;
-				
+				MoveGameObject(*(test_), scaled_projection_matrix_, identity_);
 			}
 		}
 	}
 
 	/// DEBUG
-	debug_matrix.SetIdentity();
+	/*debug_matrix.SetIdentity();
 
 	debug_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
 
-	debug_matrix.SetTranslation(/*test_->CollisionSpherePosition() +*/ test_->GetTranslation());
+	debug_matrix.SetTranslation(test_->GetTranslation());
 
-	debug_sphere.set_transform(debug_matrix);
+	debug_sphere.set_transform(debug_matrix);*/
 	/// END DEBUG
 
 
@@ -225,7 +218,7 @@ void ARApp::Render()
 
 	// DRAW 3D MESHES HERE
 	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
-	renderer_3d_->DrawMesh(debug_sphere);
+	//renderer_3d_->DrawMesh(debug_sphere);
 
 	renderer_3d_->End();
 
@@ -255,6 +248,7 @@ void ARApp::InitFont()
 	font_ = new gef::Font(platform_);
 	font_->Load("comic_sans");
 }
+
 
 void ARApp::CleanUpFont()
 {
@@ -376,7 +370,6 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Ma
 		// Define the start and end point of the ray (based on the frustrum of the camera.)
 		gef::Vector4 near_point, far_point;
 
-
 		// PS Vita
 		// The frustrum on the Vita runs from -1 to 1.
 		near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
@@ -426,17 +419,12 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 
 bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
-
+	// Get a collision sphere that's in world space. MOVE TO INIT OR CONSTRUCTOR? UPDATE? Add this as a component of GameObject, and update it's transform whenever the game object is transformed?
 	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
-
-
 
     //Calculate the squared distance from the point to the center of the sphere
 	gef::Vector4 vecDist(transformed_sphere.position() - point);
 
-	/// DEBUG ///
-	//gef::Vector4 vecDist(game_object.GetTranslation() - point);	
-	/// END DEBUG ///
 
     //float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
 	float fDistSq(vecDist.DotProduct(vecDist));
@@ -448,37 +436,55 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 		return true;
 	}
 
-	/// DEBUG ///
-	/*if (fDistSq < ((0.00125f*50.5) * (0.00125f * 50.5)))
-	{
-		return true;
-	}*/
-	/// END DEBUG ///
 
     //If not, return false
     return false;
 }
 
-/*
-Hey James,
+void ARApp::MoveGameObject(GameObject& game_object, gef::Matrix44 & projection, gef::Matrix44 & view)
+{
+	// Placeholder function. For now, I just want to be able to move the ball mesh around.
+	float delta_x;
+	float delta_y;
 
-So, I figured out that I need to add vectors, not multiply, in order to get the collision shpere's position in world cordinates.
-However, the problem seems to be that the GameObeject's collision sphere is not actually centred on the game object.
-This is likely because the actual origin of the GameObject is not in it's centre. This could cause issues later down the line, but I don't know how to fix it.
+	// First, get the touch's position in world space.
+		gef::Vector2 normalised_device_coordinates;
 
-Update: I've temporarily altered the collision code, so that it treats the origin of the game object as the centre of the sphere.
-I'm having the same issue as before, where clicking anyhere on the screen is interperated as  successfull collision.
-Here are a few possible causes:
-1) The radius of the collision sphere is large enough for it to cover the entire screen.
-	=> Try decreasing the radius of the sphere?
-		=> Problem: The mesh_ is declared as a const in MeshInstance, so it doesn't like me trying to change it. I don't know what to do here.
-	=> Consider swapping to AABB?
-2) I've botched the translation of Grant's code.
-	=> Compare once again to Grant's email and correct any mistakes noted.
-3) I've botched the translation of the collision detection code.
-	=> Double check the source code, making sure that my alterations to make it fit gef are sensible.
-		=> May not be neccessary if I swap to AABB.
+		float half_width = platform_.width() * 0.5f;
+		float half_height = platform_.height() * 0.5f;
 
-Udpate 2: After replacing all of the collision detection's calls to the sphere object with magic numbers, I discovered that the problem is with my use of this object.
-That is to say, my translation of Grant's code and the code from the internet both seem fine.
-*/
+		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
+		normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
+		normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
+
+		// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
+		gef::Matrix44 projectionInverse;
+		projectionInverse.Inverse(view * projection);
+
+		// Define the start and end point of the ray (based on the frustrum of the camera.)
+		gef::Vector4 near_point, far_point;
+
+		// PS Vita
+		// The frustrum on the Vita runs from -1 to 1.
+		near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
+		far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
+
+		// Homogenise the vectors.
+		near_point /= near_point.w();
+		far_point /= far_point.w();
+
+		// Work out the touch's position in world space.
+		gef::Vector4 touch_position_world = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
+
+
+	// Next, compare the touch's current position with it's previous position.
+
+
+	// Apply the translation to the game object.
+	//game_object.SetTranslation(game_object.GetTranslation() + gef::Vector4(0.0f, 0.05f, 0.05f));
+
+	game_object.SetTranslation(touch_position_world);
+
+	
+}
+
