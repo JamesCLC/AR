@@ -19,7 +19,7 @@
 
 // James' Files
 #include "game_object.h"
-
+#include "game_state.h" 
 
 // FRAMEWORK FORWARD DECLARATIONS
 
@@ -59,7 +59,7 @@ private:
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
 	void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44& );
-	void GameObjectFall(GameObject&, gef::Matrix44&);
+	bool GameObjectFall(GameObject&, gef::Matrix44&);
 
 	gef::InputManager* input_manager_;
 

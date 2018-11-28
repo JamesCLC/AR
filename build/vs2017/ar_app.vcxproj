@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp" />
+    <ClCompile Include="..\..\GameStates\Level.cpp" />
     <ClCompile Include="..\..\game_object.cpp" />
     <ClCompile Include="..\..\main_vita.cpp" />
     <ClCompile Include="..\..\primitive_builder.cpp" />
@@ -82,7 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
+    <ClInclude Include="..\..\GameStates\Level.h" />
     <ClInclude Include="..\..\game_object.h" />
+    <ClInclude Include="..\..\game_state.h" />
     <ClInclude Include="..\..\primitive_builder.h" />
     <ClInclude Include="..\..\primitive_renderer.h" />
     <ClInclude Include="..\..\vertex_colour_unlit_shader.h" />
