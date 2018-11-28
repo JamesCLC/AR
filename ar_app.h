@@ -9,6 +9,7 @@
 #include <platform/vita/graphics/texture_vita.h>
 #include "primitive_builder.h"
 
+
 // Vita AR includes
 #include <camera.h>
 #include <gxm.h>
@@ -16,7 +17,12 @@
 #include <libdbg.h>
 #include <libsmart.h>
 
+// James' Files
+#include "game_object.h"
+
+
 // FRAMEWORK FORWARD DECLARATIONS
+
 namespace gef
 {
 	class Platform;
@@ -28,6 +34,7 @@ namespace gef
 	class TextureVita;
 	class InputManager;
 }
+
 
 
 class ARApp : public gef::Application
@@ -45,6 +52,13 @@ private:
 
 	void RenderOverlay();
 	void SetupLights();
+
+	bool ProcessTouchInput();
+	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
+	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
+	bool PointInSphere(GameObject&, gef::Vector4&);
+
+	void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44& );
 
 	gef::InputManager* input_manager_;
 
@@ -76,7 +90,21 @@ private:
 	int marker_id = 1;
 	gef::Matrix44 box_scale_matrix;
 
-	///
+	
+	GameObject* test_;
+
+	//gef::MeshInstance debug_sphere;
+	//gef::Matrix44 debug_matrix;
+
+
+	// Touch Input - To Be Moved
+	Int32 active_touch_id;
+	gef::Vector2 touch_position;
+
+	// Raytracing - To Be Moved
+	gef::Vector4 ray_start;
+	gef::Vector4 ray_direction;
+	
 
 };
 #endif // _RENDER_TARGET_APP_H

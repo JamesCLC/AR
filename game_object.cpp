@@ -8,12 +8,10 @@ GameObject::GameObject()
 }
 
 
-GameObject::GameObject(gef::Platform& platform_, gef::Vector4 n_velocity, std::string n_scene_filename_)
+GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) : 
+	scene_filename_(n_scene_filename_)
 {
-	velocity_ = n_velocity;
-	scene_filename_ = n_scene_filename_;
-
-	Initialise(platform_);
+	Initialise(platform_);	// Consider changing this. Keep the class interface uniform!
 }
 
 
@@ -23,6 +21,15 @@ GameObject::~GameObject()
 }
 
 void GameObject::Initialise(gef::Platform& platform_)
+{
+	// Read relevent data from the scene file.
+	if (!scene_filename_.empty())
+	{
+		ReadSceneFile(platform_);
+	}
+}
+
+void GameObject::ReadSceneFile(gef::Platform & platform_)
 {
 	// Read the specified scene file.
 	scene_.ReadSceneFromFile(platform_, scene_filename_.data());
@@ -35,19 +42,12 @@ void GameObject::Initialise(gef::Platform& platform_)
 	{
 		mesh_ = scene_.CreateMesh(platform_, scene_.mesh_data.front());
 	}
-
-}
-
-void GameObject::UpdatePosition()
-{
-	if (velocity_.Length() > 0.0f)
+	else
 	{
-		// update the object's position if it has a velocity.
-		transform_.SetTranslation(transform_.GetTranslation() + velocity_);
+		// There's no data in the scene file!
 	}
-
-
 }
+
 
 
 
