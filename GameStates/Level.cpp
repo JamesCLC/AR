@@ -2,7 +2,7 @@
 
 
 
-Level::Level(gef::Platform& platform):
+Level::Level(gef::Platform& platform) :
 	GameState(platform),
 	renderer_3d_(NULL),
 	font_(NULL),
@@ -19,16 +19,16 @@ Level::~Level()
 
 void Level::Init()
 {
-	input_manager_ = gef::InputManager::Create(platform_);
-	sprite_renderer_ = gef::SpriteRenderer::Create(platform_);
-	renderer_3d_ = gef::Renderer3D::Create(platform_);
+	input_manager_ = gef::InputManager::Create(platform);
+	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
+	renderer_3d_ = gef::Renderer3D::Create(platform);
 	//primitive_builder_ = new PrimitiveBuilder(platform_);
 
 
 	/// 2D Camera Feed
 	// Set up the Ortho Matrix for rendering the camera feed.
 	ortho_matrix_.SetIdentity();	// Probably unneccesary.
-	ortho_matrix_ = platform_.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
+	ortho_matrix_ = platform.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
 
 																		// Calculate y-scaling factor (based on resolution of camera and resolution of screen.)
 	scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
@@ -46,7 +46,7 @@ void Level::Init()
 	/// 3D Elements
 	// Create the initial projection matrix.
 	unscaled_projection_matrix_.SetIdentity();
-	unscaled_projection_matrix_ = platform_.PerspectiveProjectionFov(SCE_SMART_IMAGE_FOV, (SCE_SMART_IMAGE_WIDTH / SCE_SMART_IMAGE_HEIGHT), 0.1f, 100.0f);
+	unscaled_projection_matrix_ = platform.PerspectiveProjectionFov(SCE_SMART_IMAGE_FOV, (SCE_SMART_IMAGE_WIDTH / SCE_SMART_IMAGE_HEIGHT), 0.1f, 100.0f);
 
 	// Create the Scaling Matrix
 	scaling_matrix_.SetIdentity();
@@ -64,7 +64,7 @@ void Level::Init()
 	game_object_scale_matrix.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 
 	// Initialise the game objects
-	test_ = new GameObject(platform_, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
+	test_ = new GameObject(platform, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
 
 																		// Create a Debug Sphere
 																		//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
@@ -224,7 +224,7 @@ void Level::RenderOverlay()
 	//
 	gef::Matrix44 proj_matrix2d;
 
-	proj_matrix2d = platform_.OrthographicFrustum(0.0f, platform_.width(), 0.0f, platform_.height(), -1.0f, 1.0f);
+	proj_matrix2d = platform.OrthographicFrustum(0.0f, platform.width(), 0.0f, platform.height(), -1.0f, 1.0f);
 	sprite_renderer_->set_projection_matrix(proj_matrix2d);
 	sprite_renderer_->Begin(false);
 	DrawHUD();
@@ -233,7 +233,7 @@ void Level::RenderOverlay()
 
 void Level::InitFont()
 {
-	font_ = new gef::Font(platform_);
+	font_ = new gef::Font(platform);
 	font_->Load("comic_sans");
 }
 
@@ -338,8 +338,8 @@ void Level::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Ma
 	{
 		gef::Vector2 normalised_device_coordinates;
 
-		float half_width = platform_.width() * 0.5f;
-		float half_height = platform_.height() * 0.5f;
+		float half_width = platform.width() * 0.5f;
+		float half_height = platform.height() * 0.5f;
 
 		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
 		normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
@@ -429,8 +429,8 @@ void Level::MoveGameObject(GameObject& game_object, gef::Matrix44 & projection, 
 	// First, get the touch's position in world space.
 	gef::Vector2 normalised_device_coordinates;
 
-	float half_width = platform_.width() * 0.5f;
-	float half_height = platform_.height() * 0.5f;
+	float half_width = platform.width() * 0.5f;
+	float half_height = platform.height() * 0.5f;
 
 	// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
 	normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;

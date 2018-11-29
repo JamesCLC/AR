@@ -1,5 +1,4 @@
 #pragma once
-#include "m:\AppliedGamesTechnology\ar_app\game_state.h"
 
 #include <platform\vita\graphics\texture_vita.h>
 #include <graphics\sprite.h>
@@ -20,12 +19,13 @@
 #include <libdbg.h>
 #include <libsmart.h>
 
+#include "m:\AppliedGamesTechnology\ar_app\game_state.h"
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 
 class Level : public GameState
 {
 public:
-	Level(gef::Platform& platform);
+	Level(gef::Platform& platform) /*: GameState(platform) {}*/;
 	~Level();
 
 	void Init();

@@ -20,6 +20,7 @@
 // James' Files
 #include "game_object.h"
 #include "game_state.h" 
+#include "M:\AppliedGamesTechnology\ar_app\GameStates\Level.h"
 
 // FRAMEWORK FORWARD DECLARATIONS
 
@@ -105,7 +106,10 @@ private:
 	// Raytracing - To Be Moved
 	gef::Vector4 ray_start;
 	gef::Vector4 ray_direction;
+
+	GameState* current_state_;
 	
+	Level* level;
 
 };
 #endif // _RENDER_TARGET_APP_H

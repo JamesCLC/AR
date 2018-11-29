@@ -35,6 +35,9 @@
     <ClCompile Include="..\..\GameStates\Level.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game_state.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">

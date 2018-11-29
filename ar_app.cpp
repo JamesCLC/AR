@@ -25,12 +25,17 @@ ARApp::ARApp(gef::Platform& platform) :
 	font_(NULL),
 	renderer_3d_(NULL),
 	primitive_builder_(NULL),
-	active_touch_id(-1)
+	active_touch_id(-1),
+	level(NULL),
+	current_state_(NULL)
 {
+	level = new Level(platform);
+	//current_state_ = level;
 }
 
 void ARApp::Init()
 {
+	/*
 	input_manager_ = gef::InputManager::Create(platform_);
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform_);
 	renderer_3d_ = gef::Renderer3D::Create(platform_);
@@ -100,12 +105,22 @@ void ARApp::Init()
 	{
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
+	*/
 
+	/*if (current_state_)
+	{
+		current_state_->Init();
+	}*/
+
+	if (level)
+	{
+		level->Init();
+	}
 }
 
 void ARApp::CleanUp()
 {
-	delete primitive_builder_;
+	/*delete primitive_builder_;
 	primitive_builder_ = NULL;
 
 	smartRelease();
@@ -119,11 +134,22 @@ void ARApp::CleanUp()
 	renderer_3d_ = NULL;
 
 	delete input_manager_;
-	input_manager_ = NULL;
+	input_manager_ = NULL;*/
+
+	/*if (current_state_)
+	{
+		current_state_->CleanUp();
+	}*/
+
+	if (level)
+	{
+		level->CleanUp();
+	}
 }
 
 bool ARApp::Update(float frame_time)
 {
+	/*
 	fps_ = 1.0f / frame_time;
 
 	AppData* dat = sampleUpdateBegin();
@@ -174,17 +200,32 @@ bool ARApp::Update(float frame_time)
 
 	debug_matrix.SetTranslation(test_->GetTranslation());
 
-	debug_sphere.set_transform(debug_matrix);*/
+	debug_sphere.set_transform(debug_matrix);
 	/// END DEBUG
 
 
 	sampleUpdateEnd(dat);
 
-	return true;
+	return true;*/
+
+	/*if (current_state_)
+	{
+		return current_state_->Update(frame_time);
+	}
+	*/
+
+	if (level)
+	{
+		return level->Update(frame_time);
+	}
+
+	return false;
 }
 
 void ARApp::Render()
 {
+	
+	/*
 	AppData* dat = sampleRenderBegin();
 
 	//
@@ -227,11 +268,23 @@ void ARApp::Render()
 	RenderOverlay();
 
 	sampleRenderEnd();
+	*/
+
+	/*if (current_state_)
+	{
+		current_state_->Render();
+	}*/
+
+	if (level)
+	{
+		level->Render();
+	}
 }
 
 
 void ARApp::RenderOverlay()
 {
+	/*
 	//
 	// render 2d hud on top
 	//
@@ -242,25 +295,27 @@ void ARApp::RenderOverlay()
 	sprite_renderer_->Begin(false);
 	DrawHUD();
 	sprite_renderer_->End();
+	*/
 }
 
 
 void ARApp::InitFont()
 {
-	font_ = new gef::Font(platform_);
-	font_->Load("comic_sans");
+	/*font_ = new gef::Font(platform_);
+	font_->Load("comic_sans");*/
 }
 
 
 void ARApp::CleanUpFont()
 {
-	delete font_;
-	font_ = NULL;
+	//delete font_;
+	//font_ = NULL;
 }
 
 
 void ARApp::DrawHUD()
 {
+	/*
 	if(font_)
 	{
 		// Degub - Display the position of the touch
@@ -276,11 +331,13 @@ void ARApp::DrawHUD()
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}
+	*/
 }
 
 
 void ARApp::SetupLights()
 {
+	/*
 	gef::PointLight default_point_light;
 	default_point_light.set_colour(gef::Colour(0.7f, 0.7f, 1.0f, 1.0f));
 	default_point_light.set_position(gef::Vector4(-300.0f, -500.0f, 100.0f));
@@ -288,11 +345,13 @@ void ARApp::SetupLights()
 	gef::Default3DShaderData& default_shader_data = renderer_3d_->default_shader_data();
 	default_shader_data.set_ambient_light_colour(gef::Colour(0.5f, 0.5f, 0.5f, 1.0f));
 	default_shader_data.AddPointLight(default_point_light);
+	*/
 }
 
 
 bool ARApp::ProcessTouchInput()
 {
+	/*
 	const gef::TouchInputManager* touch_input = input_manager_->touch_manager();
 
 	bool isTouch = false;
@@ -347,12 +406,16 @@ bool ARApp::ProcessTouchInput()
 	}
 
 	return isTouch;
+
+	*/
+	return true;
 }
 
 
 // Here's the code that Grant emiled to me. I've changed a couple of variable names for consistency within my own code.
 void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Matrix44 & projection, gef::Matrix44 & view)
 {
+	/*
 	// Make sure the input manager and touch manager have been initialised.
 	if(input_manager_ && input_manager_->touch_manager())
 	{
@@ -386,10 +449,12 @@ void ARApp::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Ma
 		direction = far_point - near_point;
 		direction.Normalise();
 	}
+	*/
 }
 
 bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::Vector4& ray_direction)
 {
+	/*
 	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
 
 	//First, let's see if the point is inside the sphere. If so, return true
@@ -417,10 +482,13 @@ bool ARApp::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 
 	//Check if that point is inside the sphere
 	return (PointInSphere(game_object, vecClosestPoint));
+	*/
+	return true;
 }
 
 bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
+	/*
 	// Get a collision sphere that's in world space. MOVE TO INIT OR CONSTRUCTOR? UPDATE? Add this as a component of GameObject, and update it's transform whenever the game object is transformed?
 	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
 
@@ -441,10 +509,14 @@ bool ARApp::PointInSphere(GameObject& game_object, gef::Vector4& point)
 
     //If not, return false
     return false;
+	*/
+
+	return true;
 }
 
 void ARApp::MoveGameObject(GameObject& game_object, gef::Matrix44 & projection, gef::Matrix44 & view)
 {
+	/*
 	// Placeholder function. For now, I just want to be able to move the ball mesh around.
 	// First, get the touch's position in world space.
 		gef::Vector2 normalised_device_coordinates;
@@ -484,14 +556,13 @@ void ARApp::MoveGameObject(GameObject& game_object, gef::Matrix44 & projection, 
 
 	game_object.SetTranslation(touch_position_world);
 
-	
+	*/
 }
 
 bool ARApp::GameObjectFall(GameObject & game_object, gef::Matrix44 & marker_transform)
 {
+	/*
 	// Another Dummy Function. This time, I want the game object to fall back to the plane defined by the marker.
-	
-
 	gef::Matrix44 new_relative_transform = marker_transform;
 
 	// Calculate the Game Object's translation relative to the marker. We can ignore rotation for now. Dunno about scale.
@@ -514,6 +585,9 @@ bool ARApp::GameObjectFall(GameObject & game_object, gef::Matrix44 & marker_tran
 	}
 	
 	return false;
+
+	*/
+	return true;
 }
 
 /*

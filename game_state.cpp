@@ -2,7 +2,8 @@
 
 
 
-GameState::GameState()
+GameState::GameState(gef::Platform& platform_) :
+	platform(platform_)
 {
 }
 
