@@ -24,63 +24,62 @@ ARApp::ARApp(gef::Platform& platform) :
 	current_state_(NULL)
 {
 	level = new Level(platform);
-	//current_state_ = level;
+	current_state_ = level;
 }
 
 void ARApp::Init()
 {
 	
-	/*if (current_state_)
+	if (current_state_)
 	{
 		current_state_->Init();
-	}*/
+	}
 
-	if (level)
+	/*else if (level)
 	{
 		level->Init();
-	}
+	}*/
 }
 
 void ARApp::CleanUp()
 {
-	/*if (current_state_)
+	if (current_state_)
 	{
 		current_state_->CleanUp();
-	}*/
+	}
 
-	if (level)
+	/*else if (level)
 	{
 		level->CleanUp();
-	}
+	}*/
 }
 
 bool ARApp::Update(float frame_time)
 {
-	/*if (current_state_)
+	if (current_state_)
 	{
 		return current_state_->Update(frame_time);
 	}
-	*/
-
-	if (level)
+	
+	/*if (level)
 	{
 		return level->Update(frame_time);
-	}
+	}*/
 
 	return false;
 }
 
 void ARApp::Render()
 {
-	/*if (current_state_)
+	if (current_state_)
 	{
 		current_state_->Render();
-	}*/
+	}
 
-	if (level)
+	/*if (level)
 	{
 		level->Render();
-	}
+	}*/
 }
 
 
