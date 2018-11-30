@@ -60,6 +60,8 @@ bool ARApp::Update(float frame_time)
 	{
 		return current_state_->Update(frame_time);
 	}
+
+	// TO DO - Call Cleanup and Init when the stat changes?
 	
 	/*if (level)
 	{
