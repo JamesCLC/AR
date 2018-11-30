@@ -20,11 +20,14 @@
 
 ARApp::ARApp(gef::Platform& platform) :
 	Application(platform),
-	level(NULL),
+	level_(NULL),
+	main_menu_(NULL),
 	current_state_(NULL)
 {
-	level = new Level(platform);
-	current_state_ = level;
+	level_ = new Level(platform);
+	main_menu_ = new MainMenu(platform);
+
+	current_state_ = level_;
 }
 
 void ARApp::Init()

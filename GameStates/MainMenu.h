@@ -11,8 +11,6 @@
 
 // Replace these includes with forward declarations?
 
-class gef::Platform;
-
 class MainMenu : public GameState
 {
 public:
@@ -27,6 +25,7 @@ public:
 private:
 	void RenderText();
 	bool ProcessTouchInput();
+	void SetUpLights();
 
 	gef::Font* font_;
 	gef::InputManager* input_manager_;
@@ -34,12 +33,13 @@ private:
 
 
 	gef::Texture* background_texture_;
-	gef::Sprite* background_sprite_;
-
-	float fps_;
+	gef::Sprite background_sprite_;
+	gef::Matrix44 ortho_matrix_;
 
 	// Touch Input - To Be Moved
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
+
+	float fps_;
 };
 

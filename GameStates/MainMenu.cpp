@@ -6,7 +6,8 @@ MainMenu::MainMenu(gef::Platform& platform) :
 	GameState(platform),
 	font_(NULL),
 	input_manager_(NULL),
-	sprite_renderer_(NULL)
+	sprite_renderer_(NULL),
+	background_texture_(NULL)
 {
 }
 
@@ -17,6 +18,9 @@ MainMenu::~MainMenu()
 
 void MainMenu::Init()
 {
+	// Set up the Ortho Matrix for rendering the camera feed.
+	ortho_matrix_.SetIdentity();	// Probably unneccesary.
+	ortho_matrix_ = platform.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
 
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
 
@@ -24,11 +28,18 @@ void MainMenu::Init()
 	{
 		background_texture_ = CreateTextureFromPNG("MainMenu.png", platform);
 		if (background_texture_)
-		{
-			background_sprite_->set_texture(background_texture_);
-			background_sprite_->set_height(platform.height);
-			background_sprite_->set_width(platform.width);
-			background_sprite_->set_position(450.0f, 300.0f, 0.0f);
+		{	
+			background_sprite_.set_height(platform.height());
+			background_sprite_.set_width(platform.width());
+			background_sprite_.set_position((platform.width() * 0.5), (platform.height() *0.5), -0.99f);
+			background_sprite_.set_texture(background_texture_);
+
+			//scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
+			// Scale the camera feed to fit on the Vita's display.
+			//camera_feed_sprite_.set_width(2.0f);
+			//camera_feed_sprite_.set_height(2.0f * scaling_factor_);
+			// Place the sprite at the back of the orthographic fustrum to prevent clipping.
+			//background_sprite_.set_position(0, 0, 1);
 		}
 	}
 
@@ -64,6 +75,18 @@ bool MainMenu::Update(float frame_time)
 
 void MainMenu::Render()
 {
+	// REMEMBER AND SET THE PROJECTION MATRIX HERE
+
+	if (sprite_renderer_)
+	{
+		// Prepare for Orthographic rendering
+		sprite_renderer_->set_projection_matrix(ortho_matrix_);
+
+		// Render the background image
+		sprite_renderer_->Begin(true);
+		sprite_renderer_->DrawSprite(background_sprite_);
+		sprite_renderer_->End();
+	}
 
 	RenderText();
 }
@@ -117,6 +140,11 @@ void MainMenu::RenderText()
 
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
+
+		// Display the "buttons"
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
 	}
 
 	sprite_renderer_->End();
@@ -178,4 +206,15 @@ bool MainMenu::ProcessTouchInput()
 	}
 
 	return isTouch;
+}
+
+void MainMenu::SetUpLights()
+{
+	//gef::PointLight default_point_light;
+	//default_point_light.set_colour(gef::Colour(0.7f, 0.7f, 1.0f, 1.0f));
+	//default_point_light.set_position(gef::Vector4(-300.0f, -500.0f, 100.0f));
+
+	//gef::Default3DShaderData& default_shader_data = renderer_3d_->default_shader_data();
+	//default_shader_data.set_ambient_light_colour(gef::Colour(0.5f, 0.5f, 0.5f, 1.0f));
+	//default_shader_data.AddPointLight(default_point_light);
 }

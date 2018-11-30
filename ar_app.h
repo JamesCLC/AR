@@ -21,6 +21,7 @@
 #include "game_object.h"
 #include "game_state.h" 
 #include "M:\AppliedGamesTechnology\ar_app\GameStates\Level.h"
+#include "M:\AppliedGamesTechnology\ar_app\GameStates\MainMenu.h"
 
 // FRAMEWORK FORWARD DECLARATIONS
 
@@ -50,7 +51,8 @@ private:
 	
 	GameState* current_state_;
 	
-	Level* level;
+	MainMenu* main_menu_;
+	Level* level_;
 
 };
 #endif // _RENDER_TARGET_APP_H

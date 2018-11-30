@@ -38,10 +38,13 @@
     <ClCompile Include="..\..\game_state.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
+    <ClCompile Include="..\..\load_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\load_texture.cpp">
+    <ClCompile Include="..\..\GameStates\MainMenu.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -67,10 +70,13 @@
     <ClInclude Include="..\..\GameStates\Level.h">
       <Filter>Game States</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
+    <ClInclude Include="..\..\load_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\load_texture.h">
+    <ClInclude Include="..\..\GameStates\MainMenu.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
