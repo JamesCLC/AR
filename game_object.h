@@ -26,7 +26,7 @@ public:
 	~GameObject();
 
 	// Transform
-	void SetTransform(gef::Matrix44 n_transform) { transform_ = scale_matrix_* n_transform; }
+	void SetTransform(gef::Matrix44 n_transform) { transform_ = scale_matrix_ * n_transform; }
 	const gef::Matrix44& GetTransform() { return transform_; }
 
 	// Translation

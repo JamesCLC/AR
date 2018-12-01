@@ -7,8 +7,8 @@ Level::Level(gef::Platform& platform) :
 	renderer_3d_(NULL),
 	font_(NULL),
 	input_manager_(NULL),
-	sprite_renderer_(NULL)
-
+	sprite_renderer_(NULL),
+	game_object_manager_(NULL)
 {
 }
 
@@ -61,7 +61,8 @@ void Level::Init()
 	identity_.SetIdentity();
 
 	// Initialise the game objects
-	test_ = new GameObject(platform, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
+	game_object_manager_ = new GameObjectManager(platform, renderer_3d_);
+	game_object_manager_->Init();
 
 	// Create a Debug Sphere
 	//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
@@ -104,9 +105,7 @@ bool Level::Update(float frame_time)
 		sampleGetTransform(marker_id, &marker_transform_);
 
 		// set the transform of the 3D mesh instance to draw on top of the marker
-		test_->SetTransform(marker_transform_);
-
-
+		game_object_manager_->Update(frame_time, marker_transform_);
 		//GameObjectFall(*(test_), marker_transform_);
 	}
 
@@ -121,12 +120,12 @@ bool Level::Update(float frame_time)
 			// Create a ray from the touch postion into the scene
 			GetRay(ray_start, ray_direction, scaled_projection_matrix_, identity_);
 
-			// Test to see if the ray collided with the sphere.
-			if (RayToSphere(*(test_), ray_start, ray_direction))
-			{
-				// Ray collision detection was successful!
-				MoveGameObject(*(test_), scaled_projection_matrix_, identity_);
-			}
+			//// Test to see if the ray collided with the sphere.
+			//if (RayToSphere(*(test_), ray_start, ray_direction))
+			//{
+			//	// Ray collision detection was successful!
+			//	MoveGameObject(*(test_), scaled_projection_matrix_, identity_);
+			//}
 		}
 	}
 
@@ -182,8 +181,8 @@ void Level::Render()
 	renderer_3d_->Begin(false);
 
 	// DRAW 3D MESHES HERE
-	renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
-
+	//renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
+	game_object_manager_->Render();
 
 	renderer_3d_->End();
 
@@ -197,10 +196,18 @@ void Level::CleanUp()
 	//delete primitive_builder_;
 	//primitive_builder_ = NULL;
 
+	if (game_object_manager_)
+	{
+		game_object_manager_->Cleanup();
+		delete game_object_manager_;
+		game_object_manager_ = NULL;
+	}
+
 	smartRelease();
 	sampleRelease();
 
 	CleanUpFont();
+
 	delete sprite_renderer_;
 	sprite_renderer_ = NULL;
 
@@ -209,6 +216,7 @@ void Level::CleanUp()
 
 	delete input_manager_;
 	input_manager_ = NULL;
+
 }
 
 void Level::RenderOverlay()

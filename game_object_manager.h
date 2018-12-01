@@ -8,20 +8,20 @@ class gef::Platform;
 class GameObjectManager
 {
 public:
-	GameObjectManager(gef::Platform& platform, gef::Matrix44& marker_origin);
+	GameObjectManager(gef::Platform& platform, gef::Renderer3D* renderer_3d);
 	~GameObjectManager();
 
-	void Update();
-	void Render(gef::Renderer3D& renderer_3D_);
+	void Update(float frame_time, gef::Matrix44& marker_transform);
+	void Init();
+	void Render();
+	void Cleanup();
 
 private:
+	class gef::Renderer3D* renderer_3d_;
 	gef::Platform& platform_;
 
 	// Structure to store all the game objects.
 	GameObject* game_object_container[1];
-
-	// The world space transform of marker 1, treated as the origin of the scene.
-	gef::Matrix44 marker_origin_;
 };
 
 // tie the number of game objects initialised into the difficulty?

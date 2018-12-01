@@ -21,6 +21,7 @@
 
 #include "m:\AppliedGamesTechnology\ar_app\game_state.h"
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
+#include "m:\AppliedGamesTechnology\ar_app\game_object_manager.h"
 
 class Level : public GameState
 {
@@ -76,10 +77,7 @@ private:
 
 	gef::Matrix44 marker_transform_;
 
-	GameObject* test_;
-	///
-	gef::Matrix44 game_object_scale_matrix;
-	///
+	GameObjectManager* game_object_manager_;
 
 	// bool is_marker_visible;
 };
