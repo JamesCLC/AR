@@ -60,15 +60,12 @@ void Level::Init()
 	// Create an identity matrix.
 	identity_.SetIdentity();
 
-	// Create default box mesh for testing.
-	game_object_scale_matrix.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
-
 	// Initialise the game objects
 	test_ = new GameObject(platform, "balls/ball1.scn");				// Need to do additional setup for rigged models. See animated_mesh for details.
 
-																		// Create a Debug Sphere
-																		//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
-																		//
+	// Create a Debug Sphere
+	//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+																
 
 	InitFont();
 	SetUpLights();
@@ -104,16 +101,13 @@ bool Level::Update(float frame_time)
 	if (sampleIsMarkerFound(marker_id))
 	{
 		// marker is being tracked, get it’s transform
-		gef::Matrix44 marker_transform;
-		sampleGetTransform(
-			marker_id,
-			&marker_transform);
+		sampleGetTransform(marker_id, &marker_transform_);
 
-		// set the transform of the 3D mesh instance to draw on
-		// top of the marker
-		test_->SetTransform(game_object_scale_matrix * marker_transform);
+		// set the transform of the 3D mesh instance to draw on top of the marker
+		test_->SetTransform(marker_transform_);
 
-		GameObjectFall(*(test_), marker_transform);
+
+		//GameObjectFall(*(test_), marker_transform_);
 	}
 
 	// Check for user input, process accordingly.

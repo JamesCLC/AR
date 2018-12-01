@@ -25,7 +25,7 @@
 class Level : public GameState
 {
 public:
-	Level(gef::Platform& platform) /*: GameState(platform) {}*/;
+	Level(gef::Platform& platform);
 	~Level();
 
 	void Init();
@@ -74,7 +74,13 @@ private:
 	gef::Vector4 ray_start;
 	gef::Vector4 ray_direction;
 
+	gef::Matrix44 marker_transform_;
+
 	GameObject* test_;
+	///
 	gef::Matrix44 game_object_scale_matrix;
+	///
+
+	// bool is_marker_visible;
 };
 
