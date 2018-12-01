@@ -370,7 +370,7 @@ void Level::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Ma
 
 bool Level::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::Vector4& ray_direction)
 {
-	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
+	//gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
 
 	//First, let's see if the point is inside the sphere. If so, return true
 	if (PointInSphere(game_object, ray_start))
@@ -379,7 +379,8 @@ bool Level::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 	}
 
 	//Create a vector from the ray's start to the sphere's center
-	gef::Vector4 vecV1(transformed_sphere.position() - ray_start);
+	//gef::Vector4 vecV1(transformed_sphere.position() - ray_start);
+	gef::Vector4 vecV1(game_object.GetCollisionSphere().position() - ray_start);
 
 	//gef::Vector4 vecV1(game_object.GetTranslation() - ray_start);	// DEBUG
 
@@ -402,10 +403,11 @@ bool Level::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::V
 bool Level::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
 	// Get a collision sphere that's in world space. MOVE TO INIT OR CONSTRUCTOR? UPDATE? Add this as a component of GameObject, and update it's transform whenever the game object is transformed?
-	gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
+	//gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
 
 	//Calculate the squared distance from the point to the center of the sphere
-	gef::Vector4 vecDist(transformed_sphere.position() - point);
+	//gef::Vector4 vecDist(transformed_sphere.position() - point);
+	gef::Vector4 vecDist(game_object.GetCollisionSphere().position() - point);
 
 
 	//float fDistSq( D3DXVec3Dot( &vecDist, &vecDist) );
@@ -413,7 +415,7 @@ bool Level::PointInSphere(GameObject& game_object, gef::Vector4& point)
 
 	//Calculate if the squared distance between the sphere's center and the point
 	//is less than the squared radius of the sphere
-	if (fDistSq < (transformed_sphere.radius() * transformed_sphere.radius()))
+	if (fDistSq < (game_object.GetCollisionSphere().radius() * game_object.GetCollisionSphere().radius()))
 	{
 		return true;
 	}

@@ -20,6 +20,14 @@ GameObject::~GameObject()
 
 }
 
+const gef::Sphere GameObject::GetCollisionSphere()
+{
+	gef::Sphere transformed_sphere = mesh_->bounding_sphere().Transform(this->transform_);
+
+	return transformed_sphere;
+
+}
+
 void GameObject::Initialise(gef::Platform& platform_)
 {
 	// Read relevent data from the scene file.
