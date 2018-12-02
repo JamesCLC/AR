@@ -2,14 +2,15 @@
 
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 #include "graphics\renderer_3d.h"
+#include <input\input_manager.h>
+#include <input\touch_input_manager.h>
 
-class gef::Platform;
 
-class GameObjectManager
+class GameManager
 {
 public:
-	GameObjectManager(gef::Platform& platform, gef::Renderer3D* renderer_3d);
-	~GameObjectManager();
+	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d);
+	~GameManager();
 
 	void Update(float frame_time, gef::Matrix44& marker_transform);
 	void Init();
@@ -17,11 +18,18 @@ public:
 	void Cleanup();
 
 private:
+	bool ProcessTouchInput();
+	
 	class gef::Renderer3D* renderer_3d_;
 	gef::Platform& platform_;
+	gef::InputManager* input_manager_;
 
 	// Structure to store all the game objects.
 	GameObject* game_object_container[1];
+
+	// Touch Input - To Be Moved
+	Int32 active_touch_id;
+	gef::Vector2 touch_position;
 };
 
 // tie the number of game objects initialised into the difficulty?

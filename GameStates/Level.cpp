@@ -8,7 +8,7 @@ Level::Level(gef::Platform& platform) :
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
-	game_object_manager_(NULL)
+	game_manager_(NULL)
 {
 }
 
@@ -30,7 +30,7 @@ void Level::Init()
 	ortho_matrix_.SetIdentity();	// Probably unneccesary.
 	ortho_matrix_ = platform.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
 
-																		// Calculate y-scaling factor (based on resolution of camera and resolution of screen.)
+	// Calculate y-scaling factor (based on resolution of camera and resolution of screen.)
 	scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
 
 	// Scale the camera feed to fit on the Vita's display.
@@ -61,8 +61,8 @@ void Level::Init()
 	identity_.SetIdentity();
 
 	// Initialise the game objects
-	game_object_manager_ = new GameObjectManager(platform, renderer_3d_);
-	game_object_manager_->Init();
+	game_manager_ = new GameManager(platform, renderer_3d_);
+	game_manager_->Init();
 
 	// Create a Debug Sphere
 	//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
@@ -105,37 +105,32 @@ bool Level::Update(float frame_time)
 		sampleGetTransform(marker_id, &marker_transform_);
 
 		// set the transform of the 3D mesh instance to draw on top of the marker
-		game_object_manager_->Update(frame_time, marker_transform_);
-		//GameObjectFall(*(test_), marker_transform_);
+		game_manager_->Update(frame_time, marker_transform_);
 	}
 
-	// Check for user input, process accordingly.
-	if (input_manager_)
-	{
-		input_manager_->Update();
-
-		// If there is currently touch input to process
-		if (ProcessTouchInput())
-		{
-			// Create a ray from the touch postion into the scene
-			GetRay(ray_start, ray_direction, scaled_projection_matrix_, identity_);
-
-			//// Test to see if the ray collided with the sphere.
-			//if (RayToSphere(*(test_), ray_start, ray_direction))
-			//{
-			//	// Ray collision detection was successful!
-			//	MoveGameObject(*(test_), scaled_projection_matrix_, identity_);
-			//}
-		}
-	}
+	//// Check for user input, process accordingly.
+	//if (input_manager_)
+	//{
+	//	input_manager_->Update();
+	//	// If there is currently touch input to process
+	//	if (ProcessTouchInput())
+	//	{
+	//		// Create a ray from the touch postion into the scene
+	//		GetRay(ray_start, ray_direction, scaled_projection_matrix_, identity_);
+	//		// game_object_manager_->ProcessTouchInput();
+	//		//// Test to see if the ray collided with the sphere.
+	//		//if (RayToSphere(*(test_), ray_start, ray_direction))
+	//		//{
+	//		//	// Ray collision detection was successful!
+	//		//	MoveGameObject(*(test_), scaled_projection_matrix_, identity_);
+	//		//}
+	//	}
+	//}
 
 	/// DEBUG
 	/*debug_matrix.SetIdentity();
-
 	debug_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
-
 	debug_matrix.SetTranslation(test_->GetTranslation());
-
 	debug_sphere.set_transform(debug_matrix);*/
 	/// END DEBUG
 
@@ -182,7 +177,7 @@ void Level::Render()
 
 	// DRAW 3D MESHES HERE
 	//renderer_3d_->DrawMesh(*(gef::MeshInstance*)test_);	// NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
-	game_object_manager_->Render();
+	game_manager_->Render();
 
 	renderer_3d_->End();
 
@@ -196,11 +191,11 @@ void Level::CleanUp()
 	//delete primitive_builder_;
 	//primitive_builder_ = NULL;
 
-	if (game_object_manager_)
+	if (game_manager_)
 	{
-		game_object_manager_->Cleanup();
-		delete game_object_manager_;
-		game_object_manager_ = NULL;
+		game_manager_->Cleanup();
+		delete game_manager_;
+		game_manager_ = NULL;
 	}
 
 	smartRelease();
@@ -249,15 +244,15 @@ void Level::DrawHUD()
 {
 	if (font_)
 	{
-		// Degub - Display the position of the touch
-		if (active_touch_id != -1)
-		{
-			font_->RenderText(
-				sprite_renderer_,
-				gef::Vector4(touch_position.x, touch_position.y, -0.9f),
-				1.0f, 0xffffffff, gef::TJ_LEFT, "(%.1f, %.1f)",
-				touch_position.x, touch_position.y);
-		}
+		//// Degub - Display the position of the touch
+		//if (active_touch_id != -1)
+		//{
+		//	font_->RenderText(
+		//		sprite_renderer_,
+		//		gef::Vector4(touch_position.x, touch_position.y, -0.9f),
+		//		1.0f, 0xffffffff, gef::TJ_LEFT, "(%.1f, %.1f)",
+		//		touch_position.x, touch_position.y);
+		//}
 
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
@@ -335,39 +330,39 @@ bool Level::ProcessTouchInput()
 
 void Level::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Matrix44 & projection, gef::Matrix44 & view)
 {
-	// Make sure the input manager and touch manager have been initialised.
-	if (input_manager_ && input_manager_->touch_manager())
-	{
-		gef::Vector2 normalised_device_coordinates;
+	//// Make sure the input manager and touch manager have been initialised.
+	//if (input_manager_ && input_manager_->touch_manager())
+	//{
+	//	gef::Vector2 normalised_device_coordinates;
 
-		float half_width = platform.width() * 0.5f;
-		float half_height = platform.height() * 0.5f;
+	//	float half_width = platform.width() * 0.5f;
+	//	float half_height = platform.height() * 0.5f;
 
-		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
-		normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
-		normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
+	//	// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
+	//	normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
+	//	normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
 
-		// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
-		gef::Matrix44 projectionInverse;
-		projectionInverse.Inverse(view * projection);
+	//	// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
+	//	gef::Matrix44 projectionInverse;
+	//	projectionInverse.Inverse(view * projection);
 
-		// Define the start and end point of the ray (based on the frustrum of the camera.)
-		gef::Vector4 near_point, far_point;
+	//	// Define the start and end point of the ray (based on the frustrum of the camera.)
+	//	gef::Vector4 near_point, far_point;
 
-		// PS Vita
-		// The frustrum on the Vita runs from -1 to 1.
-		near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
-		far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
+	//	// PS Vita
+	//	// The frustrum on the Vita runs from -1 to 1.
+	//	near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
+	//	far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
 
-		// Homogenise the vectors.
-		near_point /= near_point.w();
-		far_point /= far_point.w();
+	//	// Homogenise the vectors.
+	//	near_point /= near_point.w();
+	//	far_point /= far_point.w();
 
-		// Work out the start point of the ray and it's direction.
-		start_point = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
-		direction = far_point - near_point;
-		direction.Normalise();
-	}
+	//	// Work out the start point of the ray and it's direction.
+	//	start_point = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
+	//	direction = far_point - near_point;
+	//	direction.Normalise();
+	//}
 }
 
 bool Level::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::Vector4& ray_direction)
@@ -429,44 +424,44 @@ bool Level::PointInSphere(GameObject& game_object, gef::Vector4& point)
 
 void Level::MoveGameObject(GameObject& game_object, gef::Matrix44 & projection, gef::Matrix44 & view)
 {
-	// Placeholder function. For now, I just want to be able to move the ball mesh around.
-	// First, get the touch's position in world space.
-	gef::Vector2 normalised_device_coordinates;
+	//// Placeholder function. For now, I just want to be able to move the ball mesh around.
+	//// First, get the touch's position in world space.
+	//gef::Vector2 normalised_device_coordinates;
 
-	float half_width = platform.width() * 0.5f;
-	float half_height = platform.height() * 0.5f;
+	//float half_width = platform.width() * 0.5f;
+	//float half_height = platform.height() * 0.5f;
 
-	// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
-	normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
-	normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
+	//// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
+	//normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
+	//normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
 
-	// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
-	gef::Matrix44 projectionInverse;
-	projectionInverse.Inverse(view * projection);
+	//// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
+	//gef::Matrix44 projectionInverse;
+	//projectionInverse.Inverse(view * projection);
 
-	// Define the start and end point of the ray (based on the frustrum of the camera.)
-	gef::Vector4 near_point, far_point;
+	//// Define the start and end point of the ray (based on the frustrum of the camera.)
+	//gef::Vector4 near_point, far_point;
 
-	// PS Vita
-	// The frustrum on the Vita runs from -1 to 1.
-	near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
-	far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
+	//// PS Vita
+	//// The frustrum on the Vita runs from -1 to 1.
+	//near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
+	//far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
 
-	// Homogenise the vectors.
-	near_point /= near_point.w();
-	far_point /= far_point.w();
+	//// Homogenise the vectors.
+	//near_point /= near_point.w();
+	//far_point /= far_point.w();
 
-	// Work out the touch's position in world space.
-	gef::Vector4 touch_position_world = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
-
-
-	// Next, compare the touch's current position with it's previous position.
+	//// Work out the touch's position in world space.
+	//gef::Vector4 touch_position_world = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
 
 
-	// Apply the translation to the game object.
-	//game_object.SetTranslation(game_object.GetTranslation() + gef::Vector4(0.0f, 0.05f, 0.05f));
+	//// Next, compare the touch's current position with it's previous position.
 
-	game_object.SetTranslation(touch_position_world);
+
+	//// Apply the translation to the game object.
+	////game_object.SetTranslation(game_object.GetTranslation() + gef::Vector4(0.0f, 0.05f, 0.05f));
+
+	//game_object.SetTranslation(touch_position_world);
 }
 
 bool Level::GameObjectFall(GameObject & game_object, gef::Matrix44 & marker_transform)

@@ -41,13 +41,16 @@
     <ClCompile Include="..\..\load_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\GameStates\MainMenu.cpp">
-      <Filter>Game States</Filter>
-    </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\game_object_manager.cpp">
+    <ClCompile Include="collision_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameStates\main_menu.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,13 +79,16 @@
     <ClInclude Include="..\..\load_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\GameStates\MainMenu.h">
-      <Filter>Game States</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\game_object_manager.h">
+    <ClInclude Include="collision_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\main_menu.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
