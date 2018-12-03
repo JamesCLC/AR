@@ -13,20 +13,22 @@ CollisionManager::~CollisionManager()
 {
 }
 
-GameObject & CollisionManager::Raytrace()
-{
-	GetRay(ray_start, ray_direction,projection_matrix, view_matrix);
-
-	for (std::vector<GameObject*>::iterator it = game_manager_.GetGameObjects()->begin(); it != game_manager_.GetGameObjects()->end(); it++)
-	{
-		GameObject* ptr = (*it);
-
-		if (RayToSphere((*ptr), ray_start, ray_direction))
-		{
-			return ptr;
-		}
-	}
-}
+//GameObject & CollisionManager::Raytrace(gef::Vector2 touch_pos)
+//{
+//	touch_position = touch_pos;
+//
+//	GetRay(ray_start, ray_direction,projection_matrix, view_matrix);
+//
+//	for (std::vector<GameObject>::iterator it = game_manager_.GetGameObjects()->begin(); it != game_manager_.GetGameObjects()->end(); it++)
+//	{
+//		GameObject* ptr = (*it);
+//
+//		if (RayToSphere((*ptr), ray_start, ray_direction))
+//		{
+//			return ptr;
+//		}
+//	}
+//}
 
 
 

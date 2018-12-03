@@ -25,9 +25,10 @@ void GameManager::Init()
 	// Create the GameObjects
 	for (int i = 0; i < num_of_objects; i++)
 	{
-		GameObject* ptr = new GameObject(platform_, "balls/ball1.scn");
+		//GameObject new_game_object(platform_, "balls/ball1.scn");
+		//game_object_container.push_back(new_game_object);
 
-		game_object_container.push_back(ptr);
+		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn"));
 	}
 }
 
@@ -59,10 +60,17 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 
 void GameManager::Render()
 {
+	/*for (int i = 0; i < sizeof(game_object_container); i++)
+	{
+		GameObject* ptr = &game_object_container[i];
+
+		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
+	}*/
+
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
+		//renderer_3d_->DrawMesh(it->GetMesh(), it->GetTransform());
 		GameObject* ptr = (*it);
-
 		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
 	}
 
@@ -74,7 +82,10 @@ void GameManager::Render()
 
 void GameManager::Cleanup()
 {
+	// Delete the game objects.
+	game_object_container.clear();
 
+	// Delete the input manager
 	if (input_manager_)
 	{
 		delete input_manager_;

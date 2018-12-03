@@ -9,7 +9,7 @@ public:
 	CollisionManager(gef::Platform& platform_,GameManager& game_manager);
 	~CollisionManager();
 
-	GameObject& Raytrace();
+	//GameObject& Raytrace(gef::Vector2);
 
 private:
 	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
@@ -24,7 +24,7 @@ private:
 
 	gef::Platform& platform_;
 
-	GameManager& game_manager_;
+	GameManager& game_manager_;	//  Change to vector to prevent circular dependencies
 
 	// Touch Input
 	Int32 active_touch_id;
