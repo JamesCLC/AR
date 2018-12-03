@@ -17,12 +17,15 @@ GameObject & CollisionManager::Raytrace()
 {
 	GetRay(ray_start, ray_direction,projection_matrix, view_matrix);
 
-	for (int i = 0; i < sizeof(game_manager_.GetGameObjects()); i++)
+	for (std::vector<GameObject*>::iterator it = game_manager_.GetGameObjects()->begin(); it != game_manager_.GetGameObjects()->end(); it++)
 	{
-		//RayToSphere()
-	}
+		GameObject* ptr = (*it);
 
-	// TODO: insert return statement here
+		if (RayToSphere((*ptr), ray_start, ray_direction))
+		{
+			return ptr;
+		}
+	}
 }
 
 
@@ -67,7 +70,7 @@ void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & directi
 
 bool CollisionManager::SphereToPlane(GameObject &)
 {
-	// TO DO - Will need to
+	// TO DO - Will need to compare against marker transform.
 
 	return false;
 }

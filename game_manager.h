@@ -4,6 +4,7 @@
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
 #include <input\touch_input_manager.h>
+#include <vector>
 
 
 class GameManager
@@ -16,7 +17,8 @@ public:
 	void Init();
 	void Render();
 	void Cleanup();
-	GameObject** GetGameObjects() { return game_object_container; };
+	// Return a pointer to the vector of pointers
+	std::vector<GameObject*>* GetGameObjects() { return &game_object_container; };
 
 private:
 	bool ProcessTouchInput();
@@ -26,11 +28,14 @@ private:
 	gef::InputManager* input_manager_;
 
 	// Structure to store all the game objects.
-	GameObject* game_object_container[1];
+	std::vector<GameObject*> game_object_container;
+	//GameObject* game_object_container[1];
 
 	// Touch Input - To Be Moved
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
+
+	int num_of_objects = 1;
 };
 
 // tie the number of game objects initialised into the difficulty?

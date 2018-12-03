@@ -22,23 +22,29 @@ void GameManager::Init()
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
 
-	// load in the data from the scene files.
-	for (int i = 0; i < sizeof(game_object_container); i++)
+	// Create the GameObjects
+	for (int i = 0; i < num_of_objects; i++)
 	{
-		game_object_container[i] = new GameObject(platform_, "balls/ball1.scn");
+		GameObject* ptr = new GameObject(platform_, "balls/ball1.scn");
+
+		game_object_container.push_back(ptr);
 	}
 }
 
 void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
-
-
-	for (int i = 0; i < sizeof(game_object_container); i++)
+	// Update each of the game objects.
+	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
-
-		// For now, just put my object on the marker.
-		game_object_container[i]->SetTransform(marker_transform);
+		// Placeholder. Replace with Collision Update.
+		(*it)->SetTransform(marker_transform);
 	}
+
+	//for (int i = 0; i < sizeof(game_object_container); i++)
+	//{
+	//	// For now, just put my object on the marker.
+	//	game_object_container[i]->SetTransform(marker_transform);
+	//}
 
 	if (input_manager_)
 	{
@@ -53,20 +59,21 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 
 void GameManager::Render()
 {
-	for (int i = 0; i < sizeof(game_object_container); i++)
+	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
-		renderer_3d_->DrawMesh(*(gef::MeshInstance*)game_object_container[i]);
+		GameObject* ptr = (*it);
+
+		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
 	}
+
+	//for (int i = 0; i < sizeof(game_object_container); i++)
+	//{
+	//	renderer_3d_->DrawMesh(*(gef::MeshInstance*)game_object_container[i]);
+	//}
 }
 
 void GameManager::Cleanup()
 {
-	for (int i = 0; i < sizeof(game_object_container); i++)
-	{
-		delete game_object_container[i];
-	}
-
-	delete game_object_container;
 
 	if (input_manager_)
 	{

@@ -33,7 +33,6 @@ public:
 	void SetTranslation(gef::Vector4 n_translation) { transform_.SetTranslation(n_translation); }
 	gef::Vector4 GetTranslation() { return transform_.GetTranslation(); }
 
-
 	// Collision Sphere
 	const gef::Sphere GetCollisionSphere();
 
