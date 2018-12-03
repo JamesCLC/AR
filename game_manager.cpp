@@ -125,6 +125,8 @@ bool GameManager::ProcessTouchInput()
 					active_touch_id = -1;
 
 					isTouch = false;
+
+					// game object fall
 				}
 			}
 		}

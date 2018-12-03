@@ -16,6 +16,7 @@ public:
 	void Init();
 	void Render();
 	void Cleanup();
+	GameObject** GetGameObjects() { return game_object_container; };
 
 private:
 	bool ProcessTouchInput();

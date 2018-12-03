@@ -1,15 +1,15 @@
 #pragma once
+#include <platform/vita/system/platform_vita.h>
+#include "m:\AppliedGamesTechnology\ar_app\game_manager.h"
 
-#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 
 class CollisionManager
 {
 public:
-	CollisionManager();
+	CollisionManager(gef::Platform& platform_,GameManager& game_manager);
 	~CollisionManager();
 
-	void Update();
-
+	GameObject& Raytrace();
 
 private:
 	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
@@ -22,12 +22,18 @@ private:
 	void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44&);
 	bool GameObjectFall(GameObject&, gef::Matrix44&);
 
-	// Touch Input - To Be Moved
+	gef::Platform& platform_;
+
+	GameManager& game_manager_;
+
+	// Touch Input
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
 
-	// Raytracing - To Be Moved
+	// Raytracing
 	gef::Vector4 ray_start;
 	gef::Vector4 ray_direction;
+	gef::Matrix44 projection_matrix;
+	gef::Matrix44 view_matrix;
 };
 

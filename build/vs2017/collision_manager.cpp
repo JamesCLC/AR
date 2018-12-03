@@ -2,7 +2,9 @@
 
 
 
-CollisionManager::CollisionManager()
+CollisionManager::CollisionManager(gef::Platform& platform, GameManager& game_manager) :
+	platform_(platform),
+	game_manager_(game_manager)
 {
 }
 
@@ -11,9 +13,18 @@ CollisionManager::~CollisionManager()
 {
 }
 
-void CollisionManager::Update()
+GameObject & CollisionManager::Raytrace()
 {
+	GetRay(ray_start, ray_direction,projection_matrix, view_matrix);
+
+	for (int i = 0; i < sizeof(game_manager_.GetGameObjects()); i++)
+	{
+		//RayToSphere()
+	}
+
+	// TODO: insert return statement here
 }
+
 
 
 
@@ -22,35 +33,35 @@ void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & directi
 	//// Make sure the input manager and touch manager have been initialised.
 	//if (input_manager_ && input_manager_->touch_manager())
 	//{
-	//	gef::Vector2 normalised_device_coordinates;
+		gef::Vector2 normalised_device_coordinates;
 
-	//	float half_width = platform.width() * 0.5f;
-	//	float half_height = platform.height() * 0.5f;
+		float half_width = platform_.width() * 0.5f;
+		float half_height = platform_.height() * 0.5f;
 
-	//	// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
-	//	normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
-	//	normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
+		// Calculate Normalised Device Cordinates (https://stackoverflow.com/questions/46749675/opengl-mouse-coordinates-to-space-coordinates/46752492)
+		normalised_device_coordinates.x = (static_cast<float>(touch_position.x) - half_width) / half_width;
+		normalised_device_coordinates.y = (half_height - static_cast<float>(touch_position.y)) / half_height;
 
-	//	// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
-	//	gef::Matrix44 projectionInverse;
-	//	projectionInverse.Inverse(view * projection);
+		// Since we're working from the uniform world cordinates back to the trapezoid veiw frustrum, we need an inverse projection matrix.
+		gef::Matrix44 projectionInverse;
+		projectionInverse.Inverse(view * projection);
 
-	//	// Define the start and end point of the ray (based on the frustrum of the camera.)
-	//	gef::Vector4 near_point, far_point;
+		// Define the start and end point of the ray (based on the frustrum of the camera.)
+		gef::Vector4 near_point, far_point;
 
-	//	// PS Vita
-	//	// The frustrum on the Vita runs from -1 to 1.
-	//	near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
-	//	far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
+		// PS Vita
+		// The frustrum on the Vita runs from -1 to 1.
+		near_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, -1.0f, 1.0f).TransformW(projectionInverse);
+		far_point = gef::Vector4(normalised_device_coordinates.x, normalised_device_coordinates.y, 1.0f, 1.0f).TransformW(projectionInverse);
 
-	//	// Homogenise the vectors.
-	//	near_point /= near_point.w();
-	//	far_point /= far_point.w();
+		// Homogenise the vectors.
+		near_point /= near_point.w();
+		far_point /= far_point.w();
 
-	//	// Work out the start point of the ray and it's direction.
-	//	start_point = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
-	//	direction = far_point - near_point;
-	//	direction.Normalise();
+		// Work out the start point of the ray and it's direction.
+		start_point = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
+		direction = far_point - near_point;
+		direction.Normalise();
 	//}
 }
 
