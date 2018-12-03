@@ -3,7 +3,8 @@
 GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d) :
 	platform_(platform),
 	renderer_3d_(renderer_3d),
-	input_manager_(NULL)
+	input_manager_(NULL)/*,
+	collision_manager(NULL)*/
 {
 }
 
@@ -30,6 +31,9 @@ void GameManager::Init()
 
 		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn"));
 	}
+
+	// Initialise the collision detection.
+	//collision_manager = new CollisionManager(platform_, game_object_container);
 }
 
 void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
@@ -47,13 +51,19 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 	//	game_object_container[i]->SetTransform(marker_transform);
 	//}
 
-	if (input_manager_)
+	// Make sure the input manager is valid.
+	if (input_manager_ && input_manager_->touch_manager())
 	{
 		input_manager_->Update();
 
+		// Check to see if there's any touch input.
 		if (ProcessTouchInput())
 		{
-			int foo = 0;
+			//// Make sure the collision detection manager is valid.
+			//if (collision_manager)
+			//{
+			//	collision_manager->Raytrace(touch_position);
+			//}
 		}
 	}
 }
@@ -91,6 +101,13 @@ void GameManager::Cleanup()
 		delete input_manager_;
 		input_manager_ = NULL;
 	}
+
+	//if (collision_manager)
+	//{
+	//	collision_manager->CleanUp();
+	//	delete collision_manager;
+	//	collision_manager = NULL;
+	//}
 }
 
 bool GameManager::ProcessTouchInput()

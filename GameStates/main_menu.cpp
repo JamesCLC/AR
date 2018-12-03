@@ -20,7 +20,7 @@ void MainMenu::Init()
 {
 	// Set up the Ortho Matrix for rendering the camera feed.
 	ortho_matrix_.SetIdentity();	// Probably unneccesary.
-	ortho_matrix_ = platform.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
+	ortho_matrix_ = platform.OrthographicFrustum(0.0f, 960.0f, 0.0f, 544.0f, -1, 1);	// Numbers taken from tutorial sheet.
 
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
 

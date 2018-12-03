@@ -1,6 +1,7 @@
 #pragma once
 
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
+//#include "m:\AppliedGamesTechnology\ar_app\collision_manager.h"
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
 #include <input\touch_input_manager.h>
@@ -31,7 +32,9 @@ private:
 	std::vector<GameObject*> game_object_container;
 	//GameObject* game_object_container[1];
 
-	// Touch Input - To Be Moved
+	//CollisionManager* collision_manager;
+
+	// Touch Input
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
 

@@ -2,9 +2,9 @@
 
 
 
-CollisionManager::CollisionManager(gef::Platform& platform, GameManager& game_manager) :
+CollisionManager::CollisionManager(gef::Platform& platform, std::vector<GameObject*>& objects) :
 	platform_(platform),
-	game_manager_(game_manager)
+	game_object_container(objects)
 {
 }
 
@@ -13,24 +13,21 @@ CollisionManager::~CollisionManager()
 {
 }
 
-//GameObject & CollisionManager::Raytrace(gef::Vector2 touch_pos)
-//{
-//	touch_position = touch_pos;
-//
-//	GetRay(ray_start, ray_direction,projection_matrix, view_matrix);
-//
-//	for (std::vector<GameObject>::iterator it = game_manager_.GetGameObjects()->begin(); it != game_manager_.GetGameObjects()->end(); it++)
-//	{
-//		GameObject* ptr = (*it);
-//
-//		if (RayToSphere((*ptr), ray_start, ray_direction))
-//		{
-//			return ptr;
-//		}
-//	}
-//}
+GameObject & CollisionManager::Raytrace(gef::Vector2 touch_pos)
+{
+	touch_position = touch_pos;
 
+	GetRay(ray_start, ray_direction, projection_matrix, view_matrix);
 
+	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	{
+
+	}
+}
+
+void CollisionManager::CleanUp()
+{
+}
 
 
 void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction, gef::Matrix44 & projection, gef::Matrix44 & view)
@@ -121,8 +118,7 @@ bool CollisionManager::SphereToSphere(GameObject& obj_1, GameObject& obj_2)
 	fRadiiSumSquared *= fRadiiSumSquared;
 
 	//Check for collision
-	//If the distance squared is less than or equal to the square sum
-	//of the radii, then we have a collision
+	//If the distance squared is less than or equal to the square sum of the radii, then we have a collision
 	if (fDistSq <= fRadiiSumSquared)
 		return true;
 
@@ -132,11 +128,7 @@ bool CollisionManager::SphereToSphere(GameObject& obj_1, GameObject& obj_2)
 
 bool CollisionManager::PointInSphere(GameObject& game_object, gef::Vector4& point)
 {
-	// Get a collision sphere that's in world space. MOVE TO INIT OR CONSTRUCTOR? UPDATE? Add this as a component of GameObject, and update it's transform whenever the game object is transformed?
-	//gef::Sphere transformed_sphere = game_object.GetMesh()->bounding_sphere().Transform(game_object.GetTransform());
-
 	//Calculate the squared distance from the point to the center of the sphere
-	//gef::Vector4 vecDist(transformed_sphere.position() - point);
 	gef::Vector4 vecDist(game_object.GetCollisionSphere().position() - point);
 
 

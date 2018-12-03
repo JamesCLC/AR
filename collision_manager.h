@@ -1,15 +1,16 @@
 #pragma once
 #include <platform/vita/system/platform_vita.h>
-#include "m:\AppliedGamesTechnology\ar_app\game_manager.h"
+#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 
 
 class CollisionManager
 {
 public:
-	CollisionManager(gef::Platform& platform_,GameManager& game_manager);
+	CollisionManager(gef::Platform& platform_, std::vector<GameObject*>&);
 	~CollisionManager();
 
-	//GameObject& Raytrace(gef::Vector2);
+	GameObject& Raytrace(gef::Vector2);
+	void CleanUp();
 
 private:
 	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
@@ -24,7 +25,8 @@ private:
 
 	gef::Platform& platform_;
 
-	GameManager& game_manager_;	//  Change to vector to prevent circular dependencies
+	//GameManager& game_manager_;	//  Change to vector to prevent circular dependencies
+	std::vector<GameObject*>& game_object_container;
 
 	// Touch Input
 	Int32 active_touch_id;

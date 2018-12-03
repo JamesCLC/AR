@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp" />
+    <ClCompile Include="..\..\collision_manager.cpp" />
     <ClCompile Include="..\..\GameStates\Level.cpp" />
     <ClCompile Include="..\..\GameStates\main_menu.cpp" />
     <ClCompile Include="..\..\game_object.cpp" />
@@ -85,10 +86,10 @@
     <ClCompile Include="..\..\primitive_renderer.cpp" />
     <ClCompile Include="..\..\vertex_colour_unlit_shader.cpp" />
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="collision_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
+    <ClInclude Include="..\..\collision_manager.h" />
     <ClInclude Include="..\..\GameStates\Level.h" />
     <ClInclude Include="..\..\GameStates\main_menu.h" />
     <ClInclude Include="..\..\game_object.h" />
@@ -99,7 +100,6 @@
     <ClInclude Include="..\..\primitive_renderer.h" />
     <ClInclude Include="..\..\vertex_colour_unlit_shader.h" />
     <ClInclude Include="Button.h" />
-    <ClInclude Include="collision_manager.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
