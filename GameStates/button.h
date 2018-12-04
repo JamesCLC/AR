@@ -27,7 +27,7 @@ private:
 	gef::Texture* button_texture_;
 	gef::Sprite button_sprite_;
 
-	float button_width_ = 256;
+	float button_width_ = 256;	// Replace with #defines?
 	float button_height_ = 128;
 
 	std::string button_text_;

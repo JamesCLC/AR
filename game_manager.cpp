@@ -5,6 +5,7 @@ GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d)
 	renderer_3d_(renderer_3d),
 	input_manager_(NULL),
 	collision_manager(NULL),
+	ai_manager(NULL),
 	active_touch_id(-1)
 {
 }
@@ -28,14 +29,14 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	// Create the GameObjects
 	for (int i = 0; i < num_of_objects; i++)
 	{
-		//GameObject new_game_object(platform_, "balls/ball1.scn");
-		//game_object_container.push_back(new_game_object);
-
 		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn"));
 	}
 
 	// Create the collision detection manager.
 	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
+
+	// Create the AI manager.
+	ai_manager = new AIManager(game_object_container);
 }
 
 void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
@@ -115,6 +116,13 @@ void GameManager::Cleanup()
 		collision_manager->CleanUp();
 		delete collision_manager;
 		collision_manager = NULL;
+	}
+
+	if (ai_manager)
+	{
+		ai_manager->CleanUp();
+		delete ai_manager;
+		ai_manager = NULL;
 	}
 
 	// Note: Platform and renderer3D objects don't need to be cleaned up 

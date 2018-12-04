@@ -28,7 +28,7 @@ void Level::Init()
 	ortho_matrix_ = platform.OrthographicFrustum(-1, 1, -1, 1, -1, 1);	// Numbers taken from tutorial sheet.
 
 	// Calculate y-scaling factor (based on resolution of camera and resolution of screen.)
-	scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
+	scaling_factor_ = ((platform.width() / platform.height()) / (SCE_SMART_IMAGE_WIDTH / SCE_SMART_IMAGE_HEIGHT));
 
 	// Scale the camera feed to fit on the Vita's display.
 	camera_feed_sprite_.set_width(2.0f);

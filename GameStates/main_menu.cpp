@@ -46,13 +46,6 @@ void MainMenu::Init()
 			background_sprite_.set_width(platform.width());
 			background_sprite_.set_position((platform.width() * 0.5), (platform.height() *0.5), -0.99f);
 			background_sprite_.set_texture(background_texture_);
-
-			//scaling_factor_ = ((960.0f / 544.0f) / (640.0f / 480.0f));
-			// Scale the camera feed to fit on the Vita's display.
-			//camera_feed_sprite_.set_width(2.0f);
-			//camera_feed_sprite_.set_height(2.0f * scaling_factor_);
-			// Place the sprite at the back of the orthographic fustrum to prevent clipping.
-			//background_sprite_.set_position(0, 0, 1);
 		}
 	}
 

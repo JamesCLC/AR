@@ -2,7 +2,6 @@
 #include <platform/vita/system/platform_vita.h>
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 
-
 class CollisionManager
 {
 public:
@@ -11,6 +10,7 @@ public:
 
 	// If the raytrace hits an object, it returns a pointer to that object.
 	GameObject* Raytrace(gef::Vector2);
+	void Update();
 	void CleanUp();
 
 private:

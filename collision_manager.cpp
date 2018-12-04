@@ -45,6 +45,11 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	return game_object_ptr;
 }
 
+void CollisionManager::Update()
+{
+	// Perform general collision detection here?
+}
+
 void CollisionManager::CleanUp()
 {
 }
