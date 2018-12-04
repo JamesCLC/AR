@@ -95,12 +95,6 @@ void GameManager::Render()
 
 void GameManager::Cleanup()
 {
-	if (collision_manager)
-	{
-		delete collision_manager;
-		collision_manager;
-	}
-
 	// Delete the game objects.
 	game_object_container.clear();
 

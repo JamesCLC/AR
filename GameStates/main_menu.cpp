@@ -2,14 +2,14 @@
 
 
 
-MainMenu::MainMenu(gef::Platform& platform) :
+MainMenu::MainMenu(gef::Platform& platform, GameState* level, GameState* options) :
 	GameState(platform),
+	level_(level),
+	options_(options),
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
-	background_texture_(NULL),
-	level_(NULL),
-	options_(NULL)
+	background_texture_(NULL)
 {
 }
 
@@ -27,12 +27,13 @@ void MainMenu::Init()
 	ortho_matrix_.SetIdentity();
 	ortho_matrix_ = platform.OrthographicFrustum(0.0f, 960.0f, 0.0f, 544.0f, -1, 1);
 
-	/*for (std::vector<Button*>::iterator it = button_container.begin(); it != button_container.end(); it++)
-	{
-		it = new Button();
-	}*/
+	gef::Vector4 button_pos;
 
-	
+	for (int i = 0; i < num_of_buttons; i++)
+	{
+		buttons.push_back(new Button());
+	}
+
 
 	if (sprite_renderer_)
 	{
@@ -74,7 +75,7 @@ bool MainMenu::Update(float frame_time)
 
 		if (ProcessTouchInput())
 		{
-
+			// To Do - see if any of the buttons are pressed.
 		}
 	}
 
@@ -85,12 +86,22 @@ void MainMenu::Render()
 {
 	if (sprite_renderer_)
 	{
-		// Prepare for Orthographic rendering
+		// Prepare for Orthographic rendering.
 		sprite_renderer_->set_projection_matrix(ortho_matrix_);
 
-		// Render the background image
+		// Begin rendering sprites.
 		sprite_renderer_->Begin(true);
+
+		// Render the background image.
 		sprite_renderer_->DrawSprite(background_sprite_);
+
+		// Render the buttons.
+		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
+		{
+			sprite_renderer_->DrawSprite(*(*it)->GetSprite());
+		}
+
+		// Stop rendering sprites.
 		sprite_renderer_->End();
 	}
 
@@ -99,26 +110,29 @@ void MainMenu::Render()
 
 void MainMenu::CleanUp()
 {
+	// Delete the font object.
 	if (font_)
 	{
 		delete font_;
 		font_ = NULL;
 	}
 
+	// Delete the input manager.
 	if (input_manager_)
 	{
 		delete input_manager_;
 		input_manager_ = NULL;
 	}
 
+	// Delete the sprite renderer.
 	if (sprite_renderer_)
 	{
 		delete sprite_renderer_;
 		sprite_renderer_ = NULL;
 	}
 	
-
-	
+	// Delete the buttons.
+	buttons.clear();
 }
 
 void MainMenu::RenderText()
@@ -151,6 +165,16 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
+
+		// Render the buttons.
+		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
+		{
+			// Convert the button's text from a string to a const char buffer.
+			const char *char_buffer = (*it)->GetText().c_str();
+
+			font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
+		}
+
 	}
 
 	sprite_renderer_->End();

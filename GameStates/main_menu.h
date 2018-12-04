@@ -15,7 +15,7 @@
 class MainMenu : public GameState
 {
 public:
-	MainMenu(gef::Platform& platform);
+	MainMenu(gef::Platform& platform, GameState*, GameState*);
 	~MainMenu();
 
 	void Init();
@@ -35,13 +35,14 @@ private:
 	gef::Sprite background_sprite_;
 	gef::Matrix44 ortho_matrix_;
 
+	// pointers to the gamestates the menu can transition to.
 	GameState* level_;
 	GameState* options_;
 
 	std::vector<Button*> buttons;
 	int num_of_buttons = 3;
 
-	// Touch Input - To Be Moved
+	// Touch Input
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
 
