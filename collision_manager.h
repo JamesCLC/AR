@@ -6,26 +6,27 @@
 class CollisionManager
 {
 public:
-	CollisionManager(gef::Platform& platform_, std::vector<GameObject*>&);
+	CollisionManager(gef::Platform& platform_, std::vector<GameObject*>&, gef::Matrix44, gef::Matrix44);
 	~CollisionManager();
 
-	GameObject& Raytrace(gef::Vector2);
+	// If the raytrace hits an object, it returns a pointer to that object.
+	GameObject* Raytrace(gef::Vector2);
 	void CleanUp();
 
 private:
-	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
+	void GetRay(gef::Vector4&, gef::Vector4&);
 	bool SphereToPlane(GameObject&);
 	bool SphereToSphere(GameObject&, GameObject&);
-	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
+	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);	// Can probably remove vector references.
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
 	// Move these to the game AI class
-	void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44&);
+	void MoveGameObject(GameObject&);
 	bool GameObjectFall(GameObject&, gef::Matrix44&);
 
 	gef::Platform& platform_;
 
-	//GameManager& game_manager_;	//  Change to vector to prevent circular dependencies
+
 	std::vector<GameObject*>& game_object_container;
 
 	// Touch Input
@@ -37,5 +38,7 @@ private:
 	gef::Vector4 ray_direction;
 	gef::Matrix44 projection_matrix;
 	gef::Matrix44 view_matrix;
+
+	//gef::Matrix44 marker_origin_;
 };
 

@@ -41,9 +41,6 @@
     <ClCompile Include="..\..\load_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\GameStates\main_menu.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
@@ -77,9 +74,6 @@
       <Filter>Game States</Filter>
     </ClInclude>
     <ClInclude Include="..\..\load_texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\GameStates\main_menu.h">

@@ -38,7 +38,7 @@ private:
 	GameState* level_;
 	GameState* options_;
 
-	std::vector<Button*> buttons;
+	std::vector<Button*> button_container;
 	int num_of_buttons = 3;
 
 	// Touch Input - To Be Moved

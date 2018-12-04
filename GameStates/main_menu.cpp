@@ -7,7 +7,9 @@ MainMenu::MainMenu(gef::Platform& platform) :
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
-	background_texture_(NULL)
+	background_texture_(NULL),
+	level_(NULL),
+	options_(NULL)
 {
 }
 
@@ -18,17 +20,28 @@ MainMenu::~MainMenu()
 
 void MainMenu::Init()
 {
-	// Set up the Ortho Matrix for rendering the camera feed.
-	ortho_matrix_.SetIdentity();	// Probably unneccesary.
-	ortho_matrix_ = platform.OrthographicFrustum(0.0f, 960.0f, 0.0f, 544.0f, -1, 1);	// Numbers taken from tutorial sheet.
-
+	// Create the sprite renderer.
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
+
+	// Set up the Ortho Matrix for 2D rendering.
+	ortho_matrix_.SetIdentity();
+	ortho_matrix_ = platform.OrthographicFrustum(0.0f, 960.0f, 0.0f, 544.0f, -1, 1);
+
+	/*for (std::vector<Button*>::iterator it = button_container.begin(); it != button_container.end(); it++)
+	{
+		it = new Button();
+	}*/
+
+	
 
 	if (sprite_renderer_)
 	{
+		// load in the texture for the background image.
 		background_texture_ = CreateTextureFromPNG("MainMenu.png", platform);
+
 		if (background_texture_)
 		{	
+			// Set the scale and position of the background image for the Vita.
 			background_sprite_.set_height(platform.height());
 			background_sprite_.set_width(platform.width());
 			background_sprite_.set_position((platform.width() * 0.5), (platform.height() *0.5), -0.99f);
@@ -43,12 +56,14 @@ void MainMenu::Init()
 		}
 	}
 
+	// load in the font.
 	font_ = new gef::Font(platform);
 	font_->Load("comic_sans");
 
 	// Initialise touch input
 	input_manager_ = gef::InputManager::Create(platform);
 
+	// Enable the front touch screen.
 	if (input_manager_ && input_manager_->touch_manager() && (input_manager_->touch_manager()->max_num_panels() > 0))
 	{
 		input_manager_->touch_manager()->EnablePanel(0);
@@ -75,8 +90,6 @@ bool MainMenu::Update(float frame_time)
 
 void MainMenu::Render()
 {
-	// REMEMBER AND SET THE PROJECTION MATRIX HERE
-
 	if (sprite_renderer_)
 	{
 		// Prepare for Orthographic rendering
@@ -206,15 +219,4 @@ bool MainMenu::ProcessTouchInput()
 	}
 
 	return isTouch;
-}
-
-void MainMenu::SetUpLights()
-{
-	//gef::PointLight default_point_light;
-	//default_point_light.set_colour(gef::Colour(0.7f, 0.7f, 1.0f, 1.0f));
-	//default_point_light.set_position(gef::Vector4(-300.0f, -500.0f, 100.0f));
-
-	//gef::Default3DShaderData& default_shader_data = renderer_3d_->default_shader_data();
-	//default_shader_data.set_ambient_light_colour(gef::Colour(0.5f, 0.5f, 0.5f, 1.0f));
-	//default_shader_data.AddPointLight(default_point_light);
 }

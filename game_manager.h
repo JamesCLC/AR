@@ -1,7 +1,7 @@
 #pragma once
 
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
-//#include "m:\AppliedGamesTechnology\ar_app\collision_manager.h"
+#include "m:\AppliedGamesTechnology\ar_app\collision_manager.h"
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
 #include <input\touch_input_manager.h>
@@ -15,24 +15,25 @@ public:
 	~GameManager();
 
 	void Update(float frame_time, gef::Matrix44& marker_transform);
-	void Init();
+	void Init(gef::Matrix44 projection, gef::Matrix44 view);
 	void Render();
 	void Cleanup();
-	// Return a pointer to the vector of pointers
+
+	// Returns a reference to the Game Objects.
 	std::vector<GameObject*>* GetGameObjects() { return &game_object_container; };
 
 private:
 	bool ProcessTouchInput();
 	
-	class gef::Renderer3D* renderer_3d_;
 	gef::Platform& platform_;
 	gef::InputManager* input_manager_;
+	class gef::Renderer3D* renderer_3d_;
 
 	// Structure to store all the game objects.
 	std::vector<GameObject*> game_object_container;
-	//GameObject* game_object_container[1];
 
-	//CollisionManager* collision_manager;
+	// Class that handles collision detection between game objects.
+	CollisionManager* collision_manager;
 
 	// Touch Input
 	Int32 active_touch_id;

@@ -40,14 +40,14 @@ private:
 	void CleanUpFont();
 	void DrawHUD();
 	void SetUpLights();
-	bool ProcessTouchInput();
+	//bool ProcessTouchInput();
 
-	// Move to collision detection, then replace with a single call.
-	void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
-	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
-	bool PointInSphere(GameObject&, gef::Vector4&);
-	void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44&);
-	bool GameObjectFall(GameObject&, gef::Matrix44&);
+	//// Move to collision detection, then replace with a single call.
+	//void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
+	//bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
+	//bool PointInSphere(GameObject&, gef::Vector4&);
+	//void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44&);
+	//bool GameObjectFall(GameObject&, gef::Matrix44&);
 
 private:
 	// Graphics Objects
@@ -60,7 +60,7 @@ private:
 	gef::Matrix44 scaled_projection_matrix_;
 	gef::Matrix44 scaling_matrix_;
 	gef::Matrix44 ortho_matrix_;
-	gef::Matrix44 identity_;
+	gef::Matrix44 view_matrix;
 	gef::Sprite camera_feed_sprite_;
 	gef::TextureVita camera_feed_texture_;
 	float scaling_factor_ = 0.0f;
