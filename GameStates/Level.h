@@ -40,21 +40,12 @@ private:
 	void CleanUpFont();
 	void DrawHUD();
 	void SetUpLights();
-	//bool ProcessTouchInput();
-
-	//// Move to collision detection, then replace with a single call.
-	//void GetRay(gef::Vector4&, gef::Vector4&, gef::Matrix44&, gef::Matrix44&);
-	//bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);
-	//bool PointInSphere(GameObject&, gef::Vector4&);
-	//void MoveGameObject(GameObject&, gef::Matrix44&, gef::Matrix44&);
-	//bool GameObjectFall(GameObject&, gef::Matrix44&);
 
 private:
 	// Graphics Objects
 	class gef::Renderer3D* renderer_3d_;
-	gef::Font* font_;
-	gef::InputManager* input_manager_;
 	gef::SpriteRenderer* sprite_renderer_;
+	gef::Font* font_;
 
 	gef::Matrix44 unscaled_projection_matrix_;
 	gef::Matrix44 scaled_projection_matrix_;
@@ -66,14 +57,6 @@ private:
 	float scaling_factor_ = 0.0f;
 	float fps_;
 	int marker_id = 1;
-
-	// Touch Input - To Be Moved
-	Int32 active_touch_id;
-	gef::Vector2 touch_position;
-
-	// Raytracing - To Be Moved
-	gef::Vector4 ray_start;
-	gef::Vector4 ray_direction;
 
 	gef::Matrix44 marker_transform_;
 

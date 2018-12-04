@@ -15,9 +15,10 @@ public:
 
 private:
 	void GetRay(gef::Vector4&, gef::Vector4&);
+	bool RayToSphere(GameObject&);
+
 	bool SphereToPlane(GameObject&);
 	bool SphereToSphere(GameObject&, GameObject&);
-	bool RayToSphere(GameObject&, gef::Vector4&, gef::Vector4&);	// Can probably remove vector references.
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
 	// Move these to the game AI class
@@ -26,18 +27,22 @@ private:
 
 	gef::Platform& platform_;
 
-
+	// All the game objects in the game. Obtained from GameManager.
 	std::vector<GameObject*>& game_object_container;
 
-	// Touch Input
-	Int32 active_touch_id;
-	gef::Vector2 touch_position;
+	// The game object the player is currently "holding" with their finger.
+	GameObject* selected_object;
 
 	// Raytracing
 	gef::Vector4 ray_start;
 	gef::Vector4 ray_direction;
+
 	gef::Matrix44 projection_matrix;
 	gef::Matrix44 view_matrix;
+
+	// Touch Input
+	Int32 active_touch_id;
+	gef::Vector2 touch_position;
 
 	//gef::Matrix44 marker_origin_;
 };

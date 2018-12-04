@@ -54,7 +54,7 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 	//}
 
 	// Make sure the input manager is valid.
-	if (input_manager_ /*&& input_manager_->touch_manager()*/)
+	if (input_manager_ && input_manager_->touch_manager())
 	{
 		input_manager_->Update();
 
@@ -64,6 +64,9 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 			// Make sure the collision detection manager is valid.
 			if (collision_manager)
 			{
+				// Perform a raytrace against all the game objects.
+				// Function returns a pointer to that object if it's hit
+				// Returns NULL if nothing is hit.
 				if (collision_manager->Raytrace(touch_position) != NULL)
 				{
 					// The ray has hit something.
@@ -81,23 +84,12 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 
 void GameManager::Render()
 {
-	/*for (int i = 0; i < sizeof(game_object_container); i++)
-	{
-		GameObject* ptr = &game_object_container[i];
-
-		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
-	}*/
-
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
 		GameObject* ptr = (*it);
-		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
+		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr); // NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
+	
 	}
-
-	//for (int i = 0; i < sizeof(game_object_container); i++)
-	//{
-	//	renderer_3d_->DrawMesh(*(gef::MeshInstance*)game_object_container[i]);
-	//}
 }
 
 void GameManager::Cleanup()

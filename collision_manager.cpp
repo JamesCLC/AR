@@ -26,12 +26,13 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	// Create the ray
 	GetRay(ray_start, ray_direction);
                       
-	// Check each game object to see if the collision has occured.
+	// Check each game object;
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
 		game_object_ptr = (*it);
 
-		if (RayToSphere((*game_object_ptr), ray_start, ray_direction))
+		// Check to see if the ray collided with this object.
+		if (RayToSphere((*game_object_ptr)))
 		{
 			// If the ray intercepts a game object, return a reference to that game object.
 			return game_object_ptr;
@@ -48,12 +49,8 @@ void CollisionManager::CleanUp()
 {
 }
 
-
-void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction/*, gef::Matrix44 & projection, gef::Matrix44 & view*/)
+void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & direction)
 {
-	//// Make sure the input manager and touch manager have been initialised.
-	//if (input_manager_ && input_manager_->touch_manager())
-	//{
 		gef::Vector2 normalised_device_coordinates;
 
 		float half_width = platform_.width() * 0.5f;
@@ -83,7 +80,6 @@ void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & directi
 		start_point = gef::Vector4(near_point.x(), near_point.y(), near_point.z());
 		direction = far_point - near_point;
 		direction.Normalise();
-	//}
 }
 
 bool CollisionManager::SphereToPlane(GameObject &)
@@ -93,7 +89,7 @@ bool CollisionManager::SphereToPlane(GameObject &)
 	return false;
 }
 
-bool CollisionManager::RayToSphere(GameObject& game_object, gef::Vector4& ray_start, gef::Vector4& ray_direction)
+bool CollisionManager::RayToSphere(GameObject& game_object)
 {
 	//First, let's see if the point is inside the sphere. If so, return true
 	if (PointInSphere(game_object, ray_start))
@@ -156,12 +152,11 @@ bool CollisionManager::PointInSphere(GameObject& game_object, gef::Vector4& poin
 		return true;
 	}
 
-
 	//If not, return false
 	return false;
 }
 
-void CollisionManager::MoveGameObject(GameObject& game_object/*, gef::Matrix44 & projection, gef::Matrix44 & view*/)
+void CollisionManager::MoveGameObject(GameObject& game_object)
 {
 	// Placeholder function. For now, I just want to be able to move the ball mesh around.
 	// First, get the touch's position in world space.
@@ -195,7 +190,6 @@ void CollisionManager::MoveGameObject(GameObject& game_object/*, gef::Matrix44 &
 
 
 	// Next, compare the touch's current position with it's previous position.
-
 
 	// Apply the translation to the game object.
 	//game_object.SetTranslation(game_object.GetTranslation() + gef::Vector4(0.0f, 0.05f, 0.05f));
