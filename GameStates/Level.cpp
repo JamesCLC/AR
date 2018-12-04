@@ -11,7 +11,6 @@ Level::Level(gef::Platform& platform) :
 {
 }
 
-
 Level::~Level()
 {
 }
