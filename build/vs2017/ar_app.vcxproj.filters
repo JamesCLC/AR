@@ -53,11 +53,11 @@
     <ClCompile Include="..\..\game_manager.cpp">
       <Filter>Gameplay Managers</Filter>
     </ClCompile>
-    <ClCompile Include="ai_component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\GameStates\button.cpp">
       <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameObject\ai_component.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,11 +94,11 @@
     <ClInclude Include="..\..\game_manager.h">
       <Filter>Gameplay Managers</Filter>
     </ClInclude>
-    <ClInclude Include="ai_component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\GameStates\button.h">
       <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameObject\ai_component.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,10 +2,10 @@
 
 
 
-MainMenu::MainMenu(gef::Platform& platform, GameState* level, GameState* options) :
+MainMenu::MainMenu(gef::Platform& platform, GameState* level/*, GameState* options*/) :
 	GameState(platform),
 	level_(level),
-	options_(options),
+	//options_(options),
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
@@ -26,13 +26,6 @@ void MainMenu::Init()
 	// Set up the Ortho Matrix for 2D rendering.
 	ortho_matrix_.SetIdentity();
 	ortho_matrix_ = platform.OrthographicFrustum(0.0f, 960.0f, 0.0f, 544.0f, -1, 1);
-
-	gef::Vector4 button_pos;
-
-	for (int i = 0; i < num_of_buttons; i++)
-	{
-		buttons.push_back(new Button());
-	}
 
 
 	if (sprite_renderer_)
@@ -62,6 +55,9 @@ void MainMenu::Init()
 	{
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
+
+	// Initialise the buttons.
+	InitButtons();
 }
 
 bool MainMenu::Update(float frame_time)
@@ -162,18 +158,18 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// Display the "buttons"
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
+		/*font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");*/
 
-		// Render the buttons.
-		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
-		{
-			// Convert the button's text from a string to a const char buffer.
-			const char *char_buffer = (*it)->GetText().c_str();
+		//// Render text on the buttons.
+		//for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
+		//{
+		//	// Convert the button's text from a string to a const char buffer.
+		//	const char *char_buffer = (*it)->GetText().c_str();
 
-			font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
-		}
+		//	font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
+		//}
 
 	}
 
@@ -236,4 +232,31 @@ bool MainMenu::ProcessTouchInput()
 	}
 
 	return isTouch;
+}
+
+void MainMenu::InitButtons()
+{
+	for (int i = 1; (i < num_of_buttons + 1); i++)
+	{
+		buttons.push_back(new Button());
+
+		buttons.back()->Init(platform, gef::Vector4((platform.width()*0.5f), (i*100.0f), -0.9f));
+	}
+
+	//// Apply text to the buttons.
+	//if (buttons.size() >= num_of_buttons)
+	//{
+	//	buttons[0]->SetText("Play");
+	//	buttons[1]->SetText("Options");
+	//	buttons[2]->SetText("Quit");
+	//}
+	//else if (buttons.size() >= (num_of_buttons - 1))
+	//{
+	//	buttons[0]->SetText("Play");
+	//	buttons[1]->SetText("Quit");
+	//}
+	//else if (buttons.size() >= (num_of_buttons - 2))
+	//{
+	//	buttons[0]->SetText("Play");
+	//}
 }

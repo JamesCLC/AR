@@ -23,7 +23,7 @@ public:
 	Button();
 	~Button();
 
-	void Init(gef::Platform& platform, gef::Vector4 pos, std::string text);
+	void Init(gef::Platform& platform, gef::Vector4 pos);
 	void CleanUp();
 
 	gef::Vector4 GetPosition() { return button_position; };
@@ -33,6 +33,7 @@ public:
 
 	gef::Sprite* GetSprite() { return &button_sprite; };
 
+	void SetText(std::string);
 	std::string GetText() { return button_text; };
 
 private:

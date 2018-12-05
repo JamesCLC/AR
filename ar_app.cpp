@@ -25,23 +25,17 @@ ARApp::ARApp(gef::Platform& platform) :
 	current_state_(NULL)
 {
 	level_ = new Level(platform);
-	main_menu_ = new MainMenu(platform);
+	main_menu_ = new MainMenu(platform, level_);
 
 	current_state_ = level_;
 }
 
 void ARApp::Init()
 {
-	
 	if (current_state_)
 	{
 		current_state_->Init();
 	}
-
-	/*else if (level)
-	{
-		level->Init();
-	}*/
 }
 
 void ARApp::CleanUp()
@@ -50,11 +44,6 @@ void ARApp::CleanUp()
 	{
 		current_state_->CleanUp();
 	}
-
-	/*else if (level)
-	{
-		level->CleanUp();
-	}*/
 }
 
 bool ARApp::Update(float frame_time)
@@ -65,11 +54,6 @@ bool ARApp::Update(float frame_time)
 	}
 
 	// TO DO - Call Cleanup and Init when the stat changes?
-	
-	/*if (level)
-	{
-		return level->Update(frame_time);
-	}*/
 
 	return false;
 }
@@ -80,11 +64,6 @@ void ARApp::Render()
 	{
 		current_state_->Render();
 	}
-
-	/*if (level)
-	{
-		level->Render();
-	}*/
 }
 
 

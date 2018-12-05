@@ -5,7 +5,7 @@ GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d)
 	renderer_3d_(renderer_3d),
 	input_manager_(NULL),
 	collision_manager(NULL),
-	ai_manager(NULL),
+	//ai_manager(NULL),
 	active_touch_id(-1)
 {
 }
@@ -36,7 +36,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
 
 	// Create the AI manager.
-	ai_manager = new AIManager(game_object_container);
+	//ai_manager = new AIManager(game_object_container);
 }
 
 void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
@@ -112,12 +112,12 @@ void GameManager::Cleanup()
 		collision_manager = NULL;
 	}
 
-	if (ai_manager)
+	/*if (ai_manager)
 	{
 		ai_manager->CleanUp();
 		delete ai_manager;
 		ai_manager = NULL;
-	}
+	}*/
 
 	// Note: Platform and renderer3D objects don't need to be cleaned up 
 	// as they aren't allocated from the heap here.

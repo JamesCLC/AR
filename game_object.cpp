@@ -27,6 +27,16 @@ GameObject::~GameObject()
 
 }
 
+void GameObject::Update(gef::Matrix44& marker_transform)
+{
+	// Get the next command from the AI Componenet
+	ai_component.Update(marker_transform);
+
+	// TO DO - Verify this command via the CDM.
+
+	// TO DO - If this command is verified, execute it.
+}
+
 // Returns a collision sphere centred at the game object's current location.
 const gef::Sphere GameObject::GetCollisionSphere()
 {

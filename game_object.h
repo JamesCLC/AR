@@ -5,6 +5,7 @@
 #include <maths/matrix44.h>
 #include <string>
 #include <graphics/mesh.h>
+#include "M:\AppliedGamesTechnology\ar_app\GameObject\ai_component.h"
 
 
 // FRAMEWORK FORWARD DECLARATIONS
@@ -18,12 +19,10 @@ class GameObject : gef::MeshInstance	// Set to public, so I can remove some of t
 
 public:
 	GameObject();
-	GameObject
-	(
-		gef::Platform& platform_,
-		std::string n_scene_filename_
-	);
+	GameObject(gef::Platform& platform_,std::string n_scene_filename_);
 	~GameObject();
+
+	void Update(gef::Matrix44&);
 
 	// Transform
 	void SetTransform(gef::Matrix44 n_transform) { transform_ = scale_matrix_ * n_transform; }
@@ -39,6 +38,9 @@ public:
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
 
+	// AI component - Controls the movement and behaviour of this object
+	AIComponent ai_component;
+
 private:
 	void ReadSceneFile(gef::Platform& platform_);
 
@@ -46,7 +48,6 @@ private:
 	std::string scene_filename_;
 	gef::Scene scene_;
 	gef::Matrix44 scale_matrix_;
-
 	gef::Vector4 velocity;
 };
 

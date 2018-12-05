@@ -11,13 +11,12 @@ Button::~Button()
 {
 }
 
-void Button::Init(gef::Platform& platform, gef::Vector4 pos, std::string text)
+void Button::Init(gef::Platform& platform, gef::Vector4 pos)
 {
-	text = text;
-
 	button_position = pos;
+	button_position.set_z(-0.8f);
 
-	button_texture = CreateTextureFromPNG("button_texture", platform);
+	button_texture = CreateTextureFromPNG("button_texture.png", platform);
 
 	if (button_texture)
 	{
@@ -29,6 +28,8 @@ void Button::Init(gef::Platform& platform, gef::Vector4 pos, std::string text)
 	}
 
 	// Set up the bounds for the button.
+
+	CreateBounds();
 }
 
 void Button::CleanUp()
@@ -64,6 +65,11 @@ bool Button::IsPressed(gef::Vector2 touch_position)
 	// The touch is not within the bounds.
 	// Therefore, this button has not been pressed.
 	return false;
+}
+
+void Button::SetText(std::string text)
+{
+	button_text = text;
 }
 
 void Button::CreateBounds()

@@ -15,7 +15,7 @@
 class MainMenu : public GameState
 {
 public:
-	MainMenu(gef::Platform& platform, GameState*, GameState*);
+	MainMenu(gef::Platform& platform, GameState*/*, GameState**/);
 	~MainMenu();
 
 	void Init();
@@ -26,6 +26,7 @@ public:
 private:
 	void RenderText();
 	bool ProcessTouchInput();   
+	void InitButtons();
 
 	gef::Font* font_;
 	gef::InputManager* input_manager_;
@@ -40,7 +41,7 @@ private:
 	GameState* options_;
 
 	std::vector<Button*> buttons;
-	int num_of_buttons = 3;
+	const int num_of_buttons = 3;
 
 	// Touch Input
 	Int32 active_touch_id;

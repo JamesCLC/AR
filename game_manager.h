@@ -2,7 +2,7 @@
 
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 #include "m:\AppliedGamesTechnology\ar_app\collision_manager.h"
-#include "m:\AppliedGamesTechnology\ar_app\ai_manager.h" 
+//#include "m:\AppliedGamesTechnology\ar_app\ai_manager.h" 
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
 #include <input\touch_input_manager.h>
@@ -37,7 +37,7 @@ private:
 	CollisionManager* collision_manager;
 
 	// Class that handles the game's AI.
-	AIManager* ai_manager;
+	//AIManager* ai_manager;
 
 	// Touch Input
 	Int32 active_touch_id;
