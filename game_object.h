@@ -52,16 +52,19 @@ private:
 	void ReadSceneFile(gef::Platform& platform_);
 
 	// Behaviours
-	void Execute_Walk(gef::Matrix44);
-	void Execute_Hold(gef::Matrix44);
-	void Execute_Fall(gef::Matrix44);
+	void Execute_Walk(gef::Matrix44&);
+	void Execute_Hold(gef::Matrix44&);
+	void Execute_Fall(gef::Matrix44&);
 	void Execute_Die();
 
 private:
 	std::string scene_filename_;
 	gef::Scene scene_;
 	gef::Matrix44 scale_matrix_;
-	gef::Vector4 velocity;
+
+	// This object's distance from the marker.
+	gef::Vector4 distance;
+	float velocity = 0.0098f;
 
 	// The current state this object is in
 	State current_state = Walk;

@@ -20,7 +20,10 @@ GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) 
 	// Need to scale down the imported model. This is fairly arbitrary, so please forgive the magic numbers.
 	scale_matrix_.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 
-
+	distance.set_x(0.0f);
+	distance.set_y(0.3f);
+	distance.set_z(0.3f);
+	distance.set_x(0.0f);
 }
 
 
@@ -79,42 +82,60 @@ void GameObject::ReadSceneFile(gef::Platform & platform_)
 	}
 }
 
-void GameObject::Execute_Walk(gef::Matrix44 marker_transfrom)
+void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 {
-	float velocity = 0.0098f;
-	gef::Matrix44 new_transform;
+	//// Find the position of the marker in 3D space
+	gef::Vector4 marker_position = marker_transfrom.GetTranslation();
 
-	new_transform = marker_transfrom;
+	// The new position of this game object
+	gef::Vector4 new_position;
 
-	//gef::Vector4 destination = marker_transfrom.GetTranslation();
-	//
-	//gef::Vector4 distance = transform_.GetTranslation() - destination;
+	// get the x-axis NOTE: Doesn't work for any descernable reason.
+	gef::Vector4 x_axis = gef::Vector4(marker_transfrom.m(0,0),
+		marker_transfrom.m(0, 1),
+		marker_transfrom.m(0, 2));
 
-	//transform_.SetTranslation(destination);
+	// get the y-axis
+	gef::Vector4 y_axis = gef::Vector4(marker_transfrom.m(1, 0),
+		marker_transfrom.m(1, 1),
+		marker_transfrom.m(1, 2));
+	
+	// get the z-axis
+	gef::Vector4 z_axis = gef::Vector4(marker_transfrom.m(2, 0),
+		marker_transfrom.m(2, 1),
+		marker_transfrom.m(2, 2));
 
-	//// If the game object hasn't reached it's destination
-	//if (distance.Length() > 0)
-	//{
-	//	// calculate the unit vector from the current position to the destination
-	//	distance.set_x(distance.x() / distance.LengthSqr());
-	//	distance.set_y(distance.y() / distance.LengthSqr());
-	//	distance.set_z(distance.z() / distance.LengthSqr());
 
-	//	// Move the object by a given velocity along this unit vector.
-	//	float velocity = 9.8f;
+	// Update the object's position based on it's velocity.
+	if (distance.y() > 0)
+	{
+		distance.set_y(distance.y() - velocity);
+	}
+	else if (distance.y() < 0)
+	{
+		distance.set_y(distance.x() + velocity);
+	}
 
-	//	gef::Vector4 new_translation;
-	//	new_translation = transform_.GetTranslation() - (distance * velocity);
+	if (distance.z() > 0)
+	{
+		distance.set_z(distance.z() - velocity);
+	}
+	else if (distance.z() < 0)
+	{
+		distance.set_z(distance.z() + velocity);
+	}
 
-	//	// Update the object's transform.
-	//	transform_.SetTranslation(new_translation);
-	//}
+	// Update the object's position.
+	new_position = marker_position + (x_axis * distance.x()) + (y_axis * distance.y() + (z_axis * distance.z()));
 
-	SetTransform(new_transform);
+	// Copy the marker transform to match marker rotation.
+	SetTransform(marker_transfrom);
 
+	// Override the position of the object transform 
+	transform_.SetTranslation(new_position);
 }
 
-void GameObject::Execute_Fall(gef::Matrix44 marker_transfrom)
+void GameObject::Execute_Fall(gef::Matrix44& marker_transfrom)
 {
 	// clalculate the object's height above the marker
 	float height = transform_.GetTranslation().y() - marker_transfrom.GetTranslation().y();
@@ -129,7 +150,7 @@ void GameObject::Execute_Fall(gef::Matrix44 marker_transfrom)
 	transform_.SetTranslation(new_translation);
 }
 
-void GameObject::Execute_Hold(gef::Matrix44 touch_oposition_world)
+void GameObject::Execute_Hold(gef::Matrix44& touch_oposition_world)
 {
 	// Calculate the vector between this object and the touch's postion in world space.
 	gef::Vector4 distance = transform_.GetTranslation() - touch_oposition_world.GetTranslation();
