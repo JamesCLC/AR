@@ -47,6 +47,7 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 
 void CollisionManager::Update()
 {
+	
 	// Perform general collision detection here?
 }
 
@@ -161,7 +162,7 @@ bool CollisionManager::PointInSphere(GameObject& game_object, gef::Vector4& poin
 	return false;
 }
 
-void CollisionManager::MoveGameObject(GameObject& game_object)
+void CollisionManager::TouchPositionWolrd(GameObject& game_object)
 {
 	// Placeholder function. For now, I just want to be able to move the ball mesh around.
 	// First, get the touch's position in world space.

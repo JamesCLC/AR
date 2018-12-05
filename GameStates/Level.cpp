@@ -209,16 +209,6 @@ void Level::DrawHUD()
 {
 	if (font_)
 	{
-		//// Degub - Display the position of the touch
-		//if (active_touch_id != -1)
-		//{
-		//	font_->RenderText(
-		//		sprite_renderer_,
-		//		gef::Vector4(touch_position.x, touch_position.y, -0.9f),
-		//		1.0f, 0xffffffff, gef::TJ_LEFT, "(%.1f, %.1f)",
-		//		touch_position.x, touch_position.y);
-		//}
-
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}

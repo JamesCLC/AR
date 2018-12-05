@@ -22,7 +22,7 @@ private:
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
 	// Move these to the game AI class
-	void MoveGameObject(GameObject&);
+	void TouchPositionWolrd(GameObject&);
 	bool GameObjectFall(GameObject&, gef::Matrix44&);
 
 	gef::Platform& platform_;

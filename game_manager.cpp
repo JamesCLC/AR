@@ -5,7 +5,6 @@ GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d)
 	renderer_3d_(renderer_3d),
 	input_manager_(NULL),
 	collision_manager(NULL),
-	//ai_manager(NULL),
 	active_touch_id(-1)
 {
 }
@@ -34,32 +33,17 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 
 	// Create the collision detection manager.
 	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
-
-	// Create the AI manager.
-	//ai_manager = new AIManager(game_object_container);
 }
 
 void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
-	// Update each of the game objects.
-	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
-	{
-		// Placeholder. Replace with Collision Update.
-		(*it)->SetTransform(marker_transform);
-	}
-
-	//for (int i = 0; i < sizeof(game_object_container); i++)
-	//{
-	//	// For now, just put my object on the marker.
-	//	game_object_container[i]->SetTransform(marker_transform);
-	//}
+	gef::Vector4 touch_position_world;
 
 	// Make sure the input manager is valid.
 	if (input_manager_ && input_manager_->touch_manager())
 	{
-		input_manager_->Update();
-
 		// Check to see if there's any touch input.
+		input_manager_->Update();	
 		if (ProcessTouchInput())
 		{
 			// Make sure the collision detection manager is valid.
@@ -81,6 +65,12 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 			}
 		}
 	}
+
+	// Update the Game Objects.
+	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	{
+		(*it)->Update(marker_transform);
+	}
 }
 
 void GameManager::Render()
@@ -89,7 +79,6 @@ void GameManager::Render()
 	{
 		GameObject* ptr = (*it);
 		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr); // NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
-	
 	}
 }
 
@@ -111,13 +100,6 @@ void GameManager::Cleanup()
 		delete collision_manager;
 		collision_manager = NULL;
 	}
-
-	/*if (ai_manager)
-	{
-		ai_manager->CleanUp();
-		delete ai_manager;
-		ai_manager = NULL;
-	}*/
 
 	// Note: Platform and renderer3D objects don't need to be cleaned up 
 	// as they aren't allocated from the heap here.

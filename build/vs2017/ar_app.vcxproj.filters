@@ -56,9 +56,6 @@
     <ClCompile Include="..\..\GameStates\button.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\GameObject\ai_component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -96,9 +93,6 @@
     </ClInclude>
     <ClInclude Include="..\..\GameStates\button.h">
       <Filter>Game States</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\GameObject\ai_component.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
