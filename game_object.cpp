@@ -20,6 +20,9 @@ GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) 
 	// Need to scale down the imported model. This is fairly arbitrary, so please forgive the magic numbers.
 	scale_matrix_.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 
+	//float start_y = (rand() % max_distance) / 100;
+	//float start_z = (rand() % max_distance) / 100;
+
 	distance.set_x(0.0f);
 	distance.set_y(0.3f);
 	distance.set_z(0.3f);
@@ -61,7 +64,6 @@ const gef::Sphere GameObject::GetCollisionSphere()
 
 	return transformed_sphere;
 }
-
 
 void GameObject::ReadSceneFile(gef::Platform & platform_)
 {

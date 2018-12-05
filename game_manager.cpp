@@ -38,6 +38,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
 	gef::Vector4 touch_position_world;
+	GameObject* hit_object;
 
 	// Make sure the input manager is valid.
 	if (input_manager_ && input_manager_->touch_manager())
@@ -52,10 +53,12 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 				// Perform a raytrace against all the game objects.
 				// Function returns a pointer to that object if it's hit
 				// Returns NULL if nothing is hit.
-				if (collision_manager->Raytrace(touch_position) != NULL)
+				hit_object = collision_manager->Raytrace(touch_position);
+				if (hit_object)
 				{
 					// The ray has hit something.
-					int foo = 0;
+					// Tell that game object to die.
+					hit_object->SetState(GameObject::Dead);
 				}
 				else
 				{
@@ -78,7 +81,10 @@ void GameManager::Render()
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
 		GameObject* ptr = (*it);
-		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr); // NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
+		if (ptr->GetState() != GameObject::Dead)
+		{
+			renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
+		}	
 	}
 }
 

@@ -5,7 +5,7 @@
 #include <maths/matrix44.h>
 #include <string>
 #include <graphics/mesh.h>
-//#include "M:\AppliedGamesTechnology\ar_app\GameObject\ai_component.h"
+
 
 
 // FRAMEWORK FORWARD DECLARATIONS
@@ -14,9 +14,7 @@ namespace gef
 	class Platform;
 }
 
-
-
-class GameObject : gef::MeshInstance	// Set to public, so I can remove some of the accessor functions.
+class GameObject : gef::MeshInstance
 {
 public:
 	enum State
@@ -48,6 +46,9 @@ public:
 
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
+
+	void SetState(State new_state) { current_state = new_state; };
+	State GetState() { return current_state; };
 private:
 	void ReadSceneFile(gef::Platform& platform_);
 
@@ -63,8 +64,9 @@ private:
 	gef::Matrix44 scale_matrix_;
 
 	// This object's distance from the marker.
+	//int max_distance = 100;
 	gef::Vector4 distance;
-	float velocity = 0.0098f;
+	float velocity = 0.00098f;
 
 	// The current state this object is in
 	State current_state = Walk;
