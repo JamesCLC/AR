@@ -26,31 +26,28 @@ public:
 	~GameObject();
 
 	// Transform
-	void SetTransform(gef::Matrix44 n_transform) { transform_ = n_transform; }	
+	void SetTransform(gef::Matrix44 n_transform) { transform_ = scale_matrix_ * n_transform; }
 	const gef::Matrix44& GetTransform() { return transform_; }
 
 	// Translation
 	void SetTranslation(gef::Vector4 n_translation) { transform_.SetTranslation(n_translation); }
 	gef::Vector4 GetTranslation() { return transform_.GetTranslation(); }
 
-
 	// Collision Sphere
-	const gef::Sphere * GetCollisionSphere(){ return &(mesh_->bounding_sphere()); }
-	const gef::Vector4 GetCollisionSpherePosition() { return (GetCollisionSphere()->position()); }	// Optimise this?
+	const gef::Sphere GetCollisionSphere();
 
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
 
-	
-
 private:
-	void Initialise(gef::Platform& platform_);
 	void ReadSceneFile(gef::Platform& platform_);
 
 private:
 	std::string scene_filename_;
 	gef::Scene scene_;
+	gef::Matrix44 scale_matrix_;
 
+	gef::Vector4 velocity;
 };
 
 

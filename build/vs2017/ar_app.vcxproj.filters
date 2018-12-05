@@ -9,6 +9,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp</Extensions>
     </Filter>
+    <Filter Include="Game States">
+      <UniqueIdentifier>{151473d1-a3c1-4ba4-8c1d-fa6428aa82b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay Managers">
+      <UniqueIdentifier>{e0f30c94-8dc1-4a9f-9e17-d214fe142a68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp">
@@ -29,6 +35,30 @@
     <ClCompile Include="..\..\vertex_colour_unlit_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\GameStates\Level.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game_state.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\load_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameStates\main_menu.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\collision_manager.cpp">
+      <Filter>Gameplay Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game_manager.cpp">
+      <Filter>Gameplay Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameStates\button.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -45,6 +75,30 @@
     </ClInclude>
     <ClInclude Include="..\..\vertex_colour_unlit_shader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game_state.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\Level.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\load_texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\main_menu.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\collision_manager.h">
+      <Filter>Gameplay Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game_manager.h">
+      <Filter>Gameplay Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\button.h">
+      <Filter>Game States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

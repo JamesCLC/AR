@@ -4,14 +4,21 @@
 
 GameObject::GameObject()
 {
-
+	
 }
 
 
 GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) : 
 	scene_filename_(n_scene_filename_)
 {
-	Initialise(platform_);	// Consider changing this. Keep the class interface uniform!
+	// Read relevent data from the scene file.
+	if (!scene_filename_.empty())
+	{
+		ReadSceneFile(platform_);
+	}
+
+	// Need to scale down the imported model. This is fairly arbitrary, so please forgive the magic numbers.
+	scale_matrix_.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 }
 
 
@@ -20,14 +27,14 @@ GameObject::~GameObject()
 
 }
 
-void GameObject::Initialise(gef::Platform& platform_)
+// Returns a collision sphere centred at the game object's current location.
+const gef::Sphere GameObject::GetCollisionSphere()
 {
-	// Read relevent data from the scene file.
-	if (!scene_filename_.empty())
-	{
-		ReadSceneFile(platform_);
-	}
+	gef::Sphere transformed_sphere = mesh_->bounding_sphere().Transform(this->transform_);
+
+	return transformed_sphere;
 }
+
 
 void GameObject::ReadSceneFile(gef::Platform & platform_)
 {
