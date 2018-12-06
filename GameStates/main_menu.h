@@ -16,13 +16,14 @@
 class MainMenu : public GameState
 {
 public:
-	MainMenu(gef::Platform& platform, GameState* level/*, GameState**/);
+	MainMenu(gef::Platform& platform);
 	~MainMenu();
 
 	void Init();
 	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
+	void SetUpGameStates(GameState* level/*, GameState* options*/);
 
 private:
 	void RenderText();

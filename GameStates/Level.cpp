@@ -2,9 +2,9 @@
 
 
 
-Level::Level(gef::Platform& platform, GameState* game_over) :
+Level::Level(gef::Platform& platform) :
 	GameState(platform),
-	game_over_(game_over),
+	game_over_(NULL),
 	renderer_3d_(NULL),
 	font_(NULL),
 	sprite_renderer_(NULL),
@@ -178,6 +178,11 @@ void Level::CleanUp()
 
 	delete renderer_3d_;
 	renderer_3d_ = NULL;
+}
+
+void Level::SetUpGameStates(GameState * game_over)
+{
+	game_over_ = game_over;
 }
 
 void Level::RenderOverlay()

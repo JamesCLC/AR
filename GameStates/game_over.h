@@ -14,13 +14,14 @@ class GameOver :
 	public GameState
 {
 public:
-	GameOver(gef::Platform& platform, GameState* level, GameState* main_menu);
+	GameOver(gef::Platform& platform);
 	~GameOver();
 
 	void Init();
 	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
+	void SetUpStates(GameState* level, GameState* main_menu);
 
 private:
 	void RenderText();

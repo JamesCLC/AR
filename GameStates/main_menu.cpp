@@ -2,9 +2,9 @@
 
 
 
-MainMenu::MainMenu(gef::Platform& platform, GameState* level/*, GameState* options*/) :
+MainMenu::MainMenu(gef::Platform& platform) :
 	GameState(platform),
-	level_(level),
+	level_(NULL),
 	//options_(options),
 	font_(NULL),
 	input_manager_(NULL),
@@ -140,6 +140,12 @@ void MainMenu::CleanUp()
 	// Delete the buttons.
 	buttons.clear();
 }
+
+void MainMenu::SetUpGameStates(GameState * level)
+{
+	level_ = level;
+}
+
 
 void MainMenu::RenderText()
 {

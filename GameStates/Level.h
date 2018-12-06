@@ -27,13 +27,14 @@
 class Level : public GameState
 {
 public:
-	Level(gef::Platform& platform, GameState* game_over);
+	Level(gef::Platform& platform);
 	~Level();
 
 	void Init();
 	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
+	void SetUpGameStates(GameState* game_over);
 
 private:
 	void RenderOverlay();

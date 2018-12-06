@@ -26,13 +26,16 @@ ARApp::ARApp(gef::Platform& platform) :
 	current_state_(NULL)
 {
 	// Create the game states.
-	game_over_ = new GameOver(platform, level_, main_menu_);
-	level_ = new Level(platform, game_over_);
-	main_menu_ = new MainMenu(platform, level_);
+	game_over_ = new GameOver(platform_);
+	level_ = new Level(platform);
+	main_menu_ = new MainMenu(platform);
 
+	game_over_->SetUpStates(level_, main_menu_);
+	level_->SetUpGameStates(game_over_);
+	main_menu_->SetUpGameStates(level_);
 
 	// Begin the application on the main menu.
-	current_state_ = level_;
+	current_state_ = main_menu_;
 }
 
 void ARApp::Init()

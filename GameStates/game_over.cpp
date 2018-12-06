@@ -2,10 +2,10 @@
 
 
 
-GameOver::GameOver(gef::Platform& platform, GameState* level, GameState* main_menu) :
+GameOver::GameOver(gef::Platform& platform) :
 	GameState(platform),
-	level_(level),
-	main_menu_(main_menu),
+	level_(NULL),
+	main_menu_(NULL),
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
@@ -139,6 +139,12 @@ void GameOver::CleanUp()
 
 	// Delete the buttons.
 	buttons.clear();
+}
+
+void GameOver::SetUpStates(GameState * level, GameState * main_menu)
+{
+	level_ = level;
+	main_menu_ = main_menu;
 }
 
 void GameOver::RenderText()
