@@ -19,11 +19,10 @@
 
 // James' Files
 #include "game_object.h"
-#include "game_state.h" 
-//#include "M:\AppliedGamesTechnology\ar_app\GameStates\Level.h"
+#include "GameStates\game_state.h" 
 #include "GameStates\Level.h"
-//#include "M:\AppliedGamesTechnology\ar_app\GameStates\main_menu.h"
 #include "GameStates\main_menu.h"
+#include "GameStates\game_over.h"
 
 // FRAMEWORK FORWARD DECLARATIONS
 
@@ -56,5 +55,6 @@ private:
 
 	MainMenu* main_menu_;
 	Level* level_;
+	GameOver* game_over_;
 };
 #endif // _RENDER_TARGET_APP_H

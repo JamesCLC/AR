@@ -1,9 +1,7 @@
 #pragma once
 
-//#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 #include "game_object.h"
-#include "m:\AppliedGamesTechnology\ar_app\collision_manager.h"
-//#include "collision_manager"
+#include "../collision_manager.h"
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
 #include <input\touch_input_manager.h>
@@ -16,7 +14,7 @@ public:
 	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d);
 	~GameManager();
 
-	void Update(float frame_time, gef::Matrix44& marker_transform);
+	bool Update(float frame_time, gef::Matrix44& marker_transform);
 	void Init(gef::Matrix44 projection, gef::Matrix44 view);
 	void Render();
 	void Cleanup();

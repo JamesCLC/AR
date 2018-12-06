@@ -1,11 +1,11 @@
-#include "main_menu.h"
+#include "game_over.h"
 
 
 
-MainMenu::MainMenu(gef::Platform& platform, GameState* level/*, GameState* options*/) :
+GameOver::GameOver(gef::Platform& platform, GameState* level, GameState* main_menu) :
 	GameState(platform),
 	level_(level),
-	//options_(options),
+	main_menu_(main_menu),
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
@@ -14,11 +14,11 @@ MainMenu::MainMenu(gef::Platform& platform, GameState* level/*, GameState* optio
 }
 
 
-MainMenu::~MainMenu()
+GameOver::~GameOver()
 {
 }
 
-void MainMenu::Init()
+void GameOver::Init()
 {
 	// Create the sprite renderer.
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
@@ -31,10 +31,10 @@ void MainMenu::Init()
 	if (sprite_renderer_)
 	{
 		// load in the texture for the background image.
-		background_texture_ = CreateTextureFromPNG("MainMenu.png", platform);
+		background_texture_ = CreateTextureFromPNG("GameOver.png", platform);
 
 		if (background_texture_)
-		{	
+		{
 			// Set the scale and position of the background image for the Vita.
 			background_sprite_.set_height(platform.height());
 			background_sprite_.set_width(platform.width());
@@ -60,7 +60,7 @@ void MainMenu::Init()
 	InitButtons();
 }
 
-GameState* MainMenu::Update(float frame_time)
+GameState * GameOver::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
@@ -87,7 +87,7 @@ GameState* MainMenu::Update(float frame_time)
 	return return_state;
 }
 
-void MainMenu::Render()
+void GameOver::Render()
 {
 	if (sprite_renderer_)
 	{
@@ -113,7 +113,7 @@ void MainMenu::Render()
 	RenderText();
 }
 
-void MainMenu::CleanUp()
+void GameOver::CleanUp()
 {
 	// Delete the font object.
 	if (font_)
@@ -135,12 +135,12 @@ void MainMenu::CleanUp()
 		delete sprite_renderer_;
 		sprite_renderer_ = NULL;
 	}
-	
+
 	// Delete the buttons.
 	buttons.clear();
 }
 
-void MainMenu::RenderText()
+void GameOver::RenderText()
 {
 	//
 	// render 2d hud on top
@@ -167,12 +167,9 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// Display the "buttons"
-		/*font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");*/
-		font_->RenderText(sprite_renderer_, buttons[0]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Play");
-		font_->RenderText(sprite_renderer_, buttons[1]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Options");
-		font_->RenderText(sprite_renderer_, buttons[2]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Quit");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
 
 		// Render text on the buttons.
 		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
@@ -188,7 +185,7 @@ void MainMenu::RenderText()
 	sprite_renderer_->End();
 }
 
-bool MainMenu::ProcessTouchInput()
+bool GameOver::ProcessTouchInput()
 {
 	const gef::TouchInputManager* touch_input = input_manager_->touch_manager();
 
@@ -246,7 +243,7 @@ bool MainMenu::ProcessTouchInput()
 	return isTouch;
 }
 
-void MainMenu::InitButtons()
+void GameOver::InitButtons()
 {
 	for (int i = 1; (i < num_of_buttons + 1); i++)
 	{
@@ -254,21 +251,4 @@ void MainMenu::InitButtons()
 
 		buttons.back()->Init(platform, gef::Vector4((platform.width()*0.5f), (i*150.0f), -0.6f), level_);
 	}
-
-	//// Apply text to the buttons.
-	//if (buttons.size() >= num_of_buttons)
-	//{
-	//	buttons[0]->SetText("Play");
-	//	buttons[1]->SetText("Options");
-	//	buttons[2]->SetText("Quit");
-	//}
-	//else if (buttons.size() >= (num_of_buttons - 1))
-	//{
-	//	buttons[0]->SetText("Play");
-	//	buttons[1]->SetText("Quit");
-	//}
-	//else if (buttons.size() >= (num_of_buttons - 2))
-	//{
-	//	buttons[0]->SetText("Play");
-	//}
 }

@@ -19,17 +19,15 @@
 #include <libdbg.h>
 #include <libsmart.h>
 
-#include "m:\AppliedGamesTechnology\ar_app\game_state.h"
-#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
-#include "m:\AppliedGamesTechnology\ar_app\game_manager.h"
-//#include "game_state.h"
-//#include "game_object.h"
-//#include "game_manager.h"
+// James' Files
+#include "game_state.h"
+#include "../game_object.h"
+#include "../game_manager.h"
 
 class Level : public GameState
 {
 public:
-	Level(gef::Platform& platform);
+	Level(gef::Platform& platform, GameState* game_over);
 	~Level();
 
 	void Init();
@@ -64,6 +62,8 @@ private:
 	gef::Matrix44 marker_transform_;
 
 	GameManager* game_manager_;
+
+	GameState* game_over_;
 
 	// bool is_marker_visible;
 };

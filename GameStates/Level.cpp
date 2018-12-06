@@ -2,8 +2,9 @@
 
 
 
-Level::Level(gef::Platform& platform) :
+Level::Level(gef::Platform& platform, GameState* game_over) :
 	GameState(platform),
+	game_over_(game_over),
 	renderer_3d_(NULL),
 	font_(NULL),
 	sprite_renderer_(NULL),
@@ -94,18 +95,13 @@ GameState* Level::Update(float frame_time)
 		// marker is being tracked, get it’s transform
 		sampleGetTransform(marker_id, &marker_transform_);
 
-		// Perfomr all gameplay/ collision code.
-		game_manager_->Update(frame_time, marker_transform_);
+		// Perform all gameplay & collision code.
+		if (!game_manager_->Update(frame_time, marker_transform_))
+		{
+			// The player has died. Go to the game over screen.
+			return_pointer = game_over_;
+		}
 	}
-
-
-	/// DEBUG
-	/*debug_matrix.SetIdentity();
-	debug_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
-	debug_matrix.SetTranslation(test_->GetTranslation());
-	debug_sphere.set_transform(debug_matrix);*/
-	/// END DEBUG
-
 
 	sampleUpdateEnd(dat);
 

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "graphics\texture.h"
 #include "graphics\font.h"
 #include "graphics\sprite.h"
@@ -11,13 +10,12 @@
 #include "..\load_texture.h"
 #include "..\GameStates\button.h"
 
-// Replace these includes with forward declarations?
-
-class MainMenu : public GameState
+class GameOver :
+	public GameState
 {
 public:
-	MainMenu(gef::Platform& platform, GameState*/*, GameState**/);
-	~MainMenu();
+	GameOver(gef::Platform& platform, GameState* level, GameState* main_menu);
+	~GameOver();
 
 	void Init();
 	GameState* Update(float frame_time);
@@ -26,7 +24,7 @@ public:
 
 private:
 	void RenderText();
-	bool ProcessTouchInput();   
+	bool ProcessTouchInput();
 	void InitButtons();
 
 	gef::Font* font_;
@@ -39,6 +37,7 @@ private:
 
 	// pointers to the gamestates the menu can transition to.
 	GameState* level_;
+	GameState* main_menu_;
 
 	std::vector<Button*> buttons;
 	const int num_of_buttons = 3;

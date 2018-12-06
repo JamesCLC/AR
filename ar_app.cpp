@@ -22,12 +22,14 @@ ARApp::ARApp(gef::Platform& platform) :
 	Application(platform),
 	level_(NULL),
 	main_menu_(NULL),
+	game_over_(NULL),
 	current_state_(NULL)
 {
-	level_ = new Level(platform);
+	level_ = new Level(platform, game_over_);
 	main_menu_ = new MainMenu(platform, level_);
+	game_over_ = new GameOver(platform, level_, main_menu_);
 
-	current_state_ = main_menu_;
+	current_state_ = game_over_;
 }
 
 void ARApp::Init()

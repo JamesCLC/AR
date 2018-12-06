@@ -38,9 +38,6 @@
     <ClCompile Include="..\..\GameStates\Level.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\game_state.cpp">
-      <Filter>Game States</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\load_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,6 +51,12 @@
       <Filter>Gameplay Managers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\GameStates\button.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameStates\game_over.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameStates\game_state.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,9 +76,6 @@
     <ClInclude Include="..\..\vertex_colour_unlit_shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\game_state.h">
-      <Filter>Game States</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\GameStates\Level.h">
       <Filter>Game States</Filter>
     </ClInclude>
@@ -92,6 +92,12 @@
       <Filter>Gameplay Managers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\GameStates\button.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\game_over.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\game_state.h">
       <Filter>Game States</Filter>
     </ClInclude>
   </ItemGroup>

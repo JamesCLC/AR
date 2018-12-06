@@ -35,10 +35,11 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
 }
 
-void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
+bool GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
 	gef::Vector4 touch_position_world;
 	GameObject* hit_object;
+	gef::Vector4 distance_from_marker;
 
 	// Make sure the input manager is valid.
 	if (input_manager_ && input_manager_->touch_manager())
@@ -60,11 +61,6 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 					// Tell that game object to die.
 					hit_object->SetState(GameObject::Dead);
 				}
-				else
-				{
-					// The ray has not hit anything.
-					int bar = 0;
-				}
 			}
 		}
 	}
@@ -73,7 +69,18 @@ void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
 		(*it)->Update(marker_transform);
+
+		// Check to see if they reached the ground
+		distance_from_marker = ((*it)->GetTranslation() - marker_transform.GetTranslation());
+
+		if (distance_from_marker.Length() <= 0.1f)
+		{
+			// The player has died. Notify the level.
+			return false;
+		}
 	}
+
+	return true;
 }
 
 void GameManager::Render()
