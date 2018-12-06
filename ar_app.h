@@ -52,9 +52,9 @@ public:
 private:
 	
 	GameState* current_state_;
-	
+	//GameState* quit_;
+
 	MainMenu* main_menu_;
 	Level* level_;
-
 };
 #endif // _RENDER_TARGET_APP_H

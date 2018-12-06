@@ -33,7 +33,7 @@ public:
 	~Level();
 
 	void Init();
-	bool Update(float frame_time);
+	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
 

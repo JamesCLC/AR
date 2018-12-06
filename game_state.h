@@ -10,7 +10,7 @@ public:
 	virtual ~GameState();
 
 	virtual void Init() = 0;
-	virtual bool Update(float frame_time) = 0;
+	virtual GameState* Update(float frame_time) = 0;
 	virtual void Render() = 0;
 	virtual void CleanUp() = 0;
 

@@ -8,10 +8,10 @@
 #include "input\input_manager.h"
 #include "input\touch_input_manager.h"
 
-#include "m:\AppliedGamesTechnology\ar_app\load_texture.h"
-//#include "load_texture.h"
-#include "m:\AppliedGamesTechnology\ar_app\GameStates\button.h"
-//#include "GameStates\button.h"
+//#include "m:\AppliedGamesTechnology\ar_app\load_texture.h"
+#include "../load_texture.h"
+//#include "m:\AppliedGamesTechnology\ar_app\GameStates\button.h"
+#include "..\GameStates\button.h"
 
 // Replace these includes with forward declarations?
 
@@ -22,7 +22,7 @@ public:
 	~MainMenu();
 
 	void Init();
-	bool Update(float frame_time);
+	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
 

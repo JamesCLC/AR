@@ -77,8 +77,10 @@ void Level::Init()
 	sampleUpdateEnd(dat);
 }
 
-bool Level::Update(float frame_time)
+GameState* Level::Update(float frame_time)
 {
+	GameState* return_pointer = NULL;
+
 	fps_ = 1.0f / frame_time;
 
 	AppData* dat = sampleUpdateBegin();
@@ -107,7 +109,7 @@ bool Level::Update(float frame_time)
 
 	sampleUpdateEnd(dat);
 
-	return true;
+	return return_pointer;
 }
 
 void Level::Render()

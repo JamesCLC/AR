@@ -48,14 +48,24 @@ void ARApp::CleanUp()
 
 bool ARApp::Update(float frame_time)
 {
+	GameState* return_state = NULL;
+
 	if (current_state_)
 	{
-		return current_state_->Update(frame_time);
+		return_state = current_state_->Update(frame_time);
+
+		// If the state changes, clean up the previous state and initialise the new one.
+		if (return_state != NULL)
+		{
+			current_state_->CleanUp();
+			current_state_ = return_state;
+			current_state_->Init();
+		}
 	}
 
-	// TO DO - Call Cleanup and Init when the stat changes?
+	// TO DO - ALLOW FOR QUIT
 
-	return false;
+	return true;
 }
 
 void ARApp::Render()

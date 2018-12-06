@@ -60,9 +60,11 @@ void MainMenu::Init()
 	InitButtons();
 }
 
-bool MainMenu::Update(float frame_time)
+GameState* MainMenu::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
+
+	GameState* return_state = NULL;
 
 
 	if (input_manager_)
@@ -74,15 +76,16 @@ bool MainMenu::Update(float frame_time)
 			// Check to see if any of the buttons have been pressed.
 			for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
 			{
-				if ((*it)->IsPressed(touch_position))
+				return_state = (*it)->IsPressed(touch_position);
+				if (return_state != NULL)
 				{
-					// If this button h
+					return return_state;
 				}
 			}
 		}
 	}
 
-	return true;
+	return return_state;
 }
 
 void MainMenu::Render()
