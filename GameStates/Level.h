@@ -22,6 +22,9 @@
 #include "m:\AppliedGamesTechnology\ar_app\game_state.h"
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 #include "m:\AppliedGamesTechnology\ar_app\game_manager.h"
+//#include "game_state.h"
+//#include "game_object.h"
+//#include "game_manager.h"
 
 class Level : public GameState
 {

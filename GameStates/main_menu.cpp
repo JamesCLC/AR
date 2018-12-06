@@ -38,7 +38,7 @@ void MainMenu::Init()
 			// Set the scale and position of the background image for the Vita.
 			background_sprite_.set_height(platform.height());
 			background_sprite_.set_width(platform.width());
-			background_sprite_.set_position((platform.width() * 0.5), (platform.height() *0.5), -0.99f);
+			background_sprite_.set_position((platform.width() * 0.5), (platform.height() *0.5), -0.5f);
 			background_sprite_.set_texture(background_texture_);
 		}
 	}
@@ -71,7 +71,14 @@ bool MainMenu::Update(float frame_time)
 
 		if (ProcessTouchInput())
 		{
-			// To Do - see if any of the buttons are pressed.
+			// Check to see if any of the buttons have been pressed.
+			for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
+			{
+				if ((*it)->IsPressed(touch_position))
+				{
+					// If this button h
+				}
+			}
 		}
 	}
 
@@ -158,18 +165,18 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// Display the "buttons"
-		/*font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");*/
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
 
-		//// Render text on the buttons.
-		//for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
-		//{
-		//	// Convert the button's text from a string to a const char buffer.
-		//	const char *char_buffer = (*it)->GetText().c_str();
+		// Render text on the buttons.
+		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
+		{
+			// Convert the button's text from a string to a const char buffer.
+			const char *char_buffer = (*it)->GetText().c_str();
 
-		//	font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
-		//}
+			font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
+		}
 
 	}
 
@@ -240,7 +247,7 @@ void MainMenu::InitButtons()
 	{
 		buttons.push_back(new Button());
 
-		buttons.back()->Init(platform, gef::Vector4((platform.width()*0.5f), (i*100.0f), -0.9f));
+		buttons.back()->Init(platform, gef::Vector4((platform.width()*0.5f), (i*150.0f), -0.6f), level_);
 	}
 
 	//// Apply text to the buttons.

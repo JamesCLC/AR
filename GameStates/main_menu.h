@@ -1,5 +1,6 @@
 #pragma once
 #include "m:\AppliedGamesTechnology\ar_app\game_state.h"
+//#include "game_state.h"
 #include "graphics\texture.h"
 #include "graphics\font.h"
 #include "graphics\sprite.h"
@@ -8,7 +9,9 @@
 #include "input\touch_input_manager.h"
 
 #include "m:\AppliedGamesTechnology\ar_app\load_texture.h"
+//#include "load_texture.h"
 #include "m:\AppliedGamesTechnology\ar_app\GameStates\button.h"
+//#include "GameStates\button.h"
 
 // Replace these includes with forward declarations?
 
@@ -38,7 +41,6 @@ private:
 
 	// pointers to the gamestates the menu can transition to.
 	GameState* level_;
-	GameState* options_;
 
 	std::vector<Button*> buttons;
 	const int num_of_buttons = 3;

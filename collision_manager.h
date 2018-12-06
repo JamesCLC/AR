@@ -1,6 +1,7 @@
 #pragma once
 #include <platform/vita/system/platform_vita.h>
-#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
+//#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
+#include "game_object.h"
 
 class CollisionManager
 {

@@ -4,9 +4,10 @@
 #include "graphics\texture.h"
 #include <string>
 #include "m:\AppliedGamesTechnology\ar_app\load_texture.h"
+//#include "load_texture.h"
 
 class gef::Platform;
-//class GameState;
+class GameState;
 
 struct Bounds
 {
@@ -23,13 +24,13 @@ public:
 	Button();
 	~Button();
 
-	void Init(gef::Platform& platform, gef::Vector4 pos);
+	void Init(gef::Platform& platform, gef::Vector4 pos, GameState* transition_state);
 	void CleanUp();
 
 	gef::Vector4 GetPosition() { return button_position; };
 	void SetPosition(gef::Vector4 n_position) { button_position = n_position; };
 	void SetPosition(float x, float y, float z);
-	bool IsPressed(gef::Vector2);		// Change to return game state pointer.
+	GameState* IsPressed(gef::Vector2);		// Change to return game state pointer.
 
 	gef::Sprite* GetSprite() { return &button_sprite; };
 
@@ -49,6 +50,6 @@ private:
 	const float button_height = 128;
 
 	// Tells the appliation which state to transition to.
-	//GameState* transition_state;
+	GameState* transition_state_;
 };
 

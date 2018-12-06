@@ -23,7 +23,7 @@ GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) 
 	//float start_y = (rand() % max_distance) / 100;
 	//float start_z = (rand() % max_distance) / 100;
 
-	distance.set_x(0.0f);
+	distance.set_x(0.3f);
 	distance.set_y(0.3f);
 	distance.set_z(0.3f);
 	distance.set_x(0.0f);
@@ -115,7 +115,7 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 	}
 	else if (distance.y() < 0)
 	{
-		distance.set_y(distance.x() + velocity);
+		distance.set_y(distance.y() + velocity);
 	}
 
 	if (distance.z() > 0)

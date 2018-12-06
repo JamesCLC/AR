@@ -20,8 +20,10 @@
 // James' Files
 #include "game_object.h"
 #include "game_state.h" 
-#include "M:\AppliedGamesTechnology\ar_app\GameStates\Level.h"
-#include "M:\AppliedGamesTechnology\ar_app\GameStates\main_menu.h"
+//#include "M:\AppliedGamesTechnology\ar_app\GameStates\Level.h"
+#include "GameStates\Level.h"
+//#include "M:\AppliedGamesTechnology\ar_app\GameStates\main_menu.h"
+#include "GameStates\main_menu.h"
 
 // FRAMEWORK FORWARD DECLARATIONS
 

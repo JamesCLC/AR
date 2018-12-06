@@ -27,7 +27,7 @@ ARApp::ARApp(gef::Platform& platform) :
 	level_ = new Level(platform);
 	main_menu_ = new MainMenu(platform, level_);
 
-	current_state_ = level_;
+	current_state_ = main_menu_;
 }
 
 void ARApp::Init()
