@@ -82,11 +82,11 @@ void Button::SetText(std::string text)
 
 void Button::CreateBounds()
 {
-	bounds.upper_left.x = button_position.x();
-	bounds.upper_left.y = button_position.y();
+	bounds.upper_left.x = button_position.x() - (button_width * 0.5);
+	bounds.upper_left.y = button_position.y() - (button_height * 0.5);
 
-	bounds.lower_right.x = button_position.x() + button_width;
-	bounds.lower_right.y = button_position.y() + button_height;
+	bounds.lower_right.x = button_position.x() + (button_width * 0.5);
+	bounds.lower_right.y = button_position.y() + (button_height * 0.5);
 
 }
 

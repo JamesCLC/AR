@@ -109,6 +109,15 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 
 
 	// Update the object's position based on it's velocity.
+	if (distance.x() > 0)
+	{
+		distance.set_x(distance.x() - velocity);
+	}
+	else if (distance.x() < 0)
+	{
+		distance.set_x(distance.x() + velocity);
+	}
+
 	if (distance.y() > 0)
 	{
 		distance.set_y(distance.y() - velocity);
@@ -128,7 +137,7 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 	}
 
 	// Update the object's position.
-	new_position = marker_position + (x_axis * distance.x()) + (y_axis * distance.y() + (z_axis * distance.z()));
+	new_position = marker_position + (x_axis * distance.x()) + (y_axis * distance.y()) + (z_axis * distance.z());
 
 	// Copy the marker transform to match marker rotation.
 	SetTransform(marker_transfrom);
