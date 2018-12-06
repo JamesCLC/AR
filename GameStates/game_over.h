@@ -35,7 +35,7 @@ private:
 	gef::Sprite background_sprite_;
 	gef::Matrix44 ortho_matrix_;
 
-	// pointers to the gamestates the menu can transition to.
+	// pointers to the gamestates this can transition to.
 	GameState* level_;
 	GameState* main_menu_;
 

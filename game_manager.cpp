@@ -73,7 +73,7 @@ bool GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 		// Check to see if they reached the ground
 		distance_from_marker = ((*it)->GetTranslation() - marker_transform.GetTranslation());
 
-		if (distance_from_marker.Length() <= 0.1f)
+		if (distance_from_marker.Length() <= death_threshold)
 		{
 			// The player has died. Notify the level.
 			return false;

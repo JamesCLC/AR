@@ -40,5 +40,8 @@ private:
 	gef::Vector2 touch_position;
 
 	int num_of_objects = 1;
+
+	// How close to the ground the objects have to be before the player dies.
+	float death_threshold = 0.1f;
 };
 

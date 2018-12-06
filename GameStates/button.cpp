@@ -13,11 +13,15 @@ Button::~Button()
 
 void Button::Init(gef::Platform& platform, gef::Vector4 pos, GameState* transition_state)
 {
+	// Store the game state this button corresponds to (e.g. Play, Quit etc.)
 	transition_state_ = transition_state;
 	
+	// Set the position of the button, making sure that it's rendered on top
+	// of the splash screen.
 	button_position = pos;
 	button_position.set_z(-0.8f);
 
+	// Load in the texture from memory.
 	button_texture = CreateTextureFromPNG("button_texture.png", platform);
 
 	if (button_texture)
@@ -30,7 +34,6 @@ void Button::Init(gef::Platform& platform, gef::Vector4 pos, GameState* transiti
 	}
 
 	// Set up the bounds for the button.
-
 	CreateBounds();
 }
 
@@ -82,6 +85,7 @@ void Button::SetText(std::string text)
 
 void Button::CreateBounds()
 {
+	// Define the bounds for "collision detection" to be roughly the dimensions of the button.
 	bounds.upper_left.x = button_position.x() - (button_width * 0.5);
 	bounds.upper_left.y = button_position.y() - (button_height * 0.5);
 

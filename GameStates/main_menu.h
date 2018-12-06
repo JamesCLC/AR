@@ -16,7 +16,7 @@
 class MainMenu : public GameState
 {
 public:
-	MainMenu(gef::Platform& platform, GameState*/*, GameState**/);
+	MainMenu(gef::Platform& platform, GameState* level/*, GameState**/);
 	~MainMenu();
 
 	void Init();

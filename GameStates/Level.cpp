@@ -80,6 +80,7 @@ void Level::Init()
 
 GameState* Level::Update(float frame_time)
 {
+	// If a change in state is required, this is used to return that next state.
 	GameState* return_pointer = NULL;
 
 	fps_ = 1.0f / frame_time;
@@ -96,10 +97,12 @@ GameState* Level::Update(float frame_time)
 		sampleGetTransform(marker_id, &marker_transform_);
 
 		// Perform all gameplay & collision code.
+		// Function returns false if the player has died.
 		if (!game_manager_->Update(frame_time, marker_transform_))
 		{
-			// The player has died. Go to the game over screen.
-			return_pointer = game_over_;
+			sampleUpdateEnd(dat);
+
+			return game_over_;
 		}
 	}
 

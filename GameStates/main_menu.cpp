@@ -66,6 +66,7 @@ GameState* MainMenu::Update(float frame_time)
 
 	GameState* return_state = NULL;
 
+	// Process touch input.
 	if (input_manager_)
 	{
 		input_manager_->Update();
@@ -76,7 +77,7 @@ GameState* MainMenu::Update(float frame_time)
 			for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
 			{
 				return_state = (*it)->IsPressed(touch_position);
-				if (return_state != NULL)
+				if (return_state != NULL)	// Note; this is probably unneccesary.
 				{
 					return return_state;
 				}
@@ -167,9 +168,6 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// Display the "buttons"
-		/*font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");*/
 		font_->RenderText(sprite_renderer_, buttons[0]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Play");
 		font_->RenderText(sprite_renderer_, buttons[1]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Options");
 		font_->RenderText(sprite_renderer_, buttons[2]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Quit");
@@ -254,21 +252,4 @@ void MainMenu::InitButtons()
 
 		buttons.back()->Init(platform, gef::Vector4((platform.width()*0.5f), (i*150.0f), -0.6f), level_);
 	}
-
-	//// Apply text to the buttons.
-	//if (buttons.size() >= num_of_buttons)
-	//{
-	//	buttons[0]->SetText("Play");
-	//	buttons[1]->SetText("Options");
-	//	buttons[2]->SetText("Quit");
-	//}
-	//else if (buttons.size() >= (num_of_buttons - 1))
-	//{
-	//	buttons[0]->SetText("Play");
-	//	buttons[1]->SetText("Quit");
-	//}
-	//else if (buttons.size() >= (num_of_buttons - 2))
-	//{
-	//	buttons[0]->SetText("Play");
-	//}
 }
