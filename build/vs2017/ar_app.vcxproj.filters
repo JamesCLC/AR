@@ -17,9 +17,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ar_app.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\main_vita.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,6 +55,12 @@
     </ClCompile>
     <ClCompile Include="..\..\GameStates\game_state.cpp">
       <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameStates\Victory.cpp">
+      <Filter>Game States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ar_app.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +101,9 @@
       <Filter>Game States</Filter>
     </ClInclude>
     <ClInclude Include="..\..\GameStates\game_state.h">
+      <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\Victory.h">
       <Filter>Game States</Filter>
     </ClInclude>
   </ItemGroup>

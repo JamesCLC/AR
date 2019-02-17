@@ -5,6 +5,7 @@
 Level::Level(gef::Platform& platform) :
 	GameState(platform),
 	game_over_(NULL),
+	victory_(NULL),
 	renderer_3d_(NULL),
 	font_(NULL),
 	sprite_renderer_(NULL),
@@ -59,7 +60,7 @@ void Level::Init()
 	view_matrix.SetIdentity();
 
 	// Create and Initialise the Game Manager.
-	game_manager_ = new GameManager(platform, renderer_3d_);
+	game_manager_ = new GameManager(platform, renderer_3d_, game_over_, victory_);
 	game_manager_->Init(scaled_projection_matrix_, view_matrix);
 
 	// Create a Debug Sphere
@@ -98,12 +99,14 @@ GameState* Level::Update(float frame_time)
 
 		// Perform all gameplay & collision code.
 		// Function returns false if the player has died.
-		if (!game_manager_->Update(frame_time, marker_transform_))
+		/*if (!game_manager_->Update(frame_time, marker_transform_))
 		{
 			sampleUpdateEnd(dat);
 
 			return game_over_;
-		}
+		}*/
+
+		return_pointer = game_manager_->Update(frame_time, marker_transform_);
 	}
 
 	sampleUpdateEnd(dat);
@@ -180,9 +183,10 @@ void Level::CleanUp()
 	renderer_3d_ = NULL;
 }
 
-void Level::SetUpGameStates(GameState * game_over)
+void Level::SetUpGameStates(GameState * game_over, GameState* victory)
 {
 	game_over_ = game_over;
+	victory_ = victory;
 }
 
 void Level::RenderOverlay()

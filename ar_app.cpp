@@ -23,16 +23,20 @@ ARApp::ARApp(gef::Platform& platform) :
 	level_(NULL),
 	main_menu_(NULL),
 	game_over_(NULL),
+	victory_(NULL),
 	current_state_(NULL)
 {
 	// Create the game states.
 	game_over_ = new GameOver(platform_);
 	level_ = new Level(platform);
 	main_menu_ = new MainMenu(platform);
+	victory_ = new Victory(platform);
 
+	// Give the states references to the other states they can transition to.
 	game_over_->SetUpStates(level_, main_menu_);
-	level_->SetUpGameStates(game_over_);
+	level_->SetUpGameStates(game_over_, victory_);
 	main_menu_->SetUpGameStates(level_);
+	victory_->SetUpStates(level_, main_menu_);
 
 	// Begin the application on the main menu.
 	current_state_ = main_menu_;
@@ -73,7 +77,6 @@ bool ARApp::Update(float frame_time)
 			current_state_->Init();
 		}
 	}
-	// TO DO - ALLOW FOR QUIT
 
 	return true;
 }

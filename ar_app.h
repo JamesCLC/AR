@@ -23,6 +23,7 @@
 #include "GameStates\Level.h"
 #include "GameStates\main_menu.h"
 #include "GameStates\game_over.h"
+#include "GameStates\Victory.h"
 
 // FRAMEWORK FORWARD DECLARATIONS
 
@@ -50,11 +51,11 @@ public:
 	void Render();
 private:
 	
+	// Game States
 	GameState* current_state_;
-	//GameState* quit_;
-
 	MainMenu* main_menu_;
 	Level* level_;
 	GameOver* game_over_;
+	Victory* victory_;
 };
 #endif // _RENDER_TARGET_APP_H

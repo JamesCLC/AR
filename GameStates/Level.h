@@ -34,7 +34,7 @@ public:
 	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
-	void SetUpGameStates(GameState* game_over);
+	void SetUpGameStates(GameState* game_over, GameState* victory);
 
 private:
 	void RenderOverlay();
@@ -65,6 +65,7 @@ private:
 	GameManager* game_manager_;
 
 	GameState* game_over_;
+	GameState* victory_;
 
 	// bool is_marker_visible;
 };

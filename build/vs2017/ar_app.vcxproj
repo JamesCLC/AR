@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\GameStates\game_state.cpp" />
     <ClCompile Include="..\..\GameStates\Level.cpp" />
     <ClCompile Include="..\..\GameStates\main_menu.cpp" />
+    <ClCompile Include="..\..\GameStates\Victory.cpp" />
     <ClCompile Include="..\..\game_object.cpp" />
     <ClCompile Include="..\..\game_manager.cpp" />
     <ClCompile Include="..\..\load_texture.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="..\..\GameStates\game_state.h" />
     <ClInclude Include="..\..\GameStates\Level.h" />
     <ClInclude Include="..\..\GameStates\main_menu.h" />
+    <ClInclude Include="..\..\GameStates\Victory.h" />
     <ClInclude Include="..\..\game_object.h" />
     <ClInclude Include="..\..\game_manager.h" />
     <ClInclude Include="..\..\load_texture.h" />

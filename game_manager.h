@@ -7,14 +7,15 @@
 #include <input\touch_input_manager.h>
 #include <vector>
 
+class GameState;
 
 class GameManager
 {
 public:
-	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d);
+	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, GameState* game_over, GameState* victory);
 	~GameManager();
 
-	bool Update(float frame_time, gef::Matrix44& marker_transform);
+	GameState* Update(float frame_time, gef::Matrix44& marker_transform);
 	void Init(gef::Matrix44 projection, gef::Matrix44 view);
 	void Render();
 	void Cleanup();
@@ -34,6 +35,10 @@ private:
 
 	// Class that handles collision detection between game objects.
 	CollisionManager* collision_manager;
+
+	// Game States
+	GameState* victory_;
+	GameState* game_over_;
 
 	// Touch Input
 	Int32 active_touch_id;

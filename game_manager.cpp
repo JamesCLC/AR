@@ -1,8 +1,10 @@
 #include "game_manager.h"
 
-GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d) :
+GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d, GameState* game_over, GameState* victory) :
 	platform_(platform),
 	renderer_3d_(renderer_3d),
+	game_over_(game_over),
+	victory_(victory),
 	input_manager_(NULL),
 	collision_manager(NULL),
 	active_touch_id(-1)
@@ -35,11 +37,12 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
 }
 
-bool GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
+GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
 	gef::Vector4 touch_position_world;
 	GameObject* hit_object;
 	gef::Vector4 distance_from_marker;
+	GameState* return_state = NULL;
 
 	// Make sure the input manager is valid.
 	if (input_manager_ && input_manager_->touch_manager())
@@ -60,6 +63,12 @@ bool GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 					// The ray has hit something.
 					// Tell that game object to die.
 					hit_object->SetState(GameObject::Dead);
+
+					return_state = victory_;
+
+					int foo;
+
+
 				}
 			}
 		}
@@ -76,11 +85,11 @@ bool GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 		if (distance_from_marker.Length() <= death_threshold)
 		{
 			// The player has died. Notify the level.
-			return false;
+			return_state = game_over_;
 		}
 	}
 
-	return true;
+	return return_state;
 }
 
 void GameManager::Render()
