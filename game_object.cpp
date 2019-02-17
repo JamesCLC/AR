@@ -26,7 +26,9 @@ GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) 
 	distance.set_x(0.3f);
 	distance.set_y(0.3f);
 	distance.set_z(0.3f);
-	distance.set_x(0.0f);
+
+	distance.set_y(0.0f);
+	distance.set_z(0.0f);
 }
 
 
@@ -92,23 +94,24 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 	// The new position of this game object
 	gef::Vector4 new_position;
 
-	// get the x-axis NOTE: Doesn't work for any descernable reason.
+	// get the marker's x-axis NOTE: Doesn't work for any descernable reason.
 	gef::Vector4 x_axis = gef::Vector4(marker_transfrom.m(0,0),
 		marker_transfrom.m(0, 1),
 		marker_transfrom.m(0, 2));
 
-	// get the y-axis
+	// get the marker's y-axis
 	gef::Vector4 y_axis = gef::Vector4(marker_transfrom.m(1, 0),
 		marker_transfrom.m(1, 1),
 		marker_transfrom.m(1, 2));
 	
-	// get the z-axis
+	// get the marker's z-axis
 	gef::Vector4 z_axis = gef::Vector4(marker_transfrom.m(2, 0),
 		marker_transfrom.m(2, 1),
 		marker_transfrom.m(2, 2));
 
 
 	// Update the object's position based on it's velocity.
+	// Upadate the X component.
 	if (distance.x() > 0)
 	{
 		distance.set_x(distance.x() - velocity);
@@ -117,7 +120,7 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 	{
 		distance.set_x(distance.x() + velocity);
 	}
-
+	// Update the Y component.
 	if (distance.y() > 0)
 	{
 		distance.set_y(distance.y() - velocity);
@@ -127,6 +130,7 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 		distance.set_y(distance.y() + velocity);
 	}
 
+	// Update the Z component.
 	if (distance.z() > 0)
 	{
 		distance.set_z(distance.z() - velocity);

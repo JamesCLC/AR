@@ -64,11 +64,8 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 					// Tell that game object to die.
 					hit_object->SetState(GameObject::Dead);
 
+					// Return the next game state.
 					return_state = victory_;
-
-					int foo;
-
-
 				}
 			}
 		}
