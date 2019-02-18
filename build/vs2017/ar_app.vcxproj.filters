@@ -15,15 +15,15 @@
     <Filter Include="Gameplay Managers">
       <UniqueIdentifier>{e0f30c94-8dc1-4a9f-9e17-d214fe142a68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Gameplay Objects">
+      <UniqueIdentifier>{68dacb62-100d-4f51-947a-57df49ce8963}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\main_vita.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\primitive_builder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\primitive_renderer.cpp">
@@ -47,9 +47,6 @@
     <ClCompile Include="..\..\game_manager.cpp">
       <Filter>Gameplay Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\GameStates\button.cpp">
-      <Filter>Game States</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\GameStates\game_over.cpp">
       <Filter>Game States</Filter>
     </ClCompile>
@@ -62,15 +59,18 @@
     <ClCompile Include="..\..\ar_app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\GameStates\button.cpp">
+      <Filter>Gameplay Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game_object.cpp">
+      <Filter>Gameplay Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\primitive_builder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\primitive_renderer.h">
@@ -94,9 +94,6 @@
     <ClInclude Include="..\..\game_manager.h">
       <Filter>Gameplay Managers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\GameStates\button.h">
-      <Filter>Game States</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\GameStates\game_over.h">
       <Filter>Game States</Filter>
     </ClInclude>
@@ -105,6 +102,12 @@
     </ClInclude>
     <ClInclude Include="..\..\GameStates\Victory.h">
       <Filter>Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameStates\button.h">
+      <Filter>Gameplay Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game_object.h">
+      <Filter>Gameplay Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,8 +11,6 @@
 #include "..\load_texture.h"
 #include "..\GameStates\button.h"
 
-// Replace these includes with forward declarations?
-
 class MainMenu : public GameState
 {
 public:

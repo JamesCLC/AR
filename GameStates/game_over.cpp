@@ -11,9 +11,7 @@ GameOver::GameOver(gef::Platform& platform) :
 	sprite_renderer_(NULL),
 	background_texture_(NULL)
 {
-	int foo = 0;
 }
-
 
 GameOver::~GameOver()
 {

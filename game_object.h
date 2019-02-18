@@ -47,6 +47,7 @@ public:
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
 
+	// AI State
 	void SetState(State new_state) { current_state = new_state; };
 	State GetState() { return current_state; };
 private:
@@ -64,8 +65,9 @@ private:
 	gef::Matrix44 scale_matrix_;
 
 	// This object's distance from the marker.
-	//int max_distance = 100;
 	gef::Vector4 distance;
+	int max_distance = 1;
+	int min_distance = 0.3;
 	float velocity = 0.00098f;
 
 	// The current state this object is in

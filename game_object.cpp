@@ -20,15 +20,24 @@ GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) 
 	// Need to scale down the imported model. This is fairly arbitrary, so please forgive the magic numbers.
 	scale_matrix_.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
 
-	//float start_y = (rand() % max_distance) / 100;
-	//float start_z = (rand() % max_distance) / 100;
+	//distance.set_x(0.3f);
+	//distance.set_y(0.3f);
+	//distance.set_z(0.3f);
 
-	distance.set_x(0.3f);
-	distance.set_y(0.3f);
-	distance.set_z(0.3f);
-
-	distance.set_y(0.0f);
-	distance.set_z(0.0f);
+	// Give the game object a random starting location
+	// within a certain range of distance from the marker.
+	distance.set_x(rand() % max_distance);
+	if (distance.x() < min_distance)
+	{
+		distance.set_x(min_distance);
+	}
+	
+	distance.set_y(rand() % max_distance);
+	if (distance.y() < min_distance)
+	{
+		distance.set_y(min_distance);
+	}
+	
 }
 
 
@@ -45,11 +54,11 @@ void GameObject::Update(gef::Matrix44& marker_transform)
 		case GameObject::State::Walk:
 			Execute_Walk(marker_transform);
 			break;
-		case GameObject::State::Hold:
+		case GameObject::State::Hold: // CHANGE THIS TO TOUCH POSITION WORLD
 			Execute_Hold(marker_transform);
 			break;
-		case GameObject::State::Fall:
-			Execute_Fall(marker_transform);	// CHANGE THIS TO TOUCH POSITION WORLD
+		case GameObject::State::Fall:// ADD TOUCH POSITION WORLD
+			Execute_Fall(marker_transform);	
 			break;
 		case GameObject::State::Dead:
 			Execute_Die();
@@ -80,10 +89,6 @@ void GameObject::ReadSceneFile(gef::Platform & platform_)
 	{
 		mesh_ = scene_.CreateMesh(platform_, scene_.mesh_data.front());
 	}
-	else
-	{
-		// There's no data in the scene file!
-	}
 }
 
 void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
@@ -94,17 +99,17 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 	// The new position of this game object
 	gef::Vector4 new_position;
 
-	// get the marker's x-axis NOTE: Doesn't work for any descernable reason.
+	// get the marker's x-axis.
 	gef::Vector4 x_axis = gef::Vector4(marker_transfrom.m(0,0),
 		marker_transfrom.m(0, 1),
 		marker_transfrom.m(0, 2));
 
-	// get the marker's y-axis
+	// get the marker's y-axis.
 	gef::Vector4 y_axis = gef::Vector4(marker_transfrom.m(1, 0),
 		marker_transfrom.m(1, 1),
 		marker_transfrom.m(1, 2));
 	
-	// get the marker's z-axis
+	// get the marker's z-axis.
 	gef::Vector4 z_axis = gef::Vector4(marker_transfrom.m(2, 0),
 		marker_transfrom.m(2, 1),
 		marker_transfrom.m(2, 2));

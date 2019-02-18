@@ -10,8 +10,7 @@
 #include "..\load_texture.h"
 #include "..\GameStates\button.h"
 
-class GameOver :
-	public GameState
+class GameOver : public GameState
 {
 public:
 	GameOver(gef::Platform& platform);

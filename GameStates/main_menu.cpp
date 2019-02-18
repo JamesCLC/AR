@@ -13,7 +13,6 @@ MainMenu::MainMenu(gef::Platform& platform) :
 {
 }
 
-
 MainMenu::~MainMenu()
 {
 }

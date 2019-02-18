@@ -29,7 +29,7 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	// Check each game object;
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
-		game_object_ptr = (*it);
+		game_object_ptr = (*it); // ProbBLy not needed.
 
 		// Check to see if the ray collided with this object.
 		if (RayToSphere((*game_object_ptr)))

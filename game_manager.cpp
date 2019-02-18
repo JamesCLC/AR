@@ -58,14 +58,14 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 				// Function returns a pointer to that object if it's hit
 				// Returns NULL if nothing is hit.
 				hit_object = collision_manager->Raytrace(touch_position);
-				if (hit_object)
+				if (hit_object && (hit_object->GetState() != GameObject::Dead))
 				{
 					// The ray has hit something.
 					// Tell that game object to die.
 					hit_object->SetState(GameObject::Dead);
 
 					// Return the next game state.
-					return_state = victory_;
+					//return_state = victory_;
 				}
 			}
 		}
@@ -82,7 +82,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 		if (distance_from_marker.Length() <= death_threshold)
 		{
 			// The player has died. Notify the level.
-			return_state = game_over_;
+			//return_state = game_over_;
 		}
 	}
 
@@ -93,11 +93,17 @@ void GameManager::Render()
 {
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
-		GameObject* ptr = (*it);
+		//GameObject* ptr = (*it);
+		if ((*it)->GetState() != GameObject::Dead)
+		{
+			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
+		}	
+		
+		/*	GameObject* ptr = (*it);
 		if (ptr->GetState() != GameObject::Dead)
 		{
 			renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
-		}	
+		}	*/
 	}
 }
 
