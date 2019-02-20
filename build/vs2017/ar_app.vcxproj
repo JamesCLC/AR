@@ -88,6 +88,8 @@
     <ClCompile Include="..\..\primitive_builder.cpp" />
     <ClCompile Include="..\..\primitive_renderer.cpp" />
     <ClCompile Include="..\..\vertex_colour_unlit_shader.cpp" />
+    <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="Spikes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
@@ -104,6 +106,8 @@
     <ClInclude Include="..\..\primitive_builder.h" />
     <ClInclude Include="..\..\primitive_renderer.h" />
     <ClInclude Include="..\..\vertex_colour_unlit_shader.h" />
+    <ClInclude Include="Creature.h" />
+    <ClInclude Include="Spikes.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
