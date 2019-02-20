@@ -36,10 +36,9 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;
 
-		//starting_position.set_x((rand() % max_distance + min_distance) / 50);
-		starting_position.set_z(0.0f);
 		starting_position.set_y((rand() % max_distance + min_distance) / 50);
 		starting_position.set_x((rand() % max_distance + min_distance) / 50);
+		starting_position.set_z(0.0f);
 
 		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn", starting_position));
 	}

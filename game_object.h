@@ -66,7 +66,6 @@ private:
 
 	// This object's distance from the marker.
 	gef::Vector4 position;
-	//float velocity = 0.00098f;
 	float velocity = 0.00196f;
 
 	// The current state this object is in
