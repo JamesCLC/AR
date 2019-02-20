@@ -44,7 +44,10 @@ private:
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
 
+	// Game Object variables.
 	int num_of_objects = 5;
+	int max_distance = 100;
+	int min_distance = 30;
 
 	// How close to the ground the objects have to be before the player dies.
 	float death_threshold = 0.1f;

@@ -27,10 +27,21 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
 
+	// Seed the random number generator with time.
+	srand(time(NULL));
+
 	// Create the GameObjects
 	for (int i = 0; i < num_of_objects; i++)
 	{
-		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn"));
+		// Give the game object a random starting position within a given range.
+		gef::Vector4 starting_position;
+
+		//starting_position.set_x((rand() % max_distance + min_distance) / 50);
+		starting_position.set_z(0.0f);
+		starting_position.set_y((rand() % max_distance + min_distance) / 50);
+		starting_position.set_x((rand() % max_distance + min_distance) / 50);
+
+		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn", starting_position));
 	}
 
 	// Create the collision detection manager.
@@ -44,7 +55,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	gef::Vector4 distance_from_marker;
 	GameState* return_state = NULL;
 
-	// Make sure the input manager is valid.
+	// Make sure the input manager and touch input has been iniialised.
 	if (input_manager_ && input_manager_->touch_manager())
 	{
 		// Check to see if there's any touch input.
@@ -55,7 +66,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 			if (collision_manager)
 			{
 				// Perform a raytrace against all the game objects.
-				// Function returns a pointer to that object if it's hit
+				// If an object is hit, a pointer to that object is returned.
 				// Returns NULL if nothing is hit.
 				hit_object = collision_manager->Raytrace(touch_position);
 				if (hit_object && (hit_object->GetState() != GameObject::Dead))
@@ -86,7 +97,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 		}
 	}
 
-	return return_state;
+	return return_state; // Should move this to here the return state is set. Better yet, ditch the return sate variable altogether.
 }
 
 void GameManager::Render()
@@ -98,12 +109,6 @@ void GameManager::Render()
 		{
 			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
 		}	
-		
-		/*	GameObject* ptr = (*it);
-		if (ptr->GetState() != GameObject::Dead)
-		{
-			renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr);
-		}	*/
 	}
 }
 

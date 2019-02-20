@@ -28,7 +28,7 @@ public:
 
 public:
 	GameObject();
-	GameObject(gef::Platform& platform_,std::string n_scene_filename_);
+	GameObject(gef::Platform& platform_,std::string n_scene_filename_, gef::Vector4 starting_position);
 	~GameObject();
 
 	void Update(gef::Matrix44& marker_transform); // frame time?
@@ -65,10 +65,9 @@ private:
 	gef::Matrix44 scale_matrix_;
 
 	// This object's distance from the marker.
-	gef::Vector4 distance;
-	int max_distance = 1;
-	int min_distance = 0.3;
-	float velocity = 0.00098f;
+	gef::Vector4 position;
+	//float velocity = 0.00098f;
+	float velocity = 0.00196f;
 
 	// The current state this object is in
 	State current_state = Walk;

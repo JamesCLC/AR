@@ -8,8 +8,9 @@ GameObject::GameObject()
 }
 
 
-GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) : 
-	scene_filename_(n_scene_filename_)
+GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_, gef::Vector4 starting_position) :
+	scene_filename_(n_scene_filename_),
+	position(starting_position)
 {
 	// Read relevent data from the scene file.
 	if (!scene_filename_.empty())
@@ -19,27 +20,7 @@ GameObject::GameObject(gef::Platform& platform_, std::string n_scene_filename_) 
 
 	// Need to scale down the imported model. This is fairly arbitrary, so please forgive the magic numbers.
 	scale_matrix_.Scale(gef::Vector4(0.00125f, 0.00125f, 0.00125f));
-
-	//distance.set_x(0.3f);
-	//distance.set_y(0.3f);
-	//distance.set_z(0.3f);
-
-	// Give the game object a random starting location
-	// within a certain range of distance from the marker.
-	distance.set_x(rand() % max_distance);
-	if (distance.x() < min_distance)
-	{
-		distance.set_x(min_distance);
-	}
-	
-	distance.set_y(rand() % max_distance);
-	if (distance.y() < min_distance)
-	{
-		distance.set_y(min_distance);
-	}
-	
 }
-
 
 GameObject::~GameObject()
 {
@@ -96,9 +77,6 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 	//// Find the position of the marker in 3D space
 	gef::Vector4 marker_position = marker_transfrom.GetTranslation();
 
-	// The new position of this game object
-	gef::Vector4 new_position;
-
 	// get the marker's x-axis.
 	gef::Vector4 x_axis = gef::Vector4(marker_transfrom.m(0,0),
 		marker_transfrom.m(0, 1),
@@ -114,39 +92,41 @@ void GameObject::Execute_Walk(gef::Matrix44& marker_transfrom)
 		marker_transfrom.m(2, 1),
 		marker_transfrom.m(2, 2));
 
+	// The new position of this game object
+	gef::Vector4 new_position;
+
 
 	// Update the object's position based on it's velocity.
 	// Upadate the X component.
-	if (distance.x() > 0)
+	if (position.x() > 0)
 	{
-		distance.set_x(distance.x() - velocity);
+		position.set_x(position.x() - velocity);
 	}
-	else if (distance.x() < 0)
+	else if (position.x() < 0)
 	{
-		distance.set_x(distance.x() + velocity);
+		position.set_x(position.x() + velocity);
 	}
 	// Update the Y component.
-	if (distance.y() > 0)
+	if (position.y() > 0)
 	{
-		distance.set_y(distance.y() - velocity);
+		position.set_y(position.y() - velocity);
 	}
-	else if (distance.y() < 0)
+	else if (position.y() < 0)
 	{
-		distance.set_y(distance.y() + velocity);
+		position.set_y(position.y() + velocity);
 	}
-
 	// Update the Z component.
-	if (distance.z() > 0)
+	if (position.z() > 0)
 	{
-		distance.set_z(distance.z() - velocity);
+		position.set_z(position.z() - velocity);
 	}
-	else if (distance.z() < 0)
+	else if (position.z() < 0)
 	{
-		distance.set_z(distance.z() + velocity);
+		position.set_z(position.z() + velocity);
 	}
 
 	// Update the object's position.
-	new_position = marker_position + (x_axis * distance.x()) + (y_axis * distance.y()) + (z_axis * distance.z());
+	new_position = marker_position + (x_axis * position.x()) + (y_axis * position.y()) + (z_axis * position.z());
 
 	// Copy the marker transform to match marker rotation.
 	SetTransform(marker_transfrom);
