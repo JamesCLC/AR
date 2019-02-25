@@ -28,7 +28,7 @@ private:
 	gef::Platform& platform_;
 
 	// All the game objects in the game. Obtained from GameManager.
-	std::vector<GameObject*>& game_object_container;
+	std::vector<Creature*>& creature_object_container;
 
 	// The game object the player is currently "holding" with their finger.
 	GameObject* selected_object;

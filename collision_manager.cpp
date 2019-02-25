@@ -4,7 +4,7 @@
 
 CollisionManager::CollisionManager(gef::Platform& platform, std::vector<Creature*>& objects, gef::Matrix44 projection, gef::Matrix44 view) :
 	platform_(platform),
-	game_object_container(objects),
+	creature_object_container(objects),
 	projection_matrix(projection),
 	view_matrix(view)
 {
@@ -27,7 +27,7 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	GetRay(ray_start, ray_direction);
                       
 	// Check each game object;
-	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
 		game_object_ptr = (*it); // ProbBLy not needed.
 
