@@ -1,6 +1,7 @@
 #pragma once
 #include <platform/vita/system/platform_vita.h>
-#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
+//#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
+#include "game_object.h"
 
 class CollisionManager
 {
@@ -22,7 +23,7 @@ private:
 	bool PointInSphere(GameObject&, gef::Vector4&);
 
 	// Move these to the game AI class
-	void MoveGameObject(GameObject&);
+	void TouchPositionWolrd(GameObject&);
 	bool GameObjectFall(GameObject&, gef::Matrix44&);
 
 	gef::Platform& platform_;

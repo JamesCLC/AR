@@ -19,9 +19,10 @@
 #include <libdbg.h>
 #include <libsmart.h>
 
-#include "m:\AppliedGamesTechnology\ar_app\game_state.h"
-#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
-#include "m:\AppliedGamesTechnology\ar_app\game_manager.h"
+// James' Files
+#include "game_state.h"
+#include "../game_object.h"
+#include "../game_manager.h"
 
 class Level : public GameState
 {
@@ -30,9 +31,10 @@ public:
 	~Level();
 
 	void Init();
-	bool Update(float frame_time);
+	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
+	void SetUpGameStates(GameState* game_over, GameState* victory);
 
 private:
 	void RenderOverlay();
@@ -61,6 +63,9 @@ private:
 	gef::Matrix44 marker_transform_;
 
 	GameManager* game_manager_;
+
+	GameState* game_over_;
+	GameState* victory_;
 
 	// bool is_marker_visible;
 };

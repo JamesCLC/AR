@@ -1,5 +1,4 @@
 #pragma once
-
 #include "graphics\texture.h"
 #include "graphics\font.h"
 #include "graphics\sprite.h"
@@ -11,21 +10,21 @@
 #include "..\load_texture.h"
 #include "..\GameStates\button.h"
 
-class MainMenu : public GameState
+class GameOver : public GameState
 {
 public:
-	MainMenu(gef::Platform& platform);
-	~MainMenu();
+	GameOver(gef::Platform& platform);
+	~GameOver();
 
 	void Init();
 	GameState* Update(float frame_time);
 	void Render();
 	void CleanUp();
-	void SetUpGameStates(GameState* level/*, GameState* options*/);
+	void SetUpStates(GameState* level, GameState* main_menu);
 
 private:
 	void RenderText();
-	bool ProcessTouchInput();   
+	bool ProcessTouchInput();
 	void InitButtons();
 
 	gef::Font* font_;
@@ -36,8 +35,9 @@ private:
 	gef::Sprite background_sprite_;
 	gef::Matrix44 ortho_matrix_;
 
-	// pointers to the gamestates the menu can transition to.
+	// pointers to the gamestates this can transition to.
 	GameState* level_;
+	GameState* main_menu_;
 
 	std::vector<Button*> buttons;
 	const int num_of_buttons = 3;

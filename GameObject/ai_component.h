@@ -16,6 +16,8 @@ public:
 		Dead
 	};
 
+	void Update(gef::Matrix44&);
+
 private:
 	AIState current_state;
 

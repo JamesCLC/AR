@@ -12,3 +12,8 @@ AIComponent::AIComponent(GameObject& owner_) :
 AIComponent::~AIComponent()
 {
 }
+
+void AIComponent::Update(gef::Matrix44& marker_transform)
+{
+
+}

@@ -4,6 +4,8 @@
 
 Level::Level(gef::Platform& platform) :
 	GameState(platform),
+	game_over_(NULL),
+	victory_(NULL),
 	renderer_3d_(NULL),
 	font_(NULL),
 	sprite_renderer_(NULL),
@@ -58,7 +60,7 @@ void Level::Init()
 	view_matrix.SetIdentity();
 
 	// Create and Initialise the Game Manager.
-	game_manager_ = new GameManager(platform, renderer_3d_);
+	game_manager_ = new GameManager(platform, renderer_3d_, game_over_, victory_);
 	game_manager_->Init(scaled_projection_matrix_, view_matrix);
 
 	// Create a Debug Sphere
@@ -77,8 +79,11 @@ void Level::Init()
 	sampleUpdateEnd(dat);
 }
 
-bool Level::Update(float frame_time)
+GameState* Level::Update(float frame_time)
 {
+	// If a change in state is required, this is used to return that next state.
+	GameState* return_pointer = NULL;
+
 	fps_ = 1.0f / frame_time;
 
 	AppData* dat = sampleUpdateBegin();
@@ -92,22 +97,21 @@ bool Level::Update(float frame_time)
 		// marker is being tracked, get it’s transform
 		sampleGetTransform(marker_id, &marker_transform_);
 
-		// Perfomr all gameplay/ collision code.
-		game_manager_->Update(frame_time, marker_transform_);
+		// Perform all gameplay & collision code.
+		// Function returns false if the player has died.
+		/*if (!game_manager_->Update(frame_time, marker_transform_))
+		{
+			sampleUpdateEnd(dat);
+
+			return game_over_;
+		}*/
+
+		return_pointer = game_manager_->Update(frame_time, marker_transform_);
 	}
-
-
-	/// DEBUG
-	/*debug_matrix.SetIdentity();
-	debug_matrix.Scale(gef::Vector4(0.1f, 0.1f, 0.1f));
-	debug_matrix.SetTranslation(test_->GetTranslation());
-	debug_sphere.set_transform(debug_matrix);*/
-	/// END DEBUG
-
 
 	sampleUpdateEnd(dat);
 
-	return true;
+	return return_pointer;
 }
 
 void Level::Render()
@@ -179,6 +183,12 @@ void Level::CleanUp()
 	renderer_3d_ = NULL;
 }
 
+void Level::SetUpGameStates(GameState * game_over, GameState* victory)
+{
+	game_over_ = game_over;
+	victory_ = victory;
+}
+
 void Level::RenderOverlay()
 {
 	//
@@ -209,16 +219,6 @@ void Level::DrawHUD()
 {
 	if (font_)
 	{
-		//// Degub - Display the position of the touch
-		//if (active_touch_id != -1)
-		//{
-		//	font_->RenderText(
-		//		sprite_renderer_,
-		//		gef::Vector4(touch_position.x, touch_position.y, -0.9f),
-		//		1.0f, 0xffffffff, gef::TJ_LEFT, "(%.1f, %.1f)",
-		//		touch_position.x, touch_position.y);
-		//}
-
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}

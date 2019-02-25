@@ -1,11 +1,12 @@
 #include "game_manager.h"
 
-GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d) :
+GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d, GameState* game_over, GameState* victory) :
 	platform_(platform),
 	renderer_3d_(renderer_3d),
+	game_over_(game_over),
+	victory_(victory),
 	input_manager_(NULL),
 	collision_manager(NULL),
-	ai_manager(NULL),
 	active_touch_id(-1)
 {
 }
@@ -26,70 +27,87 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
 
+	// Seed the random number generator with time.
+	srand(time(NULL));
+
 	// Create the GameObjects
 	for (int i = 0; i < num_of_objects; i++)
 	{
-		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn"));
+		// Give the game object a random starting position within a given range.
+		gef::Vector4 starting_position;
+
+		starting_position.set_y((rand() % max_distance + min_distance) / 50);
+		starting_position.set_x((rand() % max_distance + min_distance) / 50);
+		starting_position.set_z(0.0f);
+
+		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn", starting_position));
 	}
 
 	// Create the collision detection manager.
 	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
-
-	// Create the AI manager.
-	ai_manager = new AIManager(game_object_container);
 }
 
-void GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
+GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
-	// Update each of the game objects.
-	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
-	{
-		// Placeholder. Replace with Collision Update.
-		(*it)->SetTransform(marker_transform);
-	}
+	gef::Vector4 touch_position_world;
+	GameObject* hit_object;
+	gef::Vector4 distance_from_marker;
+	GameState* return_state = NULL;
 
-	//for (int i = 0; i < sizeof(game_object_container); i++)
-	//{
-	//	// For now, just put my object on the marker.
-	//	game_object_container[i]->SetTransform(marker_transform);
-	//}
-
-	// Make sure the input manager is valid.
+	// Make sure the input manager and touch input has been iniialised.
 	if (input_manager_ && input_manager_->touch_manager())
 	{
-		input_manager_->Update();
-
 		// Check to see if there's any touch input.
+		input_manager_->Update();	
 		if (ProcessTouchInput())
 		{
 			// Make sure the collision detection manager is valid.
 			if (collision_manager)
 			{
 				// Perform a raytrace against all the game objects.
-				// Function returns a pointer to that object if it's hit
+				// If an object is hit, a pointer to that object is returned.
 				// Returns NULL if nothing is hit.
-				if (collision_manager->Raytrace(touch_position) != NULL)
+				hit_object = collision_manager->Raytrace(touch_position);
+				if (hit_object && (hit_object->GetState() != GameObject::Dead))
 				{
 					// The ray has hit something.
-					int foo = 0;
-				}
-				else
-				{
-					// The ray has not hit anything.
-					int bar = 0;
+					// Tell that game object to die.
+					hit_object->SetState(GameObject::Dead);
+
+					// Return the next game state.
+					//return_state = victory_;
 				}
 			}
 		}
 	}
+
+	// Update the Game Objects.
+	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	{
+		(*it)->Update(marker_transform);
+
+		// Check to see if they reached the ground
+		distance_from_marker = ((*it)->GetTranslation() - marker_transform.GetTranslation());
+
+		if (distance_from_marker.Length() <= death_threshold)
+		{
+			// The player has died. Notify the level.
+			//return_state = game_over_;
+		}
+	}
+
+	return return_state; // Should move this to here the return state is set. Better yet, ditch the return sate variable altogether.
 }
 
 void GameManager::Render()
 {
 	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
 	{
-		GameObject* ptr = (*it);
-		renderer_3d_->DrawMesh(*(gef::MeshInstance*)ptr); // NEED TO REPLACE THIS WITH Draw Skinned Mesh or something. See animated_mesh for details.
-	
+		//GameObject* ptr = (*it);
+		if ((*it)->GetState() != GameObject::Dead)
+		{
+			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
+		}	
 	}
 }
 
@@ -110,13 +128,6 @@ void GameManager::Cleanup()
 		collision_manager->CleanUp();
 		delete collision_manager;
 		collision_manager = NULL;
-	}
-
-	if (ai_manager)
-	{
-		ai_manager->CleanUp();
-		delete ai_manager;
-		ai_manager = NULL;
 	}
 
 	// Note: Platform and renderer3D objects don't need to be cleaned up 

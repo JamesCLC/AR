@@ -1,11 +1,10 @@
-#include "main_menu.h"
+#include "Victory.h"
 
 
-
-MainMenu::MainMenu(gef::Platform& platform) :
-	GameState(platform),
+Victory::Victory(gef::Platform & platform) :
+	GameState(platform), 
 	level_(NULL),
-	//options_(options),
+	main_menu_(NULL),
 	font_(NULL),
 	input_manager_(NULL),
 	sprite_renderer_(NULL),
@@ -13,11 +12,11 @@ MainMenu::MainMenu(gef::Platform& platform) :
 {
 }
 
-MainMenu::~MainMenu()
+Victory::~Victory()
 {
 }
 
-void MainMenu::Init()
+void Victory::Init()
 {
 	// Create the sprite renderer.
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
@@ -30,10 +29,10 @@ void MainMenu::Init()
 	if (sprite_renderer_)
 	{
 		// load in the texture for the background image.
-		background_texture_ = CreateTextureFromPNG("MainMenu.png", platform);
+		background_texture_ = CreateTextureFromPNG("VictoryScreen.png", platform);
 
 		if (background_texture_)
-		{	
+		{
 			// Set the scale and position of the background image for the Vita.
 			background_sprite_.set_height(platform.height());
 			background_sprite_.set_width(platform.width());
@@ -59,13 +58,12 @@ void MainMenu::Init()
 	InitButtons();
 }
 
-GameState* MainMenu::Update(float frame_time)
+GameState * Victory::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
 	GameState* return_state = NULL;
 
-	// Process touch input.
 	if (input_manager_)
 	{
 		input_manager_->Update();
@@ -76,7 +74,7 @@ GameState* MainMenu::Update(float frame_time)
 			for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
 			{
 				return_state = (*it)->IsPressed(touch_position);
-				if (return_state != NULL)	// Note; this is probably unneccesary.
+				if (return_state != NULL)
 				{
 					return return_state;
 				}
@@ -87,7 +85,7 @@ GameState* MainMenu::Update(float frame_time)
 	return return_state;
 }
 
-void MainMenu::Render()
+void Victory::Render()
 {
 	if (sprite_renderer_)
 	{
@@ -113,7 +111,7 @@ void MainMenu::Render()
 	RenderText();
 }
 
-void MainMenu::CleanUp()
+void Victory::CleanUp()
 {
 	// Delete the font object.
 	if (font_)
@@ -135,18 +133,18 @@ void MainMenu::CleanUp()
 		delete sprite_renderer_;
 		sprite_renderer_ = NULL;
 	}
-	
+
 	// Delete the buttons.
 	buttons.clear();
 }
 
-void MainMenu::SetUpGameStates(GameState * level)
+void Victory::SetUpStates(GameState * level, GameState * main_menu)
 {
 	level_ = level;
+	main_menu_ = main_menu;
 }
 
-
-void MainMenu::RenderText()
+void Victory::RenderText()
 {
 	//
 	// render 2d hud on top
@@ -173,9 +171,9 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
 		// Display the "buttons"
-		font_->RenderText(sprite_renderer_, buttons[0]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Play");
-		font_->RenderText(sprite_renderer_, buttons[1]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Options");
-		font_->RenderText(sprite_renderer_, buttons[2]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Quit");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
+		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
 
 		// Render text on the buttons.
 		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
@@ -191,7 +189,7 @@ void MainMenu::RenderText()
 	sprite_renderer_->End();
 }
 
-bool MainMenu::ProcessTouchInput()
+bool Victory::ProcessTouchInput()
 {
 	const gef::TouchInputManager* touch_input = input_manager_->touch_manager();
 
@@ -249,7 +247,7 @@ bool MainMenu::ProcessTouchInput()
 	return isTouch;
 }
 
-void MainMenu::InitButtons()
+void Victory::InitButtons()
 {
 	for (int i = 1; (i < num_of_buttons + 1); i++)
 	{
