@@ -64,7 +64,6 @@ void Creature::Execute_Walk(gef::Matrix44 &marker_transfrom)
 	// The new position of this game object
 	gef::Vector4 new_position;
 
-
 	// Update the object's position based on it's velocity.
 	// Upadate the X component.
 	if (position.x() > 0)
@@ -101,13 +100,15 @@ void Creature::Execute_Walk(gef::Matrix44 &marker_transfrom)
 	SetTransform(marker_transfrom);
 
 	// Override the position of the object transform 
-	transform_.SetTranslation(new_position);
+	SetTranslation(new_position);
+	//transform_.SetTranslation(new_position);
 }
 
 void Creature::Execute_Hold(gef::Matrix44 &touch_oposition_world)
 {
 	// Calculate the vector between this object and the touch's postion in world space.
-	gef::Vector4 distance = transform_.GetTranslation() - touch_oposition_world.GetTranslation();
+	//gef::Vector4 distance = transform_.GetTranslation() - touch_oposition_world.GetTranslation();
+	gef::Vector4 distance = GetTransform().GetTranslation() - touch_oposition_world.GetTranslation();
 
 	// If the object isn't at the touch position
 	if (distance.Length() >0)	// Replace with threshold value?
@@ -120,26 +121,27 @@ void Creature::Execute_Hold(gef::Matrix44 &touch_oposition_world)
 		// Move the object by a given velocity along this unit vector.
 		float velocity = 9.8f;
 		gef::Vector4 new_translation;
-		new_translation = transform_.GetTranslation() - (distance * velocity);
+		new_translation = GetTransform().GetTranslation() - (distance * velocity);
 
 		// Update the object's transform.
-		transform_.SetTranslation(new_translation);
+		//transform_.SetTranslation(new_translation);
+		SetTranslation(new_translation);
 	}
 }
 
 void Creature::Execute_Fall(gef::Matrix44 &marker_transfrom)
 {
 	// clalculate the object's height above the marker
-	float height = transform_.GetTranslation().y() - marker_transfrom.GetTranslation().y();
+	float height = GetTransform().GetTranslation().y() - marker_transfrom.GetTranslation().y();
 	float gravity = 0.0098f;
 
 	// Work out the object's new position after gravity has been applied.
 	gef::Vector4 new_translation;
-	new_translation = transform_.GetTranslation();
+	new_translation = GetTransform().GetTranslation();
 	new_translation.set_y(new_translation.y() - gravity);
 
 	// Update the object's transform.
-	transform_.SetTranslation(new_translation);
+	SetTranslation(new_translation);
 }
 
 void Creature::Execute_Die()

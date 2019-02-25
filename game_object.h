@@ -38,16 +38,10 @@ protected:
 
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
-
-private:
 	void ReadSceneFile(gef::Platform& platform_);
-
-private:
 	std::string scene_filename_;
 	gef::Scene scene_;
 	gef::Matrix44 scale_matrix_;
-
-
 
 };
 

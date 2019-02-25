@@ -69,7 +69,7 @@
       <Filter>Gameplay Objects</Filter>
     </ClCompile>
     <ClCompile Include="Creature.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Gameplay Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,7 +119,7 @@
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
     <ClInclude Include="Creature.h">
-      <Filter>Header Files</Filter>
+      <Filter>Gameplay Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
