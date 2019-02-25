@@ -57,6 +57,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	gef::Vector4 distance_from_marker;
 	GameState* return_state = NULL;
 
+	// Over here, James
 	//// Make sure the input manager and touch input has been iniialised.
 	//if (input_manager_ && input_manager_->touch_manager())
 	//{
