@@ -65,10 +65,10 @@
     <ClCompile Include="..\..\game_object.cpp">
       <Filter>Gameplay Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Spikes.cpp">
+    <ClCompile Include="..\..\GameObject\Creature.cpp">
       <Filter>Gameplay Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Creature.cpp">
+    <ClCompile Include="..\..\GameObject\Spikes.cpp">
       <Filter>Gameplay Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -115,10 +115,10 @@
     <ClInclude Include="..\..\game_object.h">
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Spikes.h">
+    <ClInclude Include="..\..\GameObject\Creature.h">
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Creature.h">
+    <ClInclude Include="..\..\GameObject\Spikes.h">
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
   </ItemGroup>

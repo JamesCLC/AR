@@ -40,49 +40,58 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		starting_position.set_x((rand() % max_distance + min_distance) / 50);
 		starting_position.set_z(0.0f);
 
-		game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn", starting_position));
+		//game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn", starting_position));
+		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
 	}
 
 	// Create the collision detection manager.
-	collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
+	//collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
+	collision_manager = new CollisionManager(platform_, creature_object_container, projection, view);
 }
 
 GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
 	gef::Vector4 touch_position_world;
 	GameObject* hit_object;
+	//Creature* hit_creature;
 	gef::Vector4 distance_from_marker;
 	GameState* return_state = NULL;
 
-	// Make sure the input manager and touch input has been iniialised.
-	if (input_manager_ && input_manager_->touch_manager())
-	{
-		// Check to see if there's any touch input.
-		input_manager_->Update();	
-		if (ProcessTouchInput())
-		{
-			// Make sure the collision detection manager is valid.
-			if (collision_manager)
-			{
-				// Perform a raytrace against all the game objects.
-				// If an object is hit, a pointer to that object is returned.
-				// Returns NULL if nothing is hit.
-				hit_object = collision_manager->Raytrace(touch_position);
-				if (hit_object && (hit_object->GetState() != GameObject::Dead))
-				{
-					// The ray has hit something.
-					// Tell that game object to die.
-					hit_object->SetState(GameObject::Dead);
+	//// Make sure the input manager and touch input has been iniialised.
+	//if (input_manager_ && input_manager_->touch_manager())
+	//{
+	//	// Check to see if there's any touch input.
+	//	input_manager_->Update();	
+	//	if (ProcessTouchInput())
+	//	{
+	//		// Make sure the collision detection manager is valid.
+	//		if (collision_manager)
+	//		{
+	//			// Perform a raytrace against all the game objects.
+	//			// If an object is hit, a pointer to that object is returned.
+	//			// Returns NULL if nothing is hit.
+	//			hit_object = collision_manager->Raytrace(touch_position);
 
-					// Return the next game state.
-					//return_state = victory_;
-				}
-			}
-		}
-	}
+	//			///
+	//			// Problem: How can I tell when the ray is hitting a Creature, and not a spike?
+	//			// Do I even need to bother?
+	//			///
 
-	// Update the Game Objects.
-	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	//			if (hit_object && (hit_object->GetState() != GameObject::Dead))
+	//			{
+	//				// The ray has hit something.
+	//				// Tell that game object to die.
+	//				hit_object->SetState(GameObject::Dead);
+
+	//				// Return the next game state.
+	//				//return_state = victory_;
+	//			}
+	//		}
+	//	}
+	//}
+
+	// Update the Creature Objects.
+	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
 		(*it)->Update(marker_transform);
 
@@ -101,10 +110,10 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 
 void GameManager::Render()
 {
-	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	// Render the creatures that are still alive.
+	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
-		//GameObject* ptr = (*it);
-		if ((*it)->GetState() != GameObject::Dead)
+		if ((*it)->GetState() != Creature::Dead)
 		{
 			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
 		}	
@@ -114,7 +123,7 @@ void GameManager::Render()
 void GameManager::Cleanup()
 {
 	// Delete the game objects.
-	game_object_container.clear();
+	creature_object_container.clear();
 
 	// Delete the input manager
 	if (input_manager_)

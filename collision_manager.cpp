@@ -2,7 +2,7 @@
 
 
 
-CollisionManager::CollisionManager(gef::Platform& platform, std::vector<GameObject*>& objects, gef::Matrix44 projection, gef::Matrix44 view) :
+CollisionManager::CollisionManager(gef::Platform& platform, std::vector<Creature*>& objects, gef::Matrix44 projection, gef::Matrix44 view) :
 	platform_(platform),
 	game_object_container(objects),
 	projection_matrix(projection),

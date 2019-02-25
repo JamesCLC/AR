@@ -24,7 +24,6 @@ public:
 
 	void Update(gef::Matrix44& marker_transform); // frame time?
 
-protected:
 	// Transform
 	void SetTransform(gef::Matrix44 n_transform) { transform_ = scale_matrix_ * n_transform; }
 	const gef::Matrix44& GetTransform() { return transform_; }
@@ -36,6 +35,7 @@ protected:
 	// Collision Sphere
 	const gef::Sphere GetCollisionSphere();
 
+protected:
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
 	void ReadSceneFile(gef::Platform& platform_);

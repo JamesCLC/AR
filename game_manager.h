@@ -1,6 +1,7 @@
 #pragma once
 
-#include "game_object.h"
+//#include "game_object.h"
+#include "GameObject\Creature.h"
 #include "../collision_manager.h"
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
@@ -21,7 +22,11 @@ public:
 	void Cleanup();
 
 	// Returns a reference to the Game Objects.
-	std::vector<GameObject*>* GetGameObjects() { return &game_object_container; };
+	//std::vector<GameObject*>* GetGameObjects() { return &game_object_container; };
+	
+	// Returns a reference to the Creatures.
+	//std::vector<GameObject*>* GetGameObjects() { return &game_object_container; };
+	std::vector<Creature*>* GetCreatureObjects() { return &creature_object_container; };
 
 private:
 	bool ProcessTouchInput();
@@ -31,7 +36,8 @@ private:
 	class gef::Renderer3D* renderer_3d_;
 
 	// Structure to store all the game objects.
-	std::vector<GameObject*> game_object_container;
+	//std::vector<GameObject*> game_object_container;
+	std::vector<Creature*> creature_object_container;
 
 	// Class that handles collision detection between game objects.
 	CollisionManager* collision_manager;

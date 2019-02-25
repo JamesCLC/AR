@@ -1,12 +1,11 @@
 #pragma once
 #include <platform/vita/system/platform_vita.h>
-//#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
-#include "game_object.h"
+#include "GameObject\Creature.h"
 
 class CollisionManager
 {
 public:
-	CollisionManager(gef::Platform& platform_, std::vector<GameObject*>&, gef::Matrix44, gef::Matrix44);
+	CollisionManager(gef::Platform& platform_, std::vector<Creature*>&, gef::Matrix44, gef::Matrix44);
 	~CollisionManager();
 
 	// If the raytrace hits an object, it returns a pointer to that object.

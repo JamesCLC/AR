@@ -75,6 +75,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp" />
     <ClCompile Include="..\..\collision_manager.cpp" />
+    <ClCompile Include="..\..\GameObject\Creature.cpp" />
+    <ClCompile Include="..\..\GameObject\Spikes.cpp" />
     <ClCompile Include="..\..\GameStates\button.cpp" />
     <ClCompile Include="..\..\GameStates\game_over.cpp" />
     <ClCompile Include="..\..\GameStates\game_state.cpp" />
@@ -88,12 +90,12 @@
     <ClCompile Include="..\..\primitive_builder.cpp" />
     <ClCompile Include="..\..\primitive_renderer.cpp" />
     <ClCompile Include="..\..\vertex_colour_unlit_shader.cpp" />
-    <ClCompile Include="Creature.cpp" />
-    <ClCompile Include="Spikes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
     <ClInclude Include="..\..\collision_manager.h" />
+    <ClInclude Include="..\..\GameObject\Creature.h" />
+    <ClInclude Include="..\..\GameObject\Spikes.h" />
     <ClInclude Include="..\..\GameStates\button.h" />
     <ClInclude Include="..\..\GameStates\game_over.h" />
     <ClInclude Include="..\..\GameStates\game_state.h" />
@@ -106,8 +108,6 @@
     <ClInclude Include="..\..\primitive_builder.h" />
     <ClInclude Include="..\..\primitive_renderer.h" />
     <ClInclude Include="..\..\vertex_colour_unlit_shader.h" />
-    <ClInclude Include="Creature.h" />
-    <ClInclude Include="Spikes.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
