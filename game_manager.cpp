@@ -40,7 +40,6 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		starting_position.set_x((rand() % max_distance + min_distance) / 50);
 		starting_position.set_z(0.0f);
 
-		//game_object_container.push_back(new GameObject(platform_, "balls/ball1.scn", starting_position));
 		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
 	}
 
@@ -51,7 +50,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	}
 
 	// Create the collision detection manager.
-	collision_manager = new CollisionManager(platform_, creature_object_container, projection, view);
+	collision_manager = new CollisionManager(platform_, creature_object_container, spike_object_containter, projection, view);
 }
 
 GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
@@ -117,6 +116,8 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 			//return_state = game_over_;
 		}
 	}
+
+	collision_manager->Update();
 
 	return return_state; // Should move this to here the return state is set. Better yet, ditch the return sate variable altogether.
 }

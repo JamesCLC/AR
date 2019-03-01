@@ -18,7 +18,4 @@ Spike::~Spike()
 {
 }
 
-void Spike::Update(gef::Matrix44 & marker_transform)
-{
-	SetTransform(marker_transform);
-}
+

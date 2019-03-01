@@ -36,7 +36,6 @@ private:
 	std::vector<Creature*> creature_object_container;
 	std::vector<Spike*> spike_object_containter;
 
-
 	// Class that handles collision detection between game objects.
 	CollisionManager* collision_manager;
 
