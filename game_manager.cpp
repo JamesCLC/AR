@@ -30,8 +30,8 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	// Seed the random number generator with time.
 	srand(time(NULL));
 
-	// Create the GameObjects
-	for (int i = 0; i < num_of_objects; i++)
+	// Create the Cratures
+	for (int i = 0; i < num_of_objects; ++i)
 	{
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;
@@ -44,8 +44,13 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
 	}
 
+	// Create the Spikes
+	for (int k = 0; k < 10; ++k)
+	{
+		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn"));	
+	}
+
 	// Create the collision detection manager.
-	//collision_manager = new CollisionManager(platform_, game_object_container, projection, view);
 	collision_manager = new CollisionManager(platform_, creature_object_container, projection, view);
 }
 
@@ -58,7 +63,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	GameState* return_state = NULL;
 
 	// Over here, James
-	//// Make sure the input manager and touch input has been iniialised.
+	// Make sure the input manager and touch input has been iniialised.
 	//if (input_manager_ && input_manager_->touch_manager())
 	//{
 	//	// Check to see if there's any touch input.
@@ -78,25 +83,32 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	//			// Do I even need to bother?
 	//			///
 
-	//			if (hit_object && (hit_object->GetState() != GameObject::Dead))
+	//			if (hit_object && (hit_object->GetState() != Creature::Dead))
 	//			{
 	//				// The ray has hit something.
 	//				// Tell that game object to die.
-	//				hit_object->SetState(GameObject::Dead);
+	//				hit_object->SetState(Creature::Dead);
 
 	//				// Return the next game state.
 	//				//return_state = victory_;
 	//			}
 	//		}
 	//	}
-	//}
+	////}
+
+	// Update the Spikes.
+	for (std::vector<Spike*>::iterator it = spike_object_containter.begin(); it != spike_object_containter.end(); ++it)
+	{
+		(*it)->Update(marker_transform);
+	}
+
 
 	// Update the Creature Objects.
-	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
+	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
 		(*it)->Update(marker_transform);
 
-		// Check to see if they reached the ground
+		// Check to see if they reached the central marker
 		distance_from_marker = ((*it)->GetTranslation() - marker_transform.GetTranslation());
 
 		if (distance_from_marker.Length() <= death_threshold)
@@ -111,6 +123,12 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 
 void GameManager::Render()
 {
+	// Redender the spikes.
+	for (std::vector<Spike*>::iterator it = spike_object_containter.begin(); it != spike_object_containter.end(); ++it)
+	{
+		renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
+	}
+
 	// Render the creatures that are still alive.
 	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
@@ -125,6 +143,7 @@ void GameManager::Cleanup()
 {
 	// Delete the game objects.
 	creature_object_container.clear();
+	spike_object_containter.clear();
 
 	// Delete the input manager
 	if (input_manager_)
@@ -139,9 +158,6 @@ void GameManager::Cleanup()
 		delete collision_manager;
 		collision_manager = NULL;
 	}
-
-	// Note: Platform and renderer3D objects don't need to be cleaned up 
-	// as they aren't allocated from the heap here.
 }
 
 bool GameManager::ProcessTouchInput()
