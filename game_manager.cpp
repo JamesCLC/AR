@@ -11,7 +11,6 @@ GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d,
 {
 }
 
-
 GameManager::~GameManager()
 {
 }
@@ -30,6 +29,12 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	// Seed the random number generator with time.
 	srand(time(NULL));
 
+	// Create the Spikes
+	for (int k = 0; k < 10; ++k)
+	{
+		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn"));
+	}
+
 	// Create the Cratures
 	for (int i = 0; i < num_of_objects; ++i)
 	{
@@ -43,21 +48,14 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
 	}
 
-	// Create the Spikes
-	for (int k = 0; k < 10; ++k)
-	{
-		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn"));	
-	}
-
 	// Create the collision detection manager.
 	collision_manager = new CollisionManager(platform_, creature_object_container, spike_object_containter, projection, view);
 }
 
 GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
 {
+	// Declarations.
 	gef::Vector4 touch_position_world;
-	GameObject* hit_object;
-	//Creature* hit_creature;
 	gef::Vector4 distance_from_marker;
 	GameState* return_state = NULL;
 
@@ -76,18 +74,15 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	//			// If an object is hit, a pointer to that object is returned.
 	//			// Returns NULL if nothing is hit.
 	//			hit_object = collision_manager->Raytrace(touch_position);
-
 	//			///
 	//			// Problem: How can I tell when the ray is hitting a Creature, and not a spike?
 	//			// Do I even need to bother?
 	//			///
-
 	//			if (hit_object && (hit_object->GetState() != Creature::Dead))
 	//			{
 	//				// The ray has hit something.
 	//				// Tell that game object to die.
 	//				hit_object->SetState(Creature::Dead);
-
 	//				// Return the next game state.
 	//				//return_state = victory_;
 	//			}
@@ -117,6 +112,7 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 		}
 	}
 
+	// Perform general collision detection.
 	collision_manager->Update();
 
 	return return_state; // Should move this to here the return state is set. Better yet, ditch the return sate variable altogether.
