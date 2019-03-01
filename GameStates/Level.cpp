@@ -21,8 +21,6 @@ void Level::Init()
 {
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
 	renderer_3d_ = gef::Renderer3D::Create(platform);
-	//primitive_builder_ = new PrimitiveBuilder(platform_);
-
 
 	/// 2D Camera Feed
 	// Set up the Ortho Matrix for rendering the camera feed.
@@ -98,14 +96,7 @@ GameState* Level::Update(float frame_time)
 		sampleGetTransform(marker_id, &marker_transform_);
 
 		// Perform all gameplay & collision code.
-		// Function returns false if the player has died.
-		/*if (!game_manager_->Update(frame_time, marker_transform_))
-		{
-			sampleUpdateEnd(dat);
-
-			return game_over_;
-		}*/
-
+		// If game logic dictates a state change (i.e. game over) this function returns a pointer to that state.
 		return_pointer = game_manager_->Update(frame_time, marker_transform_);
 	}
 
@@ -161,9 +152,6 @@ void Level::Render()
 
 void Level::CleanUp()
 {
-	//delete primitive_builder_;
-	//primitive_builder_ = NULL;
-
 	if (game_manager_)
 	{
 		game_manager_->Cleanup();

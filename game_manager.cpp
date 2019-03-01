@@ -26,14 +26,14 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
 
-	// Seed the random number generator with time.
-	srand(time(NULL));
-
 	// Create the Spikes
 	for (int k = 0; k < 10; ++k)
 	{
 		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn"));
 	}
+
+	// Seed the random number generator with time.
+	srand(time(NULL));
 
 	// Create the Cratures
 	for (int i = 0; i < num_of_objects; ++i)
@@ -41,9 +41,19 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;
 
-		starting_position.set_y((rand() % max_distance + min_distance) / 50);
 		starting_position.set_x((rand() % max_distance + min_distance) / 50);
+		starting_position.set_y((rand() % max_distance + min_distance) / 50);
 		starting_position.set_z(0.0f);
+
+		// Randomly flip the positions so that the objects are spawned at all sides of the central marker.
+		if ((rand() % 10 + 1) >= 5)
+		{
+			starting_position.set_x(starting_position.x() + -1);
+		}
+		if ((rand() % 10 + 1) >= 5)
+		{
+			starting_position.set_y(starting_position.y() + -1);
+		}
 
 		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
 	}

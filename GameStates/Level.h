@@ -48,18 +48,20 @@ private:
 	class gef::Renderer3D* renderer_3d_;
 	gef::SpriteRenderer* sprite_renderer_;
 	gef::Font* font_;
+	gef::Matrix44 ortho_matrix_;
+	gef::Matrix44 view_matrix;
 
+	// AR Rendering and Marker detection.
 	gef::Matrix44 unscaled_projection_matrix_;
 	gef::Matrix44 scaled_projection_matrix_;
 	gef::Matrix44 scaling_matrix_;
-	gef::Matrix44 ortho_matrix_;
-	gef::Matrix44 view_matrix;
 	gef::Sprite camera_feed_sprite_;
 	gef::TextureVita camera_feed_texture_;
 	float scaling_factor_ = 0.0f;
-	float fps_;
 	int marker_id = 1;
 
+	float fps_;
+	
 	gef::Matrix44 marker_transform_;
 
 	GameManager* game_manager_;
