@@ -75,6 +75,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\ar_app.cpp" />
     <ClCompile Include="..\..\collision_manager.cpp" />
+    <ClCompile Include="..\..\GameObject\Creature.cpp" />
+    <ClCompile Include="..\..\GameObject\Spikes.cpp" />
     <ClCompile Include="..\..\GameStates\button.cpp" />
     <ClCompile Include="..\..\GameStates\game_over.cpp" />
     <ClCompile Include="..\..\GameStates\game_state.cpp" />
@@ -92,6 +94,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h" />
     <ClInclude Include="..\..\collision_manager.h" />
+    <ClInclude Include="..\..\GameObject\Creature.h" />
+    <ClInclude Include="..\..\GameObject\Spikes.h" />
     <ClInclude Include="..\..\GameStates\button.h" />
     <ClInclude Include="..\..\GameStates\game_over.h" />
     <ClInclude Include="..\..\GameStates\game_state.h" />

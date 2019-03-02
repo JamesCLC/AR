@@ -16,19 +16,10 @@ namespace gef
 
 class GameObject : gef::MeshInstance
 {
-public:
-	enum State
-	{
-		Walk,
-		Hold,
-		Fall,
-		Dead
-	};
-
 
 public:
 	GameObject();
-	GameObject(gef::Platform& platform_,std::string n_scene_filename_, gef::Vector4 starting_position);
+	GameObject(gef::Platform& platform_,std::string n_scene_filename_);
 	~GameObject();
 
 	void Update(gef::Matrix44& marker_transform); // frame time?
@@ -44,34 +35,14 @@ public:
 	// Collision Sphere
 	const gef::Sphere GetCollisionSphere();
 
+protected:
 	// Mesh
 	const gef::Mesh * GetMesh() { return mesh_; }
-
-	// AI State
-	void SetState(State new_state) { current_state = new_state; };
-	State GetState() { return current_state; };
-private:
 	void ReadSceneFile(gef::Platform& platform_);
-
-	// Behaviours
-	void Execute_Walk(gef::Matrix44&);
-	void Execute_Hold(gef::Matrix44&);
-	void Execute_Fall(gef::Matrix44&);
-	void Execute_Die();
-
-private:
 	std::string scene_filename_;
 	gef::Scene scene_;
 	gef::Matrix44 scale_matrix_;
 
-	// This object's distance from the marker.
-	gef::Vector4 position;
-	float velocity = 0.00196f;
-
-	// The current state this object is in
-	State current_state = Walk;
-
-	bool is_alive = true;
 };
 
 

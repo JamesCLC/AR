@@ -1,12 +1,12 @@
 #pragma once
 #include <platform/vita/system/platform_vita.h>
-//#include "m:\AppliedGamesTechnology\ar_app\game_object.h"
-#include "game_object.h"
+#include "GameObject\Creature.h"
+#include "GameObject\Spikes.h"
 
 class CollisionManager
 {
 public:
-	CollisionManager(gef::Platform& platform_, std::vector<GameObject*>&, gef::Matrix44, gef::Matrix44);
+	CollisionManager(gef::Platform& platform_, std::vector<Creature*>&, std::vector<Spike*>&, gef::Matrix44, gef::Matrix44);
 	~CollisionManager();
 
 	// If the raytrace hits an object, it returns a pointer to that object.
@@ -29,7 +29,8 @@ private:
 	gef::Platform& platform_;
 
 	// All the game objects in the game. Obtained from GameManager.
-	std::vector<GameObject*>& game_object_container;
+	std::vector<Creature*>& creature_object_container;
+	std::vector<Spike*>& spike_object_container;
 
 	// The game object the player is currently "holding" with their finger.
 	GameObject* selected_object;

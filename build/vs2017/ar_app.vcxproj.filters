@@ -65,6 +65,12 @@
     <ClCompile Include="..\..\game_object.cpp">
       <Filter>Gameplay Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\GameObject\Creature.cpp">
+      <Filter>Gameplay Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameObject\Spikes.cpp">
+      <Filter>Gameplay Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ar_app.h">
@@ -107,6 +113,12 @@
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\game_object.h">
+      <Filter>Gameplay Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameObject\Creature.h">
+      <Filter>Gameplay Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameObject\Spikes.h">
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
   </ItemGroup>

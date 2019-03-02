@@ -2,9 +2,10 @@
 
 
 
-CollisionManager::CollisionManager(gef::Platform& platform, std::vector<GameObject*>& objects, gef::Matrix44 projection, gef::Matrix44 view) :
+CollisionManager::CollisionManager(gef::Platform& platform, std::vector<Creature*>& creatures, std::vector<Spike*>& spikes, gef::Matrix44 projection, gef::Matrix44 view) :
 	platform_(platform),
-	game_object_container(objects),
+	creature_object_container(creatures),
+	spike_object_container(spikes),
 	projection_matrix(projection),
 	view_matrix(view)
 {
@@ -27,9 +28,9 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	GetRay(ray_start, ray_direction);
                       
 	// Check each game object;
-	for (std::vector<GameObject*>::iterator it = game_object_container.begin(); it != game_object_container.end(); it++)
+	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
-		game_object_ptr = (*it); // ProbBLy not needed.
+		game_object_ptr = (*it); // Probably not needed.
 
 		// Check to see if the ray collided with this object.
 		if (RayToSphere((*game_object_ptr)))
@@ -47,8 +48,19 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 
 void CollisionManager::Update()
 {
-	
-	// Perform general collision detection here?
+	/// Collision detection between creatures and spikes.
+	// Check each creatures object.
+	for (std::vector<Creature*>::iterator creature_it = creature_object_container.begin(); creature_it != creature_object_container.end(); ++creature_it)
+	{
+		// check each spike
+		for (std::vector<Spike*>::iterator spike_it = spike_object_container.begin(); spike_it != spike_object_container.end(); ++spike_it)
+		{
+			if (SphereToSphere(*(*creature_it), *(*spike_it)))
+			{
+				int foo = 0;
+			}
+		}
+	}
 }
 
 void CollisionManager::CleanUp()
