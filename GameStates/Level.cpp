@@ -81,7 +81,7 @@ void Level::Init()
 	for (int i = 0; i < difficulty + 1; ++i)
 	{
 		Marker new_marker;
-		new_marker.id = 1;
+		new_marker.id = i;
 		markers.push_back(new_marker);
 	}
 }
@@ -121,13 +121,6 @@ GameState* Level::Update(float frame_time)
 		// Perform all gameplay & collision code.
 		// If game logic dictates a state change (i.e. game over) this function returns a pointer to that state.
 		return_pointer = game_manager_->Update(frame_time, markers);
-
-		int foo = 0;
-
-	}
-	else
-	{
-		int foo = 0;
 	}
 
 	sampleUpdateEnd(dat);
