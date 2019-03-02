@@ -58,7 +58,7 @@ void Level::Init()
 	view_matrix.SetIdentity();
 
 	// Create and Initialise the Game Manager.
-	game_manager_ = new GameManager(platform, renderer_3d_, game_over_, victory_);
+	game_manager_ = new GameManager(platform, renderer_3d_, game_over_, victory_, difficulty);
 	game_manager_->Init(scaled_projection_matrix_, view_matrix);
 
 	// Create a Debug Sphere
@@ -75,6 +75,15 @@ void Level::Init()
 	AppData* dat = sampleUpdateBegin();
 	smartTrackingReset();
 	sampleUpdateEnd(dat);
+
+	// Create the structures to store marker data.
+	// Need a marker for each spike + 1 for the cratrue's target.
+	for (int i = 0; i < difficulty + 1; ++i)
+	{
+		Marker new_marker;
+		new_marker.id = 1;
+		markers.push_back(new_marker);
+	}
 }
 
 GameState* Level::Update(float frame_time)
@@ -89,15 +98,36 @@ GameState* Level::Update(float frame_time)
 	// use the tracking library to try and find markers
 	smartUpdate(dat->currentImage);
 
-	// check to see if a particular marker can be found
-	if (sampleIsMarkerFound(marker_id))
+	// Get the positions of all the neccesary markers.
+	are_markers_visible = true;
+	for (Marker marker : markers)
 	{
-		// marker is being tracked, get it’s transform
-		sampleGetTransform(marker_id, &marker_transform_);
+		// check to see if a particular marker can be found
+		if (sampleIsMarkerFound(marker.id))
+		{
+			// marker is being tracked, get it’s transform
+			sampleGetTransform(marker.id, &marker.transform);
+		}
+		else // If any of the markers aren't visible, halt the game.
+		{
+			are_markers_visible = false;
+			break;
+		}
+	}
 
+	// Update the game only if all the neccesary markers are visible.
+	if (are_markers_visible)
+	{
 		// Perform all gameplay & collision code.
 		// If game logic dictates a state change (i.e. game over) this function returns a pointer to that state.
-		return_pointer = game_manager_->Update(frame_time, marker_transform_);
+		return_pointer = game_manager_->Update(frame_time, markers);
+
+		int foo = 0;
+
+	}
+	else
+	{
+		int foo = 0;
 	}
 
 	sampleUpdateEnd(dat);

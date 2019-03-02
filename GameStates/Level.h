@@ -23,6 +23,7 @@
 #include "game_state.h"
 #include "../game_object.h"
 #include "../game_manager.h"
+#include "../GameObject/Marker.h"
 
 class Level : public GameState
 {
@@ -58,17 +59,19 @@ private:
 	gef::Sprite camera_feed_sprite_;
 	gef::TextureVita camera_feed_texture_;
 	float scaling_factor_ = 0.0f;
-	int marker_id = 1;
 
 	float fps_;
-	
-	gef::Matrix44 marker_transform_;
+	std::vector<Marker> markers;
 
+	// The object responsible for all gameplay logic.
 	GameManager* game_manager_;
 
+	// Game states the application can transition to from here.
 	GameState* game_over_;
 	GameState* victory_;
 
-	// bool is_marker_visible;
+	bool are_markers_visible;
+
+	int difficulty = 3;
 };
 

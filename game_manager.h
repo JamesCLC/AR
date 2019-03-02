@@ -2,6 +2,7 @@
 
 #include "GameObject\Creature.h"
 #include "GameObject\Spikes.h"
+#include "GameObject\Marker.h"
 #include "../collision_manager.h"
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
@@ -13,10 +14,10 @@ class GameState;
 class GameManager
 {
 public:
-	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, GameState* game_over, GameState* victory);
+	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, GameState* game_over, GameState* victory, int difficulty);
 	~GameManager();
 
-	GameState* Update(float frame_time, gef::Matrix44& marker_transform);
+	GameState* Update(float frame_time, std::vector<Marker>& markers);
 	void Init(gef::Matrix44 projection, gef::Matrix44 view);
 	void Render();
 	void Cleanup();
@@ -35,6 +36,7 @@ private:
 	// Structures to store all the game objects.
 	std::vector<Creature*> creature_object_container;
 	std::vector<Spike*> spike_object_containter;
+	//std::vector<Marker>& markers_;
 
 	// Class that handles collision detection between game objects.
 	CollisionManager* collision_manager;
@@ -54,5 +56,7 @@ private:
 
 	// How close to the ground the objects have to be before the player dies.
 	float death_threshold = 0.1f;
+
+	int difficulty_;
 };
 
