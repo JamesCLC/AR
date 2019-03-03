@@ -94,7 +94,6 @@ GameState* Level::Update(float frame_time)
 	fps_ = 1.0f / frame_time;
 
 	AppData* dat = sampleUpdateBegin();
-	gef::Matrix44 new_transform;
 
 	// use the tracking library to try and find markers
 	smartUpdate(dat->currentImage);
@@ -107,9 +106,7 @@ GameState* Level::Update(float frame_time)
 		if (sampleIsMarkerFound(it->id))
 		{
 			// marker is being tracked, get it’s transform
-			sampleGetTransform(it->id, &new_transform);
-
-			it->transform = new_transform;
+			sampleGetTransform(it->id, &it->transform);
 		}
 		else // If any of the markers aren't visible, halt the game.
 		{
@@ -117,22 +114,6 @@ GameState* Level::Update(float frame_time)
 			break;
 		}
 	}
-
-	
-		//// check to see if a particular marker can be found
-		//if (sampleIsMarkerFound(marker.id))
-		//{
-		//	// marker is being tracked, get it’s transform
-		//	sampleGetTransform(marker.id, &new_transform);
-
-		//	marker.transform = new_transform;
-		//}
-		//else // If any of the markers aren't visible, halt the game.
-		//{
-		//	are_markers_visible = false;
-		//	break;
-		//}
-	
 
 	// Update the game only if all the neccesary markers are visible.
 	if (are_markers_visible)
@@ -179,13 +160,16 @@ void Level::Render()
 		renderer_3d_->set_projection_matrix(scaled_projection_matrix_);
 		renderer_3d_->set_view_matrix(view_matrix);
 
-		// Begin rendering 3D meshes, don't clear the frame buffer
-		renderer_3d_->Begin(false);
+		if (are_markers_visible)
+		{
+			// Begin rendering 3D meshes, don't clear the frame buffer
+			renderer_3d_->Begin(false);
 
-		// The game manager renders all the game objects it contains.
-		game_manager_->Render();
+			// The game manager renders all the game objects it contains.
+			game_manager_->Render();
 
-		renderer_3d_->End();
+			renderer_3d_->End();
+		}
 
 	RenderOverlay();
 
