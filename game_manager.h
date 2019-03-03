@@ -14,10 +14,10 @@ class GameState;
 class GameManager
 {
 public:
-	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, GameState* game_over, GameState* victory, int difficulty);
+	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, std::vector<Marker>& markers, GameState* game_over, GameState* victory, int difficulty);
 	~GameManager();
 
-	GameState* Update(float frame_time, std::vector<Marker>& markers);
+	GameState* Update(float frame_time);
 	void Init(gef::Matrix44 projection, gef::Matrix44 view);
 	void Render();
 	void Cleanup();
@@ -39,6 +39,9 @@ private:
 
 	// Class that handles collision detection between game objects.
 	CollisionManager* collision_manager;
+
+	// The markers
+	std::vector<Marker>& markers_;
 
 	// Game States
 	GameState* victory_;

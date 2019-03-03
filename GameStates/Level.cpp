@@ -58,7 +58,7 @@ void Level::Init()
 	view_matrix.SetIdentity();
 
 	// Create and Initialise the Game Manager.
-	game_manager_ = new GameManager(platform, renderer_3d_, game_over_, victory_, difficulty);
+	game_manager_ = new GameManager(platform, renderer_3d_, markers, game_over_, victory_, difficulty);
 	game_manager_->Init(scaled_projection_matrix_, view_matrix);
 
 	// Create a Debug Sphere
@@ -94,19 +94,22 @@ GameState* Level::Update(float frame_time)
 	fps_ = 1.0f / frame_time;
 
 	AppData* dat = sampleUpdateBegin();
+	gef::Matrix44 new_transform;
 
 	// use the tracking library to try and find markers
 	smartUpdate(dat->currentImage);
 
 	// Get the positions of all the neccesary markers.
 	are_markers_visible = true;
-	for (Marker marker : markers)
+	for (std::vector<Marker>::iterator it = markers.begin(); it != markers.end(); ++it)
 	{
 		// check to see if a particular marker can be found
-		if (sampleIsMarkerFound(marker.id))
+		if (sampleIsMarkerFound(it->id))
 		{
 			// marker is being tracked, get it’s transform
-			sampleGetTransform(marker.id, &marker.transform);
+			sampleGetTransform(it->id, &new_transform);
+
+			it->transform = new_transform;
 		}
 		else // If any of the markers aren't visible, halt the game.
 		{
@@ -115,12 +118,28 @@ GameState* Level::Update(float frame_time)
 		}
 	}
 
+	
+		//// check to see if a particular marker can be found
+		//if (sampleIsMarkerFound(marker.id))
+		//{
+		//	// marker is being tracked, get it’s transform
+		//	sampleGetTransform(marker.id, &new_transform);
+
+		//	marker.transform = new_transform;
+		//}
+		//else // If any of the markers aren't visible, halt the game.
+		//{
+		//	are_markers_visible = false;
+		//	break;
+		//}
+	
+
 	// Update the game only if all the neccesary markers are visible.
 	if (are_markers_visible)
 	{
 		// Perform all gameplay & collision code.
 		// If game logic dictates a state change (i.e. game over) this function returns a pointer to that state.
-		return_pointer = game_manager_->Update(frame_time, markers);
+		return_pointer = game_manager_->Update(frame_time);
 	}
 
 	sampleUpdateEnd(dat);
@@ -237,7 +256,7 @@ void Level::DrawHUD()
 	// If the markers aren't present, tell the player to relocate them.
 	if (!are_markers_visible)
 	{
-		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2), -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Markers not found!");
+		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2), -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Markers not found!");
 	}
 }
 

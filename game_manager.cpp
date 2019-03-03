@@ -1,8 +1,9 @@
 #include "game_manager.h"
 
-GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d, GameState* game_over, GameState* victory, int n_difficulty) :
+GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d, std::vector<Marker>& markers, GameState* game_over, GameState* victory, int n_difficulty) :
 	platform_(platform),
 	renderer_3d_(renderer_3d),
+	markers_(markers),
 	game_over_(game_over),
 	victory_(victory),
 	difficulty_(n_difficulty),
@@ -63,7 +64,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	collision_manager = new CollisionManager(platform_, creature_object_container, spike_object_containter, projection, view);
 }
 
-GameState* GameManager::Update(float frame_time, std::vector<Marker>& markers)
+GameState* GameManager::Update(float frame_time)
 {
 	// Declarations.
 	gef::Vector4 touch_position_world;
@@ -72,6 +73,8 @@ GameState* GameManager::Update(float frame_time, std::vector<Marker>& markers)
 
 	// Get the up-to-date marker transforms
 	//markers_ = markers;
+	gef::Matrix44 new_transform;
+	int spike_id = 0;
 
 	// Over here, James
 	// Make sure the input manager and touch input has been iniialised.
@@ -107,8 +110,26 @@ GameState* GameManager::Update(float frame_time, std::vector<Marker>& markers)
 	// Update the Spikes.
 	for (std::vector<Spike*>::iterator it = spike_object_containter.begin(); it != spike_object_containter.end(); ++it)
 	{
+		// Get the spike's I.D.
+		spike_id = (*it)->GetID();
+
+		// Get the corresponding marker's transform.
+		for (Marker marker : markers_)
+		{
+			if (marker.id == spike_id)
+			{
+				new_transform = marker.transform;
+
+				// Update the spike with the marker's transform.
+				(*it)->Update(new_transform);
+
+				break;
+			}
+		}
+		
 		// Update the spike's transform with that of it's correspending marker.
-		(*it)->Update(markers.at((*it)->GetID()).transform);
+		//(*it)->Update(
+			//markers.at((*it)->GetID()).transform);
 	}
 
 
@@ -116,10 +137,10 @@ GameState* GameManager::Update(float frame_time, std::vector<Marker>& markers)
 	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
 		// Pass in the central marker.
-		(*it)->Update(markers.at(0).transform);
+		(*it)->Update(markers_.at(0).transform);
 
 		// Check to see if they reached the central marker
-		distance_from_marker = ((*it)->GetTranslation() - markers.at(0).transform.GetTranslation());
+		distance_from_marker = ((*it)->GetTranslation() - markers_.at(0).transform.GetTranslation());
 
 		if (distance_from_marker.Length() <= death_threshold)
 		{
