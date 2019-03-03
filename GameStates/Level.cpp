@@ -233,6 +233,12 @@ void Level::DrawHUD()
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}
+
+	// If the markers aren't present, tell the player to relocate them.
+	if (!are_markers_visible)
+	{
+		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2), -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Markers not found!");
+	}
 }
 
 void Level::SetUpLights()
