@@ -12,7 +12,8 @@ public:
 		Walk,
 		Hold,
 		Fall,
-		Dead
+		Dead,
+		Escaped
 	};
 
 public:

@@ -121,5 +121,8 @@
     <ClInclude Include="..\..\GameObject\Spikes.h">
       <Filter>Gameplay Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\GameObject\Marker.h">
+      <Filter>Gameplay Objects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

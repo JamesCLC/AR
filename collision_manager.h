@@ -11,7 +11,7 @@ public:
 
 	// If the raytrace hits an object, it returns a pointer to that object.
 	GameObject* Raytrace(gef::Vector2);
-	void Update();
+	int Update();
 	void CleanUp();
 
 private:
@@ -46,6 +46,6 @@ private:
 	Int32 active_touch_id;
 	gef::Vector2 touch_position;
 
-	//gef::Matrix44 marker_origin_;
+
 };
 

@@ -1,16 +1,17 @@
 #include "game_manager.h"
 
-GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d, GameState* game_over, GameState* victory) :
+GameManager::GameManager(gef::Platform& platform, gef::Renderer3D * renderer_3d, std::vector<Marker>& markers, GameState* game_over, GameState* victory, int n_difficulty) :
 	platform_(platform),
 	renderer_3d_(renderer_3d),
+	markers_(markers),
 	game_over_(game_over),
 	victory_(victory),
+	difficulty_(n_difficulty),
 	input_manager_(NULL),
 	collision_manager(NULL),
 	active_touch_id(-1)
 {
 }
-
 
 GameManager::~GameManager()
 {
@@ -27,6 +28,12 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		input_manager_->touch_manager()->EnablePanel(0);
 	}
 
+	// Create the Spikes
+	for (int k = 1; k < difficulty_ + 1; ++k)
+	{
+		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn", k));
+	}
+
 	// Seed the random number generator with time.
 	srand(time(NULL));
 
@@ -36,30 +43,41 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;
 
-		starting_position.set_y((rand() % max_distance + min_distance) / 50);
 		starting_position.set_x((rand() % max_distance + min_distance) / 50);
+		starting_position.set_y((rand() % max_distance + min_distance) / 50);
 		starting_position.set_z(0.0f);
 
-		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
-	}
+		// Randomly flip the positions so that the objects are spawned at all sides of the central marker.
+		if ((rand() % 10 + 1) >= 5)
+		{
+			starting_position.set_x(starting_position.x() + -1);
+		}
+		if ((rand() % 10 + 1) >= 5)
+		{
+			starting_position.set_y(starting_position.y() + -1);
+		}
 
-	// Create the Spikes
-	for (int k = 0; k < 10; ++k)
-	{
-		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn"));	
+		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
 	}
 
 	// Create the collision detection manager.
 	collision_manager = new CollisionManager(platform_, creature_object_container, spike_object_containter, projection, view);
 }
 
-GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform)
+GameState* GameManager::Update(float frame_time)
 {
+	// Declarations.
 	gef::Vector4 touch_position_world;
-	GameObject* hit_object;
-	//Creature* hit_creature;
 	gef::Vector4 distance_from_marker;
 	GameState* return_state = NULL;
+
+	// Get the up-to-date marker transforms
+	//markers_ = markers;
+	gef::Matrix44 new_transform;
+	int spike_id = 0;
+
+	// Reset the player's score.
+	player_score_ = 0;
 
 	// Over here, James
 	// Make sure the input manager and touch input has been iniialised.
@@ -76,18 +94,15 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	//			// If an object is hit, a pointer to that object is returned.
 	//			// Returns NULL if nothing is hit.
 	//			hit_object = collision_manager->Raytrace(touch_position);
-
 	//			///
 	//			// Problem: How can I tell when the ray is hitting a Creature, and not a spike?
 	//			// Do I even need to bother?
 	//			///
-
 	//			if (hit_object && (hit_object->GetState() != Creature::Dead))
 	//			{
 	//				// The ray has hit something.
 	//				// Tell that game object to die.
 	//				hit_object->SetState(Creature::Dead);
-
 	//				// Return the next game state.
 	//				//return_state = victory_;
 	//			}
@@ -98,28 +113,57 @@ GameState* GameManager::Update(float frame_time, gef::Matrix44& marker_transform
 	// Update the Spikes.
 	for (std::vector<Spike*>::iterator it = spike_object_containter.begin(); it != spike_object_containter.end(); ++it)
 	{
-		(*it)->Update(marker_transform);
+		// Get the spike's I.D.
+		spike_id = (*it)->GetID();
+
+		// Get the corresponding marker's transform.
+		for (Marker marker : markers_)
+		{
+			if (marker.id == spike_id)
+			{
+				new_transform = marker.transform;
+
+				// Update the spike with the marker's transform.
+				(*it)->Update(new_transform);
+
+				break;
+			}
+		}
 	}
 
 
 	// Update the Creature Objects.
 	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
-		(*it)->Update(marker_transform);
-
-		// Check to see if they reached the central marker
-		distance_from_marker = ((*it)->GetTranslation() - marker_transform.GetTranslation());
-
-		if (distance_from_marker.Length() <= death_threshold)
+		// Only update the creatures that are still active.
+		if (((*it)->GetState() != Creature::Dead) && ((*it)->GetState() != Creature::Escaped))
 		{
-			// The player has died. Notify the level.
-			//return_state = game_over_;
+			// Pass in the central marker.
+			(*it)->Update(markers_.at(0).transform);
+
+			// Check to see if they reached the central marker
+			distance_from_marker = ((*it)->GetTranslation() - markers_.at(0).transform.GetTranslation());
+
+			if (distance_from_marker.Length() <= safe_threshold)
+			{
+				// This game object has escaped.
+				// Set it to dead so that it doesn't render or update,
+				// But increase the player's score.
+				(*it)->SetState(Creature::Escaped);
+			}
+		}
+
+		// The player's score is 1 for each creature that has escaped.
+		if ((*it)->GetState() == Creature::Escaped)
+		{
+			++player_score_;
 		}
 	}
 
-	collision_manager->Update();
+	// Perform general collision detection.
+	player_score_ -= collision_manager->Update();
 
-	return return_state; // Should move this to here the return state is set. Better yet, ditch the return sate variable altogether.
+	return return_state;
 }
 
 void GameManager::Render()
@@ -133,7 +177,7 @@ void GameManager::Render()
 	// Render the creatures that are still alive.
 	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
-		if ((*it)->GetState() != Creature::Dead)
+		if (((*it)->GetState() != Creature::Dead) && ((*it)->GetState() != Creature::Escaped))
 		{
 			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
 		}	

@@ -23,6 +23,7 @@
 #include "game_state.h"
 #include "../game_object.h"
 #include "../game_manager.h"
+#include "../GameObject/Marker.h"
 
 class Level : public GameState
 {
@@ -48,25 +49,29 @@ private:
 	class gef::Renderer3D* renderer_3d_;
 	gef::SpriteRenderer* sprite_renderer_;
 	gef::Font* font_;
+	gef::Matrix44 ortho_matrix_;
+	gef::Matrix44 view_matrix;
 
+	// AR Rendering and Marker detection.
 	gef::Matrix44 unscaled_projection_matrix_;
 	gef::Matrix44 scaled_projection_matrix_;
 	gef::Matrix44 scaling_matrix_;
-	gef::Matrix44 ortho_matrix_;
-	gef::Matrix44 view_matrix;
 	gef::Sprite camera_feed_sprite_;
 	gef::TextureVita camera_feed_texture_;
 	float scaling_factor_ = 0.0f;
+
 	float fps_;
-	int marker_id = 1;
+	std::vector<Marker> markers;
 
-	gef::Matrix44 marker_transform_;
-
+	// The object responsible for all gameplay logic.
 	GameManager* game_manager_;
 
+	// Game states the application can transition to from here.
 	GameState* game_over_;
 	GameState* victory_;
 
-	// bool is_marker_visible;
+	bool are_markers_visible;
+
+	int difficulty = 2;
 };
 

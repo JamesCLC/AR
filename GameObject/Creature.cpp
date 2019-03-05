@@ -36,6 +36,9 @@ void Creature::Update(gef::Matrix44& marker_transform)
 	case Creature::State::Dead:
 		Execute_Die();
 		break;
+	case Creature::State::Escaped:
+		Execute_Die();
+		break;
 	default:
 		break;
 	}

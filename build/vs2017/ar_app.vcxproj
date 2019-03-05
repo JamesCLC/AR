@@ -95,6 +95,7 @@
     <ClInclude Include="..\..\ar_app.h" />
     <ClInclude Include="..\..\collision_manager.h" />
     <ClInclude Include="..\..\GameObject\Creature.h" />
+    <ClInclude Include="..\..\GameObject\Marker.h" />
     <ClInclude Include="..\..\GameObject\Spikes.h" />
     <ClInclude Include="..\..\GameStates\button.h" />
     <ClInclude Include="..\..\GameStates\game_over.h" />

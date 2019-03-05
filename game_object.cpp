@@ -35,6 +35,10 @@ const gef::Sphere GameObject::GetCollisionSphere()
 {
 	gef::Sphere transformed_sphere = mesh_->bounding_sphere().Transform(this->transform_);
 
+	// The default collision sphere is too big for this game,
+	// So reduce it's radius by half.
+	transformed_sphere.set_radius(transformed_sphere.radius() / 2);
+
 	return transformed_sphere;
 }
 

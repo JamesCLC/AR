@@ -21,8 +21,6 @@ void Level::Init()
 {
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform);
 	renderer_3d_ = gef::Renderer3D::Create(platform);
-	//primitive_builder_ = new PrimitiveBuilder(platform_);
-
 
 	/// 2D Camera Feed
 	// Set up the Ortho Matrix for rendering the camera feed.
@@ -59,12 +57,12 @@ void Level::Init()
 	// Create the view matrix.
 	view_matrix.SetIdentity();
 
-	// Create and Initialise the Game Manager.
-	game_manager_ = new GameManager(platform, renderer_3d_, game_over_, victory_);
-	game_manager_->Init(scaled_projection_matrix_, view_matrix);
+	// Create the Game Manager.
+	game_manager_ = new GameManager(platform, renderer_3d_, markers, game_over_, 
+		victory_, difficulty);
 
-	// Create a Debug Sphere
-	//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+	// Initialise the Game Manager.
+	game_manager_->Init(scaled_projection_matrix_, view_matrix);											
 																
 	InitFont();
 	SetUpLights();
@@ -77,6 +75,15 @@ void Level::Init()
 	AppData* dat = sampleUpdateBegin();
 	smartTrackingReset();
 	sampleUpdateEnd(dat);
+
+	// Create the structures to store marker data.
+	// Need a marker for each spike + 1 for the cratrue's target.
+	for (int i = 0; i < difficulty + 1; ++i)
+	{
+		Marker new_marker;
+		new_marker.id = i;
+		markers.push_back(new_marker);
+	}
 }
 
 GameState* Level::Update(float frame_time)
@@ -91,22 +98,29 @@ GameState* Level::Update(float frame_time)
 	// use the tracking library to try and find markers
 	smartUpdate(dat->currentImage);
 
-	// check to see if a particular marker can be found
-	if (sampleIsMarkerFound(marker_id))
+	// Get the positions of all the neccesary markers.
+	are_markers_visible = true;
+	for (std::vector<Marker>::iterator it = markers.begin(); it != markers.end(); ++it)
 	{
-		// marker is being tracked, get it’s transform
-		sampleGetTransform(marker_id, &marker_transform_);
-
-		// Perform all gameplay & collision code.
-		// Function returns false if the player has died.
-		/*if (!game_manager_->Update(frame_time, marker_transform_))
+		// check to see if a particular marker can be found
+		if (sampleIsMarkerFound(it->id))
 		{
-			sampleUpdateEnd(dat);
+			// marker is being tracked, get it’s transform
+			sampleGetTransform(it->id, &it->transform);
+		}
+		else // If any of the markers aren't visible, halt the game.
+		{
+			are_markers_visible = false;
+			break;
+		}
+	}
 
-			return game_over_;
-		}*/
-
-		return_pointer = game_manager_->Update(frame_time, marker_transform_);
+	// Update the game only if all the neccesary markers are visible.
+	if (are_markers_visible)
+	{
+		// Perform all gameplay & collision code.
+		// If game logic dictates a state change (i.e. game over) this function returns a pointer to that state.
+		return_pointer = game_manager_->Update(frame_time);
 	}
 
 	sampleUpdateEnd(dat);
@@ -146,13 +160,17 @@ void Level::Render()
 		renderer_3d_->set_projection_matrix(scaled_projection_matrix_);
 		renderer_3d_->set_view_matrix(view_matrix);
 
-		// Begin rendering 3D meshes, don't clear the frame buffer
-		renderer_3d_->Begin(false);
+		// Render the gameplay objects if all the neccessary markers are visible.
+		if (are_markers_visible)
+		{
+			// Begin rendering 3D meshes, don't clear the frame buffer
+			renderer_3d_->Begin(false);
 
-		// The game manager renders all the game objects it contains.
-		game_manager_->Render();
+			// The game manager renders all the game objects it contains.
+			game_manager_->Render();
 
-		renderer_3d_->End();
+			renderer_3d_->End();
+		}
 
 	RenderOverlay();
 
@@ -161,9 +179,6 @@ void Level::Render()
 
 void Level::CleanUp()
 {
-	//delete primitive_builder_;
-	//primitive_builder_ = NULL;
-
 	if (game_manager_)
 	{
 		game_manager_->Cleanup();
@@ -222,6 +237,20 @@ void Level::DrawHUD()
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 	}
+
+	// If the markers aren't present, tell the player to relocate them.
+	if (!are_markers_visible)
+	{
+		// Render the text at the centre of the screen.
+		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2), -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Markers not found!");
+	}
+
+	// Display the player's score.
+	if (game_manager_ != nullptr)
+	{
+		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width() / 2), 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Score: %d", game_manager_->GetPlayerScore());
+	}
+	
 }
 
 void Level::SetUpLights()

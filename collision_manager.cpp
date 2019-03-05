@@ -11,7 +11,6 @@ CollisionManager::CollisionManager(gef::Platform& platform, std::vector<Creature
 {
 }
 
-
 CollisionManager::~CollisionManager()
 {
 }
@@ -46,21 +45,33 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	return game_object_ptr;
 }
 
-void CollisionManager::Update()
+int CollisionManager::Update()
 {
+	int penalty = 0;
+
 	/// Collision detection between creatures and spikes.
 	// Check each creatures object.
 	for (std::vector<Creature*>::iterator creature_it = creature_object_container.begin(); creature_it != creature_object_container.end(); ++creature_it)
 	{
-		// check each spike
+		// Check each spike.
 		for (std::vector<Spike*>::iterator spike_it = spike_object_container.begin(); spike_it != spike_object_container.end(); ++spike_it)
 		{
+			// Perform colliion detection between the two objects.
 			if (SphereToSphere(*(*creature_it), *(*spike_it)))
 			{
-				int foo = 0;
+				// If a creature touches te spikes, kill that creature.
+				(*creature_it)->SetState(Creature::Dead);
 			}
 		}
+
+		// Deduct one point for every creature that has died.
+		if ((*creature_it)->GetState() == Creature::Dead)
+		{
+			++penalty;
+		}
 	}
+
+	return penalty;
 }
 
 void CollisionManager::CleanUp()
@@ -100,10 +111,23 @@ void CollisionManager::GetRay(gef::Vector4 & start_point, gef::Vector4 & directi
 		direction.Normalise();
 }
 
-bool CollisionManager::SphereToPlane(GameObject &)
+bool CollisionManager::SphereToSphere(GameObject& obj_1, GameObject& obj_2)
 {
-	// TO DO - Will need to use the marker transform to word out where the ground is.
+	//Calculate the squared distance between the centers of both spheres
+	gef::Vector4 vecDist(obj_1.GetCollisionSphere().position() - obj_2.GetCollisionSphere().position());
 
+	float fDistSq(vecDist.DotProduct(vecDist));
+
+	//Calculate the squared sum of both radii
+	float fRadiiSumSquared(obj_1.GetCollisionSphere().radius() + obj_2.GetCollisionSphere().radius());
+	fRadiiSumSquared *= fRadiiSumSquared;
+
+	//Check for collision
+	//If the distance squared is less than or equal to the square sum of the radii, then we have a collision
+	if (fDistSq <= fRadiiSumSquared)
+		return true;
+
+	//I not, then return false
 	return false;
 }
 
@@ -132,26 +156,6 @@ bool CollisionManager::RayToSphere(GameObject& game_object)
 
 	//Check if that point is inside the sphere
 	return (PointInSphere(game_object, vecClosestPoint));
-}
-
-bool CollisionManager::SphereToSphere(GameObject& obj_1, GameObject& obj_2)
-{
-	//Calculate the squared distance between the centers of both spheres
-	gef::Vector4 vecDist(obj_1.GetCollisionSphere().position() - obj_2.GetCollisionSphere().position());
-
-	float fDistSq(vecDist.DotProduct(vecDist));
-
-	//Calculate the squared sum of both radii
-	float fRadiiSumSquared(obj_1.GetCollisionSphere().radius() + obj_2.GetCollisionSphere().radius());
-	fRadiiSumSquared *= fRadiiSumSquared;
-
-	//Check for collision
-	//If the distance squared is less than or equal to the square sum of the radii, then we have a collision
-	if (fDistSq <= fRadiiSumSquared)
-		return true;
-
-	//I not, then return false
-	return false;
 }
 
 bool CollisionManager::PointInSphere(GameObject& game_object, gef::Vector4& point)
@@ -215,11 +219,18 @@ void CollisionManager::TouchPositionWolrd(GameObject& game_object)
 	game_object.SetTranslation(touch_position_world);
 }
 
+// Not in use.
+bool CollisionManager::SphereToPlane(GameObject &)
+{
+	// TO DO - Will need to use the marker transform to word out where the ground is.
+
+	return false;
+}
+
+// Not in use.
 bool CollisionManager::GameObjectFall(GameObject & game_object, gef::Matrix44 & marker_transform)
 {
 	// Another Dummy Function. This time, I want the game object to fall back to the plane defined by the marker.
-
-
 	gef::Matrix44 new_relative_transform = marker_transform;
 
 	// Calculate the Game Object's translation relative to the marker. We can ignore rotation for now. Dunno about scale.
