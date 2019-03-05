@@ -53,6 +53,7 @@ void GameOver::Init()
 	if (input_manager_ && input_manager_->touch_manager() && (input_manager_->touch_manager()->max_num_panels() > 0))
 	{
 		input_manager_->touch_manager()->EnablePanel(0);
+		active_touch_id = -1;
 	}
 
 	// Initialise the buttons.
@@ -63,27 +64,24 @@ GameState * GameOver::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
-	GameState* return_state = NULL;
-
 	if (input_manager_)
 	{
+		// Get up-to-date player input.
 		input_manager_->Update();
 
 		if (ProcessTouchInput())
 		{
+			int foo = 0;
 			// Check to see if any of the buttons have been pressed.
 			for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
 			{
-				return_state = (*it)->IsPressed(touch_position);
-				if (return_state != NULL)
-				{
-					return return_state;
-				}
+				// If it has, go to the corresponding game state.
+				return (*it)->IsPressed(touch_position);
 			}
 		}
 	}
 
-	return return_state;
+	return NULL;
 }
 
 void GameOver::Render()
@@ -136,7 +134,14 @@ void GameOver::CleanUp()
 	}
 
 	// Delete the buttons.
+	for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); ++it)
+	{
+		delete (*it);
+	}
+
 	buttons.clear();
+
+
 }
 
 void GameOver::SetUpStates(GameState * level, GameState * main_menu)
@@ -171,20 +176,10 @@ void GameOver::RenderText()
 		// Display framerate text
 		font_->RenderText(sprite_renderer_, gef::Vector4(850.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "FPS: %.1f", fps_);
 
-		// Display the "buttons"
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Play");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
-		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
-
-		// Render text on the buttons.
-		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
-		{
-			// Convert the button's text from a string to a const char buffer.
-			const char *char_buffer = (*it)->GetText().c_str();
-
-			font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
-		}
-
+		// Render the text on the buttons.
+		font_->RenderText(sprite_renderer_, buttons[0]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Replay");
+		font_->RenderText(sprite_renderer_, buttons[1]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Options");
+		font_->RenderText(sprite_renderer_, buttons[2]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Quit");
 	}
 
 	sprite_renderer_->End();

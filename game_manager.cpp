@@ -38,7 +38,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	srand(time(NULL));
 
 	// Create the Cratures
-	for (int i = 0; i < num_of_objects; ++i)
+	for (int i = 0; i < num_of_creatures; ++i)
 	{
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;

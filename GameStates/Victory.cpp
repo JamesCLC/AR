@@ -175,14 +175,14 @@ void Victory::RenderText()
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 200.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Options");
 		font_->RenderText(sprite_renderer_, gef::Vector4(425.0f, 300.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Quit");
 
-		// Render text on the buttons.
-		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
-		{
-			// Convert the button's text from a string to a const char buffer.
-			const char *char_buffer = (*it)->GetText().c_str();
+		//// Render text on the buttons.
+		//for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
+		//{
+		//	// Convert the button's text from a string to a const char buffer.
+		//	const char *char_buffer = (*it)->GetText().c_str();
 
-			font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
-		}
+		//	font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
+		//}
 
 	}
 

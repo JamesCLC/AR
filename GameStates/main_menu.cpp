@@ -63,8 +63,6 @@ GameState* MainMenu::Update(float frame_time)
 {
 	fps_ = 1.0f / frame_time;
 
-	GameState* return_state = NULL;
-
 	// Process touch input.
 	if (input_manager_)
 	{
@@ -75,16 +73,13 @@ GameState* MainMenu::Update(float frame_time)
 			// Check to see if any of the buttons have been pressed.
 			for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
 			{
-				return_state = (*it)->IsPressed(touch_position);
-				if (return_state != NULL)	// Note; this is probably unneccesary.
-				{
-					return return_state;
-				}
+				// If it has, go to the corresponding game state.
+				return (*it)->IsPressed(touch_position);
 			}
 		}
 	}
 
-	return return_state;
+	return NULL;
 }
 
 void MainMenu::Render()
@@ -176,16 +171,6 @@ void MainMenu::RenderText()
 		font_->RenderText(sprite_renderer_, buttons[0]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Play");
 		font_->RenderText(sprite_renderer_, buttons[1]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Options");
 		font_->RenderText(sprite_renderer_, buttons[2]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Quit");
-
-		// Render text on the buttons.
-		for (std::vector<Button*>::iterator it = buttons.begin(); it != buttons.end(); it++)
-		{
-			// Convert the button's text from a string to a const char buffer.
-			const char *char_buffer = (*it)->GetText().c_str();
-
-			font_->RenderText(sprite_renderer_, (*it)->GetPosition(), 1.0f, 0xffffffff, gef::TJ_LEFT, char_buffer);
-		}
-
 	}
 
 	sprite_renderer_->End();
