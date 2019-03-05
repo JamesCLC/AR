@@ -64,6 +64,7 @@ int CollisionManager::Update()
 			}
 		}
 
+		// fuckshit
 		// Deduct one point for every creature that has died.
 		if ((*creature_it)->GetState() == Creature::Dead)
 		{
