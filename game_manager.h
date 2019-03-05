@@ -14,7 +14,8 @@ class GameState;
 class GameManager
 {
 public:
-	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, std::vector<Marker>& markers, GameState* game_over, GameState* victory, int difficulty);
+	GameManager(gef::Platform& platform, gef::Renderer3D* renderer_3d, std::vector<Marker>& markers, 
+		GameState* game_over, GameState* victory, int difficulty);
 	~GameManager();
 
 	GameState* Update(float frame_time);
@@ -25,6 +26,8 @@ public:
 	// Returns a reference to the Creatures.
 	std::vector<Creature*>* GetCreatureObjects() { return &creature_object_container; };
 	std::vector<Spike*>* GetSpikeObjects() { return &spike_object_containter; };
+
+	int GetPlayerScore() { return player_score_; };
 
 private:
 	bool ProcessTouchInput();
@@ -57,8 +60,8 @@ private:
 	int min_distance = 30;
 
 	// How close to the ground the objects have to be before the player dies.
-	float death_threshold = 0.1f;
-
+	float safe_threshold = 0.1f;
 	int difficulty_;
+	int player_score_ = 0;
 };
 

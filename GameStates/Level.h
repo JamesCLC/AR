@@ -72,7 +72,6 @@ private:
 
 	bool are_markers_visible;
 
-	int difficulty = 1 ;
-	int player_score = 0;
+	int difficulty = 2;
 };
 

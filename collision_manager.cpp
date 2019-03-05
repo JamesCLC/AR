@@ -45,8 +45,10 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	return game_object_ptr;
 }
 
-void CollisionManager::Update()
+int CollisionManager::Update()
 {
+	int penalty = 0;
+
 	/// Collision detection between creatures and spikes.
 	// Check each creatures object.
 	for (std::vector<Creature*>::iterator creature_it = creature_object_container.begin(); creature_it != creature_object_container.end(); ++creature_it)
@@ -57,11 +59,19 @@ void CollisionManager::Update()
 			// Perform colliion detection between the two objects.
 			if (SphereToSphere(*(*creature_it), *(*spike_it)))
 			{
-				// If a creature touches te spikes, kill tha creature.
+				// If a creature touches te spikes, kill that creature.
 				(*creature_it)->SetState(Creature::Dead);
 			}
 		}
+
+		// Deduct one point for every creature that has died.
+		if ((*creature_it)->GetState() == Creature::Dead)
+		{
+			++penalty;
+		}
 	}
+
+	return penalty;
 }
 
 void CollisionManager::CleanUp()

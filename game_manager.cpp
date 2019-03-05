@@ -76,6 +76,9 @@ GameState* GameManager::Update(float frame_time)
 	gef::Matrix44 new_transform;
 	int spike_id = 0;
 
+	// Reset the player's score.
+	player_score_ = 0;
+
 	// Over here, James
 	// Make sure the input manager and touch input has been iniialised.
 	//if (input_manager_ && input_manager_->touch_manager())
@@ -126,33 +129,41 @@ GameState* GameManager::Update(float frame_time)
 				break;
 			}
 		}
-		
-		// Update the spike's transform with that of it's correspending marker.
-		//(*it)->Update(
-			//markers.at((*it)->GetID()).transform);
 	}
 
 
 	// Update the Creature Objects.
 	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
-		// Pass in the central marker.
-		(*it)->Update(markers_.at(0).transform);
-
-		// Check to see if they reached the central marker
-		distance_from_marker = ((*it)->GetTranslation() - markers_.at(0).transform.GetTranslation());
-
-		if (distance_from_marker.Length() <= death_threshold)
+		// Only update the creatures that are still active.
+		if (((*it)->GetState() != Creature::Dead) && ((*it)->GetState() != Creature::Escaped))
 		{
-			// The player has died. Notify the level.
-			//return_state = game_over_;
+			// Pass in the central marker.
+			(*it)->Update(markers_.at(0).transform);
+
+			// Check to see if they reached the central marker
+			distance_from_marker = ((*it)->GetTranslation() - markers_.at(0).transform.GetTranslation());
+
+			if (distance_from_marker.Length() <= safe_threshold)
+			{
+				// This game object has escaped.
+				// Set it to dead so that it doesn't render or update,
+				// But increase the player's score.
+				(*it)->SetState(Creature::Escaped);
+			}
+		}
+
+		// The player's score is 1 for each creature that has escaped.
+		if ((*it)->GetState() == Creature::Escaped)
+		{
+			++player_score_;
 		}
 	}
 
 	// Perform general collision detection.
-	collision_manager->Update();
+	player_score_ -= collision_manager->Update();
 
-	return return_state; // Should move this to here the return state is set. Better yet, ditch the return sate variable altogether.
+	return return_state;
 }
 
 void GameManager::Render()
@@ -166,7 +177,7 @@ void GameManager::Render()
 	// Render the creatures that are still alive.
 	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
-		if ((*it)->GetState() != Creature::Dead)
+		if (((*it)->GetState() != Creature::Dead) && ((*it)->GetState() != Creature::Escaped))
 		{
 			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
 		}	

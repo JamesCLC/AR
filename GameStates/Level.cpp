@@ -57,12 +57,12 @@ void Level::Init()
 	// Create the view matrix.
 	view_matrix.SetIdentity();
 
-	// Create and Initialise the Game Manager.
-	game_manager_ = new GameManager(platform, renderer_3d_, markers, game_over_, victory_, difficulty);
-	game_manager_->Init(scaled_projection_matrix_, view_matrix);
+	// Create the Game Manager.
+	game_manager_ = new GameManager(platform, renderer_3d_, markers, game_over_, 
+		victory_, difficulty);
 
-	// Create a Debug Sphere
-	//debug_sphere.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+	// Initialise the Game Manager.
+	game_manager_->Init(scaled_projection_matrix_, view_matrix);											
 																
 	InitFont();
 	SetUpLights();
@@ -241,8 +241,16 @@ void Level::DrawHUD()
 	// If the markers aren't present, tell the player to relocate them.
 	if (!are_markers_visible)
 	{
+		// Render the text at the centre of the screen.
 		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2), -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Markers not found!");
 	}
+
+	// Display the player's score.
+	if (game_manager_ != nullptr)
+	{
+		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width() / 2), 100.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Score: %d", game_manager_->GetPlayerScore());
+	}
+	
 }
 
 void Level::SetUpLights()
