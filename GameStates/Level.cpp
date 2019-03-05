@@ -243,6 +243,7 @@ void Level::DrawHUD()
 	{
 		// Render the text at the centre of the screen.
 		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2), -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Markers not found!");
+		font_->RenderText(sprite_renderer_, gef::Vector4((platform.width()/2), (platform.height() / 2) + 50, -0.9f), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Please locate markers 1 to %d", difficulty + 1);
 	}
 
 	// Display the player's score.
