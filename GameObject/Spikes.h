@@ -10,6 +10,7 @@ public:
 	~Spike();
 
 	int GetID() { return marker_id; };
+
 private:
 	// The I.D. of the marker this spike is being placed on.
 	int marker_id;

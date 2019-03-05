@@ -160,6 +160,7 @@ void Level::Render()
 		renderer_3d_->set_projection_matrix(scaled_projection_matrix_);
 		renderer_3d_->set_view_matrix(view_matrix);
 
+		// Render the gameplay objects if all the neccessary markers are visible.
 		if (are_markers_visible)
 		{
 			// Begin rendering 3D meshes, don't clear the frame buffer

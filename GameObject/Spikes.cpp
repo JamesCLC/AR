@@ -18,5 +18,3 @@ Spike::Spike(gef::Platform & platform_, std::string n_scene_filename_, int n_mar
 Spike::~Spike()
 {
 }
-
-
