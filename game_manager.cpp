@@ -38,7 +38,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	srand(time(NULL));
 
 	// Create the Cratures
-	for (int i = 0; i < num_of_objects; ++i)
+	for (int i = 0; i < num_of_creatures; ++i)
 	{
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;
@@ -148,7 +148,6 @@ GameState* GameManager::Update(float frame_time)
 			{
 				// This game object has escaped.
 				// Set it to dead so that it doesn't render or update,
-				// But increase the player's score.
 				(*it)->SetState(Creature::Escaped);
 			}
 		}
@@ -163,7 +162,20 @@ GameState* GameManager::Update(float frame_time)
 	// Perform general collision detection.
 	player_score_ -= collision_manager->Update();
 
-	return return_state;
+
+	// Check to see if any of the creatures are still active.
+	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
+	{
+		// If any of the creatures are neither dead nor escaped...
+		if ((*it)->GetState() != Creature::Dead && (*it)->GetState() != Creature::Escaped)
+		{
+			// The game continues with no change to the state.
+			return return_state;
+		}
+	}
+
+	// If all the creatures have either died or escaped, go to the game over screen.
+	return game_over_;
 }
 
 void GameManager::Render()

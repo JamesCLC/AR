@@ -72,6 +72,6 @@ private:
 
 	bool are_markers_visible;
 
-	int difficulty = 2;
+	int difficulty = 3;
 };
 

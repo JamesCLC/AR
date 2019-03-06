@@ -55,7 +55,7 @@ private:
 	gef::Vector2 touch_position;
 
 	// Game Object variables.
-	int num_of_objects = 5;
+	int num_of_creatures = 5;
 	int max_distance = 100;
 	int min_distance = 30;
 

@@ -27,7 +27,7 @@ ARApp::ARApp(gef::Platform& platform) :
 	current_state_(NULL)
 {
 	// Create the game states.
-	game_over_ = new GameOver(platform_);
+	game_over_ = new GameOver(platform);
 	level_ = new Level(platform);
 	main_menu_ = new MainMenu(platform);
 	victory_ = new Victory(platform);
@@ -39,7 +39,7 @@ ARApp::ARApp(gef::Platform& platform) :
 	victory_->SetUpStates(level_, main_menu_);
 
 	// Begin the application on the main menu.
-	current_state_ = level_;
+	current_state_ = main_menu_;
 }
 
 void ARApp::Init()
