@@ -180,6 +180,10 @@ void GameOver::RenderText()
 		font_->RenderText(sprite_renderer_, buttons[0]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Replay");
 		font_->RenderText(sprite_renderer_, buttons[1]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Options");
 		font_->RenderText(sprite_renderer_, buttons[2]->GetPosition(), 1.0f, 0xffffffff, gef::TJ_CENTRE, "Quit");
+
+		// Display the score
+		font_->RenderText(sprite_renderer_, gef::Vector4(50.0f, 510.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "Final Score: %d", score);
+
 	}
 
 	sprite_renderer_->End();
