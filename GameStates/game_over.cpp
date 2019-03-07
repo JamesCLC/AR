@@ -141,7 +141,6 @@ void GameOver::CleanUp()
 
 	buttons.clear();
 
-
 }
 
 void GameOver::SetUpStates(GameState * level, GameState * main_menu)

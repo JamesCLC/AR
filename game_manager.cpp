@@ -171,8 +171,8 @@ GameState* GameManager::Update(float frame_time)
 		}
 	}
 
+	// Pass the player's score over to the game over screen.
 	GameOver* test = (GameOver*)game_over_;
-
 	test->SetScore(player_score_);
 
 	// If all the creatures have either died or escaped, go to the game over screen.
