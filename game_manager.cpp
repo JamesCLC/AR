@@ -31,14 +31,14 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 	// Create the Spikes
 	for (int k = 1; k < difficulty_ + 1; ++k)
 	{
-		spike_object_containter.push_back(new Spike(platform_, "spikes/spikes.scn", k));
+		spike_container.push_back(new Spike(platform_, "spikes/spikes.scn", k));
 	}
 
 	// Seed the random number generator with time.
 	srand(time(NULL));
 
-	// Create the Cratures
-	for (int i = 0; i < num_of_creatures; ++i)
+	// Create the Balls.
+	for (int i = 0; i < num_of_balls; ++i)
 	{
 		// Give the game object a random starting position within a given range.
 		gef::Vector4 starting_position;
@@ -47,7 +47,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 		starting_position.set_y((rand() % max_distance + min_distance) / 50);
 		starting_position.set_z(0.0f);
 
-		// Randomly flip the positions so that the objects are spawned at all sides of the central marker.
+		// Randomly flip the positions so that the Balls are spawned from all angles.
 		if ((rand() % 10 + 1) >= 5)
 		{
 			starting_position.set_x(starting_position.x() + -1);
@@ -57,11 +57,11 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 			starting_position.set_y(starting_position.y() + -1);
 		}
 
-		creature_object_container.push_back(new Ball(platform_, "balls/ball1.scn", starting_position));
+		ball_container.push_back(new Ball(platform_, "balls/ball1.scn", starting_position));
 	}
 
 	// Create the collision detection manager.
-	collision_manager = new CollisionManager(platform_, creature_object_container, spike_object_containter, projection, view);
+	collision_manager = new CollisionManager(platform_, ball_container, spike_container, projection, view);
 }
 
 GameState* GameManager::Update(float frame_time)
@@ -79,6 +79,7 @@ GameState* GameManager::Update(float frame_time)
 	// Reset the player's score.
 	player_score_ = 0;
 
+	// CUT - Touch screen object selection
 	// Make sure the input manager and touch input has been iniialised.
 	//if (input_manager_ && input_manager_->touch_manager())
 	//{
@@ -92,11 +93,8 @@ GameState* GameManager::Update(float frame_time)
 	//			// Perform a raytrace against all the game objects.
 	//			// If an object is hit, a pointer to that object is returned.
 	//			// Returns NULL if nothing is hit.
-	//			hit_object = collision_manager->Raytrace(touch_position);
-	//			///
-	//			// Problem: How can I tell when the ray is hitting a Creature, and not a spike?
-	//			// Do I even need to bother?
-	//			///
+	//			hit_object = collision_manager->Raytrace(touch_position)
+	//
 	//			if (hit_object && (hit_object->GetState() != Creature::Dead))
 	//			{
 	//				// The ray has hit something.
@@ -110,7 +108,7 @@ GameState* GameManager::Update(float frame_time)
 	////}
 
 	// Update the Spikes.
-	for (std::vector<Spike*>::iterator it = spike_object_containter.begin(); it != spike_object_containter.end(); ++it)
+	for (std::vector<Spike*>::iterator it = spike_container.begin(); it != spike_container.end(); ++it)
 	{
 		// Get the spike's I.D.
 		spike_id = (*it)->GetID();
@@ -132,7 +130,7 @@ GameState* GameManager::Update(float frame_time)
 
 
 	// Update the Creature Objects.
-	for (std::vector<Ball*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
+	for (std::vector<Ball*>::iterator it = ball_container.begin(); it != ball_container.end(); ++it)
 	{
 		// Only update the creatures that are still active.
 		if (((*it)->GetState() != Ball::Dead) && ((*it)->GetState() != Ball::Escaped))
@@ -163,7 +161,7 @@ GameState* GameManager::Update(float frame_time)
 
 
 	// Check to see if any of the creatures are still active.
-	for (std::vector<Ball*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
+	for (std::vector<Ball*>::iterator it = ball_container.begin(); it != ball_container.end(); ++it)
 	{
 		// If any of the creatures are neither dead nor escaped...
 		if ((*it)->GetState() != Ball::Dead && (*it)->GetState() != Ball::Escaped)
@@ -173,6 +171,10 @@ GameState* GameManager::Update(float frame_time)
 		}
 	}
 
+	//GameOver* test = dynamic_cast<GameOver*>(game_over_);
+
+	//test->SetScore(player_score_);
+
 	// If all the creatures have either died or escaped, go to the game over screen.
 	return game_over_;
 }
@@ -180,13 +182,13 @@ GameState* GameManager::Update(float frame_time)
 void GameManager::Render()
 {
 	// Redender the spikes.
-	for (std::vector<Spike*>::iterator it = spike_object_containter.begin(); it != spike_object_containter.end(); ++it)
+	for (std::vector<Spike*>::iterator it = spike_container.begin(); it != spike_container.end(); ++it)
 	{
 		renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
 	}
 
-	// Render the creatures that are still alive.
-	for (std::vector<Ball*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
+	// Render the Balls that are still in play.
+	for (std::vector<Ball*>::iterator it = ball_container.begin(); it != ball_container.end(); it++)
 	{
 		if (((*it)->GetState() != Ball::Dead) && ((*it)->GetState() != Ball::Escaped))
 		{
@@ -198,16 +200,17 @@ void GameManager::Render()
 void GameManager::Cleanup()
 {
 	// Delete the game objects.
-	creature_object_container.clear();
-	spike_object_containter.clear();
+	ball_container.clear();
+	spike_container.clear();
 
-	// Delete the input manager
+	// Delete the input manager.
 	if (input_manager_)
 	{
 		delete input_manager_;
 		input_manager_ = NULL;
 	}
 
+	// Delete the collision manager.
 	if (collision_manager)
 	{
 		collision_manager->CleanUp();
