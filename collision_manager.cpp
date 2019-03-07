@@ -51,21 +51,24 @@ int CollisionManager::Update()
 
 	/// Collision detection between creatures and spikes.
 	// Check each creatures object.
-	for (std::vector<Ball*>::iterator creature_it = ball_container.begin(); creature_it != ball_container.end(); ++creature_it)
+	for (std::vector<Ball*>::iterator ball_it = ball_container.begin(); ball_it != ball_container.end(); ++ball_it)
 	{
 		// Check each spike.
 		for (std::vector<Spike*>::iterator spike_it = spike_container.begin(); spike_it != spike_container.end(); ++spike_it)
 		{
 			// Perform colliion detection between the two objects.
-			if (SphereToSphere(*(*creature_it), *(*spike_it)))
+			if (SphereToSphere(*(*ball_it), *(*spike_it)))
 			{
-				// If a creature touches te spikes, kill that creature.
-				(*creature_it)->SetState(Ball::Dead);
+				if ((*ball_it)->GetState() != Ball::Escaped)
+				{
+					// If a creature touches te spikes, kill that creature.
+					(*ball_it)->SetState(Ball::Dead);
+				}
 			}
 		}
 
 		// Deduct one point for every creature that has died.
-		if ((*creature_it)->GetState() == Ball::Dead)
+		if ((*ball_it)->GetState() == Ball::Dead)
 		{
 			++penalty;
 		}
