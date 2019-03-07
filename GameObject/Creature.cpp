@@ -2,11 +2,11 @@
 
 
 
-Creature::Creature()
+Ball::Ball()
 {
 }
 
-Creature::Creature(gef::Platform& platform_, std::string n_scene_filename_, gef::Vector4 starting_position) :
+Ball::Ball(gef::Platform& platform_, std::string n_scene_filename_, gef::Vector4 starting_position) :
 	GameObject(platform_, n_scene_filename_),
 	position(starting_position)
 {
@@ -15,28 +15,28 @@ Creature::Creature(gef::Platform& platform_, std::string n_scene_filename_, gef:
 }
 
 
-Creature::~Creature()
+Ball::~Ball()
 {
 }
 
-void Creature::Update(gef::Matrix44& marker_transform)
+void Ball::Update(gef::Matrix44& marker_transform)
 {
 	// The game objects acts according to it's current state.
 	switch (current_state)
 	{
-	case Creature::State::Walk:
+	case Ball::State::Walk:
 		Execute_Walk(marker_transform);
 		break;
-	case Creature::State::Hold: // CHANGE THIS TO TOUCH POSITION WORLD
+	case Ball::State::Hold: // CHANGE THIS TO TOUCH POSITION WORLD
 		Execute_Hold(marker_transform);
 		break;
-	case Creature::State::Fall:// ADD TOUCH POSITION WORLD
+	case Ball::State::Fall:// ADD TOUCH POSITION WORLD
 		Execute_Fall(marker_transform);
 		break;
-	case Creature::State::Dead:
+	case Ball::State::Dead:
 		Execute_Die();
 		break;
-	case Creature::State::Escaped:
+	case Ball::State::Escaped:
 		Execute_Die();
 		break;
 	default:
@@ -44,7 +44,7 @@ void Creature::Update(gef::Matrix44& marker_transform)
 	}
 }
 
-void Creature::Execute_Walk(gef::Matrix44 &marker_transfrom)
+void Ball::Execute_Walk(gef::Matrix44 &marker_transfrom)
 {
 	//// Find the position of the marker in 3D space
 	gef::Vector4 marker_position = marker_transfrom.GetTranslation();
@@ -107,7 +107,7 @@ void Creature::Execute_Walk(gef::Matrix44 &marker_transfrom)
 	//transform_.SetTranslation(new_position);
 }
 
-void Creature::Execute_Hold(gef::Matrix44 &touch_oposition_world)
+void Ball::Execute_Hold(gef::Matrix44 &touch_oposition_world)
 {
 	// Calculate the vector between this object and the touch's postion in world space.
 	//gef::Vector4 distance = transform_.GetTranslation() - touch_oposition_world.GetTranslation();
@@ -132,7 +132,7 @@ void Creature::Execute_Hold(gef::Matrix44 &touch_oposition_world)
 	}
 }
 
-void Creature::Execute_Fall(gef::Matrix44 &marker_transfrom)
+void Ball::Execute_Fall(gef::Matrix44 &marker_transfrom)
 {
 	// clalculate the object's height above the marker
 	float height = GetTransform().GetTranslation().y() - marker_transfrom.GetTranslation().y();
@@ -147,7 +147,7 @@ void Creature::Execute_Fall(gef::Matrix44 &marker_transfrom)
 	SetTranslation(new_translation);
 }
 
-void Creature::Execute_Die()
+void Ball::Execute_Die()
 {
 	is_alive = false;
 }

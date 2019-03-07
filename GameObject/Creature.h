@@ -2,7 +2,7 @@
 #include "m:\AppliedGamesTechnology\ar_app\game_object.h"
 
 
-class Creature : public GameObject
+class Ball : public GameObject
 {
 public:
 
@@ -17,9 +17,9 @@ public:
 	};
 
 public:
-	Creature();
-	Creature(gef::Platform& platform_, std::string n_scene_filename_, gef::Vector4 starting_position);
-	~Creature();
+	Ball();
+	Ball(gef::Platform& platform_, std::string n_scene_filename_, gef::Vector4 starting_position);
+	~Ball();
 
 	void Update(gef::Matrix44& marker_transform); // frame time?
 

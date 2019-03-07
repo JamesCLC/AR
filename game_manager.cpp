@@ -57,7 +57,7 @@ void GameManager::Init(gef::Matrix44 projection, gef::Matrix44 view)
 			starting_position.set_y(starting_position.y() + -1);
 		}
 
-		creature_object_container.push_back(new Creature(platform_, "balls/ball1.scn", starting_position));
+		creature_object_container.push_back(new Ball(platform_, "balls/ball1.scn", starting_position));
 	}
 
 	// Create the collision detection manager.
@@ -79,7 +79,6 @@ GameState* GameManager::Update(float frame_time)
 	// Reset the player's score.
 	player_score_ = 0;
 
-	// Over here, James
 	// Make sure the input manager and touch input has been iniialised.
 	//if (input_manager_ && input_manager_->touch_manager())
 	//{
@@ -133,10 +132,10 @@ GameState* GameManager::Update(float frame_time)
 
 
 	// Update the Creature Objects.
-	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
+	for (std::vector<Ball*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
 		// Only update the creatures that are still active.
-		if (((*it)->GetState() != Creature::Dead) && ((*it)->GetState() != Creature::Escaped))
+		if (((*it)->GetState() != Ball::Dead) && ((*it)->GetState() != Ball::Escaped))
 		{
 			// Pass in the central marker.
 			(*it)->Update(markers_.at(0).transform);
@@ -148,12 +147,12 @@ GameState* GameManager::Update(float frame_time)
 			{
 				// This game object has escaped.
 				// Set it to dead so that it doesn't render or update,
-				(*it)->SetState(Creature::Escaped);
+				(*it)->SetState(Ball::Escaped);
 			}
 		}
 
 		// The player's score is 1 for each creature that has escaped.
-		if ((*it)->GetState() == Creature::Escaped)
+		if ((*it)->GetState() == Ball::Escaped)
 		{
 			++player_score_;
 		}
@@ -164,10 +163,10 @@ GameState* GameManager::Update(float frame_time)
 
 
 	// Check to see if any of the creatures are still active.
-	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
+	for (std::vector<Ball*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
 	{
 		// If any of the creatures are neither dead nor escaped...
-		if ((*it)->GetState() != Creature::Dead && (*it)->GetState() != Creature::Escaped)
+		if ((*it)->GetState() != Ball::Dead && (*it)->GetState() != Ball::Escaped)
 		{
 			// The game continues with no change to the state.
 			return return_state;
@@ -187,9 +186,9 @@ void GameManager::Render()
 	}
 
 	// Render the creatures that are still alive.
-	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
+	for (std::vector<Ball*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); it++)
 	{
-		if (((*it)->GetState() != Creature::Dead) && ((*it)->GetState() != Creature::Escaped))
+		if (((*it)->GetState() != Ball::Dead) && ((*it)->GetState() != Ball::Escaped))
 		{
 			renderer_3d_->DrawMesh(*(gef::MeshInstance*)(*it));
 		}	

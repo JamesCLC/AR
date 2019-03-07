@@ -24,7 +24,7 @@ public:
 	void Cleanup();
 
 	// Returns a reference to the Creatures.
-	std::vector<Creature*>* GetCreatureObjects() { return &creature_object_container; };
+	std::vector<Ball*>* GetCreatureObjects() { return &creature_object_container; };
 	std::vector<Spike*>* GetSpikeObjects() { return &spike_object_containter; };
 
 	int GetPlayerScore() { return player_score_; };
@@ -37,7 +37,7 @@ private:
 	class gef::Renderer3D* renderer_3d_;
 
 	// Structures to store all the game objects.
-	std::vector<Creature*> creature_object_container;
+	std::vector<Ball*> creature_object_container;
 	std::vector<Spike*> spike_object_containter;
 
 	// Class that handles collision detection between game objects.

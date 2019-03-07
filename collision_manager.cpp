@@ -2,10 +2,10 @@
 
 
 
-CollisionManager::CollisionManager(gef::Platform& platform, std::vector<Creature*>& creatures, std::vector<Spike*>& spikes, gef::Matrix44 projection, gef::Matrix44 view) :
+CollisionManager::CollisionManager(gef::Platform& platform, std::vector<Ball*>& creatures, std::vector<Spike*>& spikes, gef::Matrix44 projection, gef::Matrix44 view) :
 	platform_(platform),
-	creature_object_container(creatures),
-	spike_object_container(spikes),
+	ball_container(creatures),
+	spike_container(spikes),
 	projection_matrix(projection),
 	view_matrix(view)
 {
@@ -26,8 +26,8 @@ GameObject * CollisionManager::Raytrace(gef::Vector2 touch_pos)
 	// Create the ray
 	GetRay(ray_start, ray_direction);
                       
-	// Check each game object;
-	for (std::vector<Creature*>::iterator it = creature_object_container.begin(); it != creature_object_container.end(); ++it)
+	// Check each ball.
+	for (std::vector<Ball*>::iterator it = ball_container.begin(); it != ball_container.end(); ++it)
 	{
 		game_object_ptr = (*it); // Probably not needed.
 
@@ -51,21 +51,21 @@ int CollisionManager::Update()
 
 	/// Collision detection between creatures and spikes.
 	// Check each creatures object.
-	for (std::vector<Creature*>::iterator creature_it = creature_object_container.begin(); creature_it != creature_object_container.end(); ++creature_it)
+	for (std::vector<Ball*>::iterator creature_it = ball_container.begin(); creature_it != ball_container.end(); ++creature_it)
 	{
 		// Check each spike.
-		for (std::vector<Spike*>::iterator spike_it = spike_object_container.begin(); spike_it != spike_object_container.end(); ++spike_it)
+		for (std::vector<Spike*>::iterator spike_it = spike_container.begin(); spike_it != spike_container.end(); ++spike_it)
 		{
 			// Perform colliion detection between the two objects.
 			if (SphereToSphere(*(*creature_it), *(*spike_it)))
 			{
 				// If a creature touches te spikes, kill that creature.
-				(*creature_it)->SetState(Creature::Dead);
+				(*creature_it)->SetState(Ball::Dead);
 			}
 		}
 
 		// Deduct one point for every creature that has died.
-		if ((*creature_it)->GetState() == Creature::Dead)
+		if ((*creature_it)->GetState() == Ball::Dead)
 		{
 			++penalty;
 		}

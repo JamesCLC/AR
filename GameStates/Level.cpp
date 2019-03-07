@@ -39,7 +39,7 @@ void Level::Init()
 
 	// Texture the sprite with the camera feed.
 	camera_feed_sprite_.set_texture(&camera_feed_texture_);
-
+	 
 	/// 3D Elements
 	// Create the initial projection matrix.
 	unscaled_projection_matrix_.SetIdentity();
