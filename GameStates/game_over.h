@@ -22,6 +22,8 @@ public:
 	void CleanUp();
 	void SetUpStates(GameState* level, GameState* main_menu);
 
+	void SetScore(int new_score) { score = new_score; };
+
 private:
 	void RenderText();
 	bool ProcessTouchInput();
@@ -47,5 +49,6 @@ private:
 	gef::Vector2 touch_position;
 
 	float fps_;
+	int score = 0;
 };
 

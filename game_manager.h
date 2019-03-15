@@ -4,6 +4,7 @@
 #include "GameObject\Spikes.h"
 #include "GameObject\Marker.h"
 #include "../collision_manager.h"
+#include "GameStates\game_over.h"
 #include "graphics\renderer_3d.h"
 #include <input\input_manager.h>
 #include <input\touch_input_manager.h>
@@ -24,8 +25,8 @@ public:
 	void Cleanup();
 
 	// Returns a reference to the Creatures.
-	std::vector<Creature*>* GetCreatureObjects() { return &creature_object_container; };
-	std::vector<Spike*>* GetSpikeObjects() { return &spike_object_containter; };
+	std::vector<Ball*>* GetCreatureObjects() { return &ball_container; };
+	std::vector<Spike*>* GetSpikeObjects() { return &spike_container; };
 
 	int GetPlayerScore() { return player_score_; };
 
@@ -37,8 +38,8 @@ private:
 	class gef::Renderer3D* renderer_3d_;
 
 	// Structures to store all the game objects.
-	std::vector<Creature*> creature_object_container;
-	std::vector<Spike*> spike_object_containter;
+	std::vector<Ball*> ball_container;
+	std::vector<Spike*> spike_container;
 
 	// Class that handles collision detection between game objects.
 	CollisionManager* collision_manager;
@@ -55,7 +56,7 @@ private:
 	gef::Vector2 touch_position;
 
 	// Game Object variables.
-	int num_of_creatures = 5;
+	int num_of_balls = 5;
 	int max_distance = 100;
 	int min_distance = 30;
 
